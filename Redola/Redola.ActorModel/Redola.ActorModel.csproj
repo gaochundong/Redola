@@ -72,6 +72,7 @@
     <Compile Include="Actor\Channel\Transport\ActorTransportConnector.cs" />
     <Compile Include="Actor\Channel\Transport\ActorTransportListener.cs" />
     <Compile Include="Actor\Channel\Transport\ActorTransportReconnectableConnector.cs" />
+    <Compile Include="Actor\Channel\Transport\ActorTransportSession.cs" />
     <Compile Include="Actor\Channel\Transport\EventArgs\ActorTransportConnectedEventArgs.cs" />
     <Compile Include="Actor\Channel\Transport\EventArgs\ActorTransportDataReceivedEventArgs.cs" />
     <Compile Include="Actor\Channel\Transport\EventArgs\ActorTransportDisconnectedEventArgs.cs" />

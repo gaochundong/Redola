@@ -11,7 +11,8 @@ namespace Redola.ActorModel
     {
         private ILog _log = Logger.Get<ActorTransportListener>();
         private TcpSocketServer _server;
-        private ConcurrentDictionary<string, TcpSocketSession> _sessions = new ConcurrentDictionary<string, TcpSocketSession>(); // sessionKey -> session
+        private ConcurrentDictionary<string, ActorTransportSession> _sessions
+            = new ConcurrentDictionary<string, ActorTransportSession>(); // sessionKey -> session
 
         public ActorTransportListener(IPEndPoint listenedEndPoint)
         {
@@ -36,7 +37,7 @@ namespace Redola.ActorModel
             {
                 var configuration = new TcpSocketServerConfiguration()
                 {
-                    SendTimeout = TimeSpan.FromMinutes(1),
+                    SendTimeout = TimeSpan.FromSeconds(15),
                     ReceiveTimeout = TimeSpan.Zero,
                 };
                 _server = new TcpSocketServer(this.ListenedEndPoint, configuration);
@@ -86,7 +87,7 @@ namespace Redola.ActorModel
         private void OnClientConnected(object sender, TcpClientConnectedEventArgs e)
         {
             _log.InfoFormat("TCP client [{0}] has connected.", e.Session.RemoteEndPoint);
-            _sessions.Add(e.Session.SessionKey, e.Session);
+            _sessions.Add(e.Session.SessionKey, new ActorTransportSession(e.Session));
 
             if (Connected != null)
             {
@@ -115,18 +116,7 @@ namespace Redola.ActorModel
 
         public void SendTo(string sessionKey, byte[] data)
         {
-            if (!IsListening)
-                throw new InvalidOperationException("The server has stopped to listen.");
-
-            TcpSocketSession session = null;
-            if (_sessions.TryGetValue(sessionKey, out session))
-            {
-                _server.SendTo(session, data);
-            }
-            else
-            {
-                _log.WarnFormat("SendTo, cannot find target client [{0}].", sessionKey);
-            }
+            SendTo(sessionKey, data, 0, data.Length);
         }
 
         public void SendTo(string sessionKey, byte[] data, int offset, int count)
@@ -134,31 +124,20 @@ namespace Redola.ActorModel
             if (!IsListening)
                 throw new InvalidOperationException("The server has stopped to listen.");
 
-            TcpSocketSession session = null;
+            ActorTransportSession session = null;
             if (_sessions.TryGetValue(sessionKey, out session))
             {
-                _server.SendTo(session, data, offset, count);
+                session.Send(data, offset, count);
             }
             else
             {
-                _log.WarnFormat("SendTo, cannot find target client [{0}].", sessionKey);
+                _log.WarnFormat("SendTo, cannot find target session [{0}].", sessionKey);
             }
         }
 
         public void SendToAsync(string sessionKey, byte[] data)
         {
-            if (!IsListening)
-                throw new InvalidOperationException("The server has stopped to listen.");
-
-            TcpSocketSession session = null;
-            if (_sessions.TryGetValue(sessionKey, out session))
-            {
-                _server.SendToAsync(session, data);
-            }
-            else
-            {
-                _log.WarnFormat("SendToAsync, cannot find target client [{0}].", sessionKey);
-            }
+            SendToAsync(sessionKey, data, 0, data.Length);
         }
 
         public void SendToAsync(string sessionKey, byte[] data, int offset, int count)
@@ -166,14 +145,52 @@ namespace Redola.ActorModel
             if (!IsListening)
                 throw new InvalidOperationException("The server has stopped to listen.");
 
-            TcpSocketSession session = null;
+            ActorTransportSession session = null;
             if (_sessions.TryGetValue(sessionKey, out session))
             {
-                _server.SendToAsync(session, data, offset, count);
+                session.SendAsync(data, offset, count);
             }
             else
             {
-                _log.WarnFormat("SendToAsync, cannot find target client [{0}].", sessionKey);
+                _log.WarnFormat("SendToAsync, cannot find target session [{0}].", sessionKey);
+            }
+        }
+
+        public IAsyncResult BeginSend(string sessionKey, byte[] data, AsyncCallback callback)
+        {
+            return BeginSend(sessionKey, data, 0, data.Length, callback);
+        }
+
+        public IAsyncResult BeginSend(string sessionKey, byte[] data, int offset, int count, AsyncCallback callback)
+        {
+            if (!IsListening)
+                throw new InvalidOperationException("The server has stopped to listen.");
+
+            ActorTransportSession session = null;
+            if (_sessions.TryGetValue(sessionKey, out session))
+            {
+                return session.BeginSend(data, offset, count, callback, sessionKey);
+            }
+            else
+            {
+                _log.WarnFormat("BeginSend, cannot find target session [{0}].", sessionKey);
+            }
+
+            return null;
+        }
+
+        public void EndSend(IAsyncResult asyncResult)
+        {
+            string sessionKey = (string)asyncResult.AsyncState;
+
+            ActorTransportSession session = null;
+            if (_sessions.TryGetValue(sessionKey, out session))
+            {
+                session.EndSend(asyncResult);
+            }
+            else
+            {
+                _log.WarnFormat("EndSend, cannot find target session [{0}].", sessionKey);
             }
         }
 

@@ -39,7 +39,7 @@ namespace Redola.ActorModel
                 var configuration = new TcpSocketClientConfiguration()
                 {
                     ConnectTimeout = timeout,
-                    SendTimeout = TimeSpan.FromMinutes(1),
+                    SendTimeout = TimeSpan.FromSeconds(15),
                     ReceiveTimeout = TimeSpan.Zero,
                 };
                 _client = new TcpSocketClient(this.ConnectToEndPoint, configuration);
@@ -125,10 +125,7 @@ namespace Redola.ActorModel
 
         public void Send(byte[] data)
         {
-            if (!IsConnected)
-                throw new InvalidOperationException("The client has not connected to server.");
-
-            _client.Send(data);
+            Send(data, 0, data.Length);
         }
 
         public void Send(byte[] data, int offset, int count)
@@ -141,10 +138,7 @@ namespace Redola.ActorModel
 
         public void SendAsync(byte[] data)
         {
-            if (!IsConnected)
-                throw new InvalidOperationException("The client has not connected to server.");
-
-            _client.SendAsync(data);
+            SendAsync(data, 0, data.Length);
         }
 
         public void SendAsync(byte[] data, int offset, int count)
@@ -153,6 +147,24 @@ namespace Redola.ActorModel
                 throw new InvalidOperationException("The client has not connected to server.");
 
             _client.SendAsync(data, offset, count);
+        }
+
+        public IAsyncResult BeginSend(byte[] data, AsyncCallback callback, object state)
+        {
+            return BeginSend(data, 0, data.Length, callback, state);
+        }
+
+        public IAsyncResult BeginSend(byte[] data, int offset, int count, AsyncCallback callback, object state)
+        {
+            if (!IsConnected)
+                throw new InvalidOperationException("The client has not connected to server.");
+
+            return _client.BeginSend(data, offset, count, callback, state);
+        }
+
+        public void EndSend(IAsyncResult asyncResult)
+        {
+            _client.EndSend(asyncResult);
         }
 
         public event EventHandler<ActorTransportConnectedEventArgs> Connected;
