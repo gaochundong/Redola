@@ -49,9 +49,17 @@
     <Compile Include="..\SolutionVersion.cs">
       <Link>SolutionVersion.cs</Link>
     </Compile>
+    <Compile Include="Framing\BinaryFrame.cs" />
     <Compile Include="Framing\Builder\ActorFrameBuilder.cs" />
+    <Compile Include="Framing\Builder\ActorFrameException.cs" />
+    <Compile Include="Framing\Builder\IActorFrameBuilder.cs" />
+    <Compile Include="Framing\ControlFrame.cs" />
+    <Compile Include="Framing\DataFrame.cs" />
+    <Compile Include="Framing\Frame.cs" />
     <Compile Include="Framing\Header\ActorFrameHeader.cs" />
     <Compile Include="Framing\Header\OpCode.cs" />
+    <Compile Include="Framing\PingFrame.cs" />
+    <Compile Include="Framing\PongFrame.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
