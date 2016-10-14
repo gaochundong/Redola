@@ -30,6 +30,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Logrila.Logging, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Logrila.Logging.1.0.1.0\lib\net46\Logrila.Logging.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
@@ -41,7 +45,40 @@
     <Compile Include="..\SolutionVersion.cs">
       <Link>SolutionVersion.cs</Link>
     </Compile>
+    <Compile Include="Buffer\BufferDeflector.cs" />
+    <Compile Include="Buffer\BufferValidator.cs" />
+    <Compile Include="Buffer\GrowingByteBufferManager.cs" />
+    <Compile Include="Buffer\IBufferManager.cs" />
+    <Compile Include="Client\InternalTcpSocketSaeaClientMessageDispatcherImplementation.cs" />
+    <Compile Include="Client\ITcpSocketSaeaClientMessageDispatcher.cs" />
+    <Compile Include="Client\TcpSocketSaeaClient.cs" />
+    <Compile Include="Client\TcpSocketSaeaClientConfiguration.cs" />
+    <Compile Include="Framing\FixedLengthFrameBuilder.cs" />
+    <Compile Include="Framing\FrameBuilder.cs" />
+    <Compile Include="Framing\IFrameBuilder.cs" />
+    <Compile Include="Framing\IFrameDecoder.cs" />
+    <Compile Include="Framing\IFrameEncoder.cs" />
+    <Compile Include="Framing\LengthFieldBasedFrameBuilder.cs" />
+    <Compile Include="Framing\LengthPrefixedFrameBuilder.cs" />
+    <Compile Include="Framing\LineBasedFrameBuilder.cs" />
+    <Compile Include="Framing\RawBufferFrameBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Server\Awaitable\SaeaAwaitable.cs" />
+    <Compile Include="Server\Awaitable\SaeaAwaiter.cs" />
+    <Compile Include="Server\Awaitable\SaeaExtensions.cs" />
+    <Compile Include="Server\InternalTcpSocketSaeaServerMessageDispatcherImplementation.cs" />
+    <Compile Include="Server\ITcpSocketSaeaServerMessageDispatcher.cs" />
+    <Compile Include="Server\Pooling\QueuedObjectPool.cs" />
+    <Compile Include="Server\Pooling\SaeaPool.cs" />
+    <Compile Include="Server\Pooling\SessionPool.cs" />
+    <Compile Include="Server\TcpSocketSaeaServer.cs" />
+    <Compile Include="Server\TcpSocketSaeaServerConfiguration.cs" />
+    <Compile Include="Server\TcpSocketSaeaSession.cs" />
+    <Compile Include="TcpSocketConnectionState.cs" />
+    <Compile Include="TplExtensions.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
