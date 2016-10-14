@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Text;
-using Cowboy.Sockets;
 
 namespace Redola.ActorModel
 {
