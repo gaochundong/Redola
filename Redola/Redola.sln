@@ -13,6 +13,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{49D4F9A0
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redola.Rpc.TestRpcServer", "..\Tests\Redola.Rpc.TestRpcServer\Redola.Rpc.TestRpcServer.csproj", "{C06D311C-BD6A-4E5C-86DF-1BDA937A5FE0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redola.Rpc.TestRpcClient", "..\Tests\Redola.Rpc.TestRpcClient\Redola.Rpc.TestRpcClient.csproj", "{94B31D55-C3A9-43C9-8819-61753B4B2435}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,11 +37,16 @@ Global
 		{C06D311C-BD6A-4E5C-86DF-1BDA937A5FE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C06D311C-BD6A-4E5C-86DF-1BDA937A5FE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C06D311C-BD6A-4E5C-86DF-1BDA937A5FE0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94B31D55-C3A9-43C9-8819-61753B4B2435}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94B31D55-C3A9-43C9-8819-61753B4B2435}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94B31D55-C3A9-43C9-8819-61753B4B2435}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94B31D55-C3A9-43C9-8819-61753B4B2435}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{C06D311C-BD6A-4E5C-86DF-1BDA937A5FE0} = {49D4F9A0-5E09-4CE9-B9C3-49766ABACD19}
+		{94B31D55-C3A9-43C9-8819-61753B4B2435} = {49D4F9A0-5E09-4CE9-B9C3-49766ABACD19}
 	EndGlobalSection
 EndGlobal
