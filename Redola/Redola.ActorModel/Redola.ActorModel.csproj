@@ -38,7 +38,12 @@
       <HintPath>..\packages\Logrila.Logging.1.0.1.0\lib\net46\Logrila.Logging.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="protobuf-net, Version=2.1.0.0, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
+      <HintPath>..\packages\protobuf-net.2.1.0\lib\net451\protobuf-net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
@@ -49,6 +54,38 @@
     <Compile Include="..\SolutionVersion.cs">
       <Link>SolutionVersion.cs</Link>
     </Compile>
+    <Compile Include="Actor\Actor.cs" />
+    <Compile Include="Actor\ActorConfiguration.cs" />
+    <Compile Include="Actor\ActorDirectory.cs" />
+    <Compile Include="Actor\ActorMaster.cs" />
+    <Compile Include="Actor\ActorNotFoundException.cs" />
+    <Compile Include="Actor\ActorConfigurationReader.cs" />
+    <Compile Include="Actor\Channel\ActorChannelFactory.cs" />
+    <Compile Include="Actor\Channel\ActorChannelManager.cs" />
+    <Compile Include="Actor\Channel\ActorConnectorChannel.cs" />
+    <Compile Include="Actor\Channel\ActorConnectorReconnectableChannel.cs" />
+    <Compile Include="Actor\Channel\ActorListenerChannel.cs" />
+    <Compile Include="Actor\Channel\EventArgs\ActorConnectedEventArgs.cs" />
+    <Compile Include="Actor\Channel\EventArgs\ActorDataReceivedEventArgs.cs" />
+    <Compile Include="Actor\Channel\EventArgs\ActorDisconnectedEventArgs.cs" />
+    <Compile Include="Actor\Channel\IActorChannel.cs" />
+    <Compile Include="Actor\Channel\Transport\ActorTransportConnector.cs" />
+    <Compile Include="Actor\Channel\Transport\ActorTransportListener.cs" />
+    <Compile Include="Actor\Channel\Transport\ActorTransportReconnectableConnector.cs" />
+    <Compile Include="Actor\Channel\Transport\EventArgs\ActorTransportConnectedEventArgs.cs" />
+    <Compile Include="Actor\Channel\Transport\EventArgs\ActorTransportDataReceivedEventArgs.cs" />
+    <Compile Include="Actor\Channel\Transport\EventArgs\ActorTransportDisconnectedEventArgs.cs" />
+    <Compile Include="Actor\Description\ActorDescription.cs" />
+    <Compile Include="Actor\Description\ActorDescriptionCollection.cs" />
+    <Compile Include="Extensions\ConcurrentDictionaryExtensions.cs" />
+    <Compile Include="Actor\Message\ActorHandshakeRequest.cs" />
+    <Compile Include="Actor\Message\ActorHandshakeResponse.cs" />
+    <Compile Include="Actor\Message\ActorLookupRequest.cs" />
+    <Compile Include="Actor\Message\ActorLookupResponse.cs" />
+    <Compile Include="Actor\Message\Encoding\IActorMessageDecoder.cs" />
+    <Compile Include="Actor\Message\Encoding\IActorMessageEncoder.cs" />
+    <Compile Include="Actor\Message\Envelope\ActorMessageEnvelope.cs" />
+    <Compile Include="Actor\Message\Envelope\IActorMessageEnvelope.cs" />
     <Compile Include="Framing\BinaryFrame.cs" />
     <Compile Include="Framing\Builder\ActorFrameBuilder.cs" />
     <Compile Include="Framing\Builder\ActorFrameException.cs" />
@@ -63,8 +100,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Actor\Message\ActorMessage.proto" />
+    <None Include="Actor\Message\Envelope\ActorMessageEnvelope.proto" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

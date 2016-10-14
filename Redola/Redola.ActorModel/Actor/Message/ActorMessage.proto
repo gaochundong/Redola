@@ -1,0 +1,31 @@
+package Redola.ActorModel;
+
+option java_package = "com.tcminplay.fida.servicemodel";
+option java_outer_classname = "ActorMessage";
+
+message ActorDescription
+{
+	required string Name = 10;
+	required string Type = 20;
+	required string Address = 30;
+	required string Port = 40;
+}
+
+message ActorHandshakeRequest
+{
+	required ActorDescription ActorDescription = 10;
+}
+
+message ActorHandshakeResponse
+{
+	required ActorDescription ActorDescription = 10;
+}
+
+message ActorLookupRequest
+{
+}
+
+message ActorLookupResponse
+{
+	repeated ActorDescription Actors = 10;
+}

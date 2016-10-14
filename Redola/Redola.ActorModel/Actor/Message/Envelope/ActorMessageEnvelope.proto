@@ -1,0 +1,12 @@
+package Redola.ActorModel;
+
+option java_package = "com.tcminplay.fida.servicemodel";
+option java_outer_classname = "ActorEnvelope";
+
+message ActorMessageEnvelope
+{
+	required string MessageID = 10;
+	required int64 MessageTime = 20;
+	required string MessageType = 80;
+	optional bytes MessageData = 90;
+}
