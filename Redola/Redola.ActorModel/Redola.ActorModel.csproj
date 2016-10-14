@@ -49,6 +49,9 @@
     <Compile Include="..\SolutionVersion.cs">
       <Link>SolutionVersion.cs</Link>
     </Compile>
+    <Compile Include="Framing\Builder\ActorFrameBuilder.cs" />
+    <Compile Include="Framing\Header\ActorFrameHeader.cs" />
+    <Compile Include="Framing\Header\OpCode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
