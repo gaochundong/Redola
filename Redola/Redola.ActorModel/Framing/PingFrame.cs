@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Redola.ActorModel
+namespace Redola.ActorModel.Framing
 {
     public sealed class PingFrame : ControlFrame
     {

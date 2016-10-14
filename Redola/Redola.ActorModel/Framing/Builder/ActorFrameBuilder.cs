@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace Redola.ActorModel
+namespace Redola.ActorModel.Framing
 {
     // A high-level overview of the framing is given in the following figure. 
     //  0                   1                   2                   3

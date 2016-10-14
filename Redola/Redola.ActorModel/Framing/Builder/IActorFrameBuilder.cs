@@ -1,4 +1,4 @@
-﻿namespace Redola.ActorModel
+﻿namespace Redola.ActorModel.Framing
 {
     public interface IActorFrameBuilder
     {

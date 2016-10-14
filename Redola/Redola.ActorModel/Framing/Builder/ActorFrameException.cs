@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Redola.ActorModel
+namespace Redola.ActorModel.Framing
 {
     [Serializable]
     public class ActorFrameException : Exception

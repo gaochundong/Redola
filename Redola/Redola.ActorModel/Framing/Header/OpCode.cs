@@ -1,4 +1,4 @@
-﻿namespace Redola.ActorModel
+﻿namespace Redola.ActorModel.Framing
 {
     // The opcode denotes the frame type of the Actor frame.
     // The opcode is an integer number between 0 and 15, inclusive.
