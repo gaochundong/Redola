@@ -41,6 +41,8 @@
     <Compile Include="..\SolutionVersion.cs">
       <Link>SolutionVersion.cs</Link>
     </Compile>
+    <Compile Include="Encoding\ActorMessageDecoder.cs" />
+    <Compile Include="Encoding\ActorMessageEncoder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

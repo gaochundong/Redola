@@ -99,6 +99,15 @@
     <Compile Include="Framing\PingFrame.cs" />
     <Compile Include="Framing\PongFrame.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RouteActor\BlockingActorMessageHandlerBase.cs" />
+    <Compile Include="RouteActor\BlockingCallbackHolder.cs" />
+    <Compile Include="RouteActor\BlockingRouteActor.cs" />
+    <Compile Include="RouteActor\IActorMessageHandler.cs" />
+    <Compile Include="RouteActor\IBlockingActorMessageHandler.cs" />
+    <Compile Include="RouteActor\IRouteActorMessageHandler.cs" />
+    <Compile Include="RouteActor\MessageHandleStrategy.cs" />
+    <Compile Include="RouteActor\RouteActor.cs" />
+    <Compile Include="RouteActor\RouteActorMessageHandlerBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Actor\Message\ActorMessage.proto" />
