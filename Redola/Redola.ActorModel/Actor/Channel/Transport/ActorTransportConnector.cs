@@ -136,12 +136,12 @@ namespace Redola.ActorModel
             _client.Send(data, offset, count);
         }
 
-        public void SendAsync(byte[] data)
+        public void BeginSend(byte[] data)
         {
-            SendAsync(data, 0, data.Length);
+            BeginSend(data, 0, data.Length);
         }
 
-        public void SendAsync(byte[] data, int offset, int count)
+        public void BeginSend(byte[] data, int offset, int count)
         {
             if (!IsConnected)
                 throw new InvalidOperationException("The client has not connected to server.");

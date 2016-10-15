@@ -58,7 +58,7 @@ namespace Redola.ActorModel
                 };
 
             _centerChannel.DataReceived += onDataReceived;
-            _centerChannel.SendAsync(_centerActor.Type, _centerActor.Name, actorLookupRequestBuffer);
+            _centerChannel.BeginSend(_centerActor.Type, _centerActor.Name, actorLookupRequestBuffer);
 
             bool lookedup = waitingResponse.Wait(TimeSpan.FromSeconds(15));
             _centerChannel.DataReceived -= onDataReceived;
@@ -102,7 +102,7 @@ namespace Redola.ActorModel
                 };
 
             _centerChannel.DataReceived += onDataReceived;
-            _centerChannel.SendAsync(_centerActor.Type, _centerActor.Name, actorLookupRequestBuffer);
+            _centerChannel.BeginSend(_centerActor.Type, _centerActor.Name, actorLookupRequestBuffer);
 
             bool lookedup = waitingResponse.Wait(TimeSpan.FromSeconds(15));
             _centerChannel.DataReceived -= onDataReceived;

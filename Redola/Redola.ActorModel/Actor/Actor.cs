@@ -141,13 +141,13 @@ namespace Redola.ActorModel
         public void SendAsync(ActorDescription remoteActor, byte[] data)
         {
             var channel = _manager.GetActorChannel(remoteActor);
-            channel.SendAsync(remoteActor.Type, remoteActor.Name, data);
+            channel.BeginSend(remoteActor.Type, remoteActor.Name, data);
         }
 
         public void SendAsync(ActorDescription remoteActor, byte[] data, int offset, int count)
         {
             var channel = _manager.GetActorChannel(remoteActor);
-            channel.SendAsync(remoteActor.Type, remoteActor.Name, data, offset, count);
+            channel.BeginSend(remoteActor.Type, remoteActor.Name, data, offset, count);
         }
 
         public void Send(string remoteActorType, string remoteActorName, byte[] data)
@@ -165,13 +165,13 @@ namespace Redola.ActorModel
         public void SendAsync(string remoteActorType, string remoteActorName, byte[] data)
         {
             var channel = _manager.GetActorChannel(remoteActorType, remoteActorName);
-            channel.SendAsync(remoteActorType, remoteActorName, data);
+            channel.BeginSend(remoteActorType, remoteActorName, data);
         }
 
         public void SendAsync(string remoteActorType, string remoteActorName, byte[] data, int offset, int count)
         {
             var channel = _manager.GetActorChannel(remoteActorType, remoteActorName);
-            channel.SendAsync(remoteActorType, remoteActorName, data, offset, count);
+            channel.BeginSend(remoteActorType, remoteActorName, data, offset, count);
         }
 
         public void Send(string remoteActorType, byte[] data)
@@ -189,13 +189,13 @@ namespace Redola.ActorModel
         public void SendAsync(string remoteActorType, byte[] data)
         {
             var channel = _manager.GetActorChannel(remoteActorType);
-            channel.SendAsync(remoteActorType, data);
+            channel.BeginSend(remoteActorType, data);
         }
 
         public void SendAsync(string remoteActorType, byte[] data, int offset, int count)
         {
             var channel = _manager.GetActorChannel(remoteActorType);
-            channel.SendAsync(remoteActorType, data, offset, count);
+            channel.BeginSend(remoteActorType, data, offset, count);
         }
 
         public void Broadcast(string remoteActorType, byte[] data)
@@ -221,7 +221,7 @@ namespace Redola.ActorModel
             var channels = _manager.GetActorChannels(remoteActorType);
             foreach (var channel in channels.Where(c => c != null))
             {
-                channel.SendAsync(remoteActorType, data);
+                channel.BeginSend(remoteActorType, data);
             }
         }
 
@@ -230,7 +230,7 @@ namespace Redola.ActorModel
             var channels = _manager.GetActorChannels(remoteActorType);
             foreach (var channel in channels.Where(c => c != null))
             {
-                channel.SendAsync(remoteActorType, data, offset, count);
+                channel.BeginSend(remoteActorType, data, offset, count);
             }
         }
 

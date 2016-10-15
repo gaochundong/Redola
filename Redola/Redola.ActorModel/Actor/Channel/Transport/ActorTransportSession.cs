@@ -34,7 +34,7 @@ namespace Redola.ActorModel
 
         public void Send(byte[] data)
         {
-            _session.Send(data);
+            Send(data, 0, data.Length);
         }
 
         public void Send(byte[] data, int offset, int count)
@@ -42,19 +42,19 @@ namespace Redola.ActorModel
             _session.Send(data, offset, count);
         }
 
-        public void SendAsync(byte[] data)
+        public void BeginSend(byte[] data)
         {
-            _session.SendAsync(data);
+            BeginSend(data, 0, data.Length);
         }
 
-        public void SendAsync(byte[] data, int offset, int count)
+        public void BeginSend(byte[] data, int offset, int count)
         {
             _session.SendAsync(data, offset, count);
         }
 
         public IAsyncResult BeginSend(byte[] data, AsyncCallback callback, object state)
         {
-            return _session.BeginSend(data, callback, state);
+            return BeginSend(data, 0, data.Length, callback, state);
         }
 
         public IAsyncResult BeginSend(byte[] data, int offset, int count, AsyncCallback callback, object state)

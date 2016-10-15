@@ -15,12 +15,12 @@ namespace Redola.ActorModel
 
         void Send(string actorType, string actorName, byte[] data);
         void Send(string actorType, string actorName, byte[] data, int offset, int count);
-        void SendAsync(string actorType, string actorName, byte[] data);
-        void SendAsync(string actorType, string actorName, byte[] data, int offset, int count);
+        void BeginSend(string actorType, string actorName, byte[] data);
+        void BeginSend(string actorType, string actorName, byte[] data, int offset, int count);
 
         void Send(string actorType, byte[] data);
         void Send(string actorType, byte[] data, int offset, int count);
-        void SendAsync(string actorType, byte[] data);
-        void SendAsync(string actorType, byte[] data, int offset, int count);
+        void BeginSend(string actorType, byte[] data);
+        void BeginSend(string actorType, byte[] data, int offset, int count);
     }
 }

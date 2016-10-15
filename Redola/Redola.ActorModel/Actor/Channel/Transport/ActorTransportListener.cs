@@ -135,12 +135,12 @@ namespace Redola.ActorModel
             }
         }
 
-        public void SendToAsync(string sessionKey, byte[] data)
+        public void BeginSendTo(string sessionKey, byte[] data)
         {
-            SendToAsync(sessionKey, data, 0, data.Length);
+            BeginSendTo(sessionKey, data, 0, data.Length);
         }
 
-        public void SendToAsync(string sessionKey, byte[] data, int offset, int count)
+        public void BeginSendTo(string sessionKey, byte[] data, int offset, int count)
         {
             if (!IsListening)
                 throw new InvalidOperationException("The server has stopped to listen.");
@@ -148,20 +148,20 @@ namespace Redola.ActorModel
             ActorTransportSession session = null;
             if (_sessions.TryGetValue(sessionKey, out session))
             {
-                session.SendAsync(data, offset, count);
+                session.BeginSend(data, offset, count);
             }
             else
             {
-                _log.WarnFormat("SendToAsync, cannot find target session [{0}].", sessionKey);
+                _log.WarnFormat("BeginSendTo, cannot find target session [{0}].", sessionKey);
             }
         }
 
-        public IAsyncResult BeginSend(string sessionKey, byte[] data, AsyncCallback callback)
+        public IAsyncResult BeginSendTo(string sessionKey, byte[] data, AsyncCallback callback, object state)
         {
-            return BeginSend(sessionKey, data, 0, data.Length, callback);
+            return BeginSendTo(sessionKey, data, 0, data.Length, callback, state);
         }
 
-        public IAsyncResult BeginSend(string sessionKey, byte[] data, int offset, int count, AsyncCallback callback)
+        public IAsyncResult BeginSendTo(string sessionKey, byte[] data, int offset, int count, AsyncCallback callback, object state)
         {
             if (!IsListening)
                 throw new InvalidOperationException("The server has stopped to listen.");
@@ -169,20 +169,18 @@ namespace Redola.ActorModel
             ActorTransportSession session = null;
             if (_sessions.TryGetValue(sessionKey, out session))
             {
-                return session.BeginSend(data, offset, count, callback, sessionKey);
+                return session.BeginSend(data, offset, count, callback, state);
             }
             else
             {
-                _log.WarnFormat("BeginSend, cannot find target session [{0}].", sessionKey);
+                _log.WarnFormat("BeginSendTo, cannot find target session [{0}].", sessionKey);
             }
 
             return null;
         }
 
-        public void EndSend(IAsyncResult asyncResult)
+        public void EndSendTo(string sessionKey, IAsyncResult asyncResult)
         {
-            string sessionKey = (string)asyncResult.AsyncState;
-
             ActorTransportSession session = null;
             if (_sessions.TryGetValue(sessionKey, out session))
             {
@@ -190,7 +188,7 @@ namespace Redola.ActorModel
             }
             else
             {
-                _log.WarnFormat("EndSend, cannot find target session [{0}].", sessionKey);
+                _log.WarnFormat("EndSendTo, cannot find target session [{0}].", sessionKey);
             }
         }
 
@@ -202,7 +200,7 @@ namespace Redola.ActorModel
             _server.Broadcast(data);
         }
 
-        public void BroadcastAsync(byte[] data)
+        public void BeginBroadcast(byte[] data)
         {
             if (!IsListening)
                 throw new InvalidOperationException("The server has stopped to listen.");

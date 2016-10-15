@@ -140,7 +140,7 @@ namespace Redola.ActorModel
 
             _connector.DataReceived += onHandshaked;
             _log.InfoFormat("Handshake request from local actor [{0}].", _localActor);
-            _connector.SendAsync(actorHandshakeRequestBuffer);
+            _connector.BeginSend(actorHandshakeRequestBuffer);
 
             bool handshaked = waitingHandshaked.Wait(timeout);
             _connector.DataReceived -= onHandshaked;
@@ -201,16 +201,7 @@ namespace Redola.ActorModel
 
         public void Send(string actorType, string actorName, byte[] data)
         {
-            var actorKey = ActorDescription.GetKey(actorType, actorName);
-
-            if (_remoteActor == null)
-                throw new InvalidOperationException(
-                    string.Format("The remote actor has not been connected, Type[{0}], Name[{1}].", actorType, actorName));
-            if (_remoteActor.GetKey() != actorKey)
-                throw new InvalidOperationException(
-                    string.Format("Remote actor key not matched, [{0}]:[{1}].", _remoteActor.GetKey(), actorKey));
-
-            _connector.Send(data);
+            Send(actorType, actorName, data, 0, data.Length);
         }
 
         public void Send(string actorType, string actorName, byte[] data, int offset, int count)
@@ -227,21 +218,12 @@ namespace Redola.ActorModel
             _connector.Send(data, offset, count);
         }
 
-        public void SendAsync(string actorType, string actorName, byte[] data)
+        public void BeginSend(string actorType, string actorName, byte[] data)
         {
-            var actorKey = ActorDescription.GetKey(actorType, actorName);
-
-            if (_remoteActor == null)
-                throw new InvalidOperationException(
-                    string.Format("The remote actor has not been connected, Type[{0}], Name[{1}].", actorType, actorName));
-            if (_remoteActor.GetKey() != actorKey)
-                throw new InvalidOperationException(
-                    string.Format("Remote actor key not matched, [{0}]:[{1}].", _remoteActor.GetKey(), actorKey));
-
-            _connector.SendAsync(data);
+            BeginSend(actorType, actorName, data, 0, data.Length);
         }
 
-        public void SendAsync(string actorType, string actorName, byte[] data, int offset, int count)
+        public void BeginSend(string actorType, string actorName, byte[] data, int offset, int count)
         {
             var actorKey = ActorDescription.GetKey(actorType, actorName);
 
@@ -252,19 +234,12 @@ namespace Redola.ActorModel
                 throw new InvalidOperationException(
                     string.Format("Remote actor key not matched, [{0}]:[{1}].", _remoteActor.GetKey(), actorKey));
 
-            _connector.SendAsync(data, offset, count);
+            _connector.BeginSend(data, offset, count);
         }
 
         public void Send(string actorType, byte[] data)
         {
-            if (_remoteActor == null)
-                throw new InvalidOperationException(
-                    string.Format("The remote actor has not been connected, Type[{0}].", actorType));
-            if (_remoteActor.Type != actorType)
-                throw new InvalidOperationException(
-                    string.Format("Remote actor type not matched, [{0}]:[{1}].", _remoteActor.Type, actorType));
-
-            _connector.Send(data);
+            Send(actorType, data, 0, data.Length);
         }
 
         public void Send(string actorType, byte[] data, int offset, int count)
@@ -279,19 +254,12 @@ namespace Redola.ActorModel
             _connector.Send(data, offset, count);
         }
 
-        public void SendAsync(string actorType, byte[] data)
+        public void BeginSend(string actorType, byte[] data)
         {
-            if (_remoteActor == null)
-                throw new InvalidOperationException(
-                    string.Format("The remote actor has not been connected, Type[{0}].", actorType));
-            if (_remoteActor.Type != actorType)
-                throw new InvalidOperationException(
-                    string.Format("Remote actor type not matched, [{0}]:[{1}].", _remoteActor.Type, actorType));
-
-            _connector.SendAsync(data);
+            BeginSend(actorType, data, 0, data.Length);
         }
 
-        public void SendAsync(string actorType, byte[] data, int offset, int count)
+        public void BeginSend(string actorType, byte[] data, int offset, int count)
         {
             if (_remoteActor == null)
                 throw new InvalidOperationException(
@@ -300,7 +268,31 @@ namespace Redola.ActorModel
                 throw new InvalidOperationException(
                     string.Format("Remote actor type not matched, [{0}]:[{1}].", _remoteActor.Type, actorType));
 
-            _connector.SendAsync(data, offset, count);
+            _connector.BeginSend(data, offset, count);
+        }
+
+        public IAsyncResult BeginSend(string actorType, string actorName, byte[] data, AsyncCallback callback, object state)
+        {
+            return BeginSend(actorType, actorName, data, 0, data.Length, callback, state);
+        }
+
+        public IAsyncResult BeginSend(string actorType, string actorName, byte[] data, int offset, int count, AsyncCallback callback, object state)
+        {
+            var actorKey = ActorDescription.GetKey(actorType, actorName);
+
+            if (_remoteActor == null)
+                throw new InvalidOperationException(
+                    string.Format("The remote actor has not been connected, Type[{0}], Name[{1}].", actorType, actorName));
+            if (_remoteActor.GetKey() != actorKey)
+                throw new InvalidOperationException(
+                    string.Format("Remote actor key not matched, [{0}]:[{1}].", _remoteActor.GetKey(), actorKey));
+
+            return _connector.BeginSend(data, offset, count, callback, state);
+        }
+
+        public void EndSend(string actorType, string actorName, IAsyncResult asyncResult)
+        {
+            _connector.EndSend(asyncResult);
         }
     }
 }

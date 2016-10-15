@@ -86,7 +86,7 @@ namespace Redola.ActorModel
                     ActorDescription = _localActor,
                 };
                 var actorHandshakeResponseBuffer = _encoder.Encode(actorHandshakeResponse);
-                _listener.SendToAsync(e.SessionKey, actorHandshakeResponseBuffer);
+                _listener.BeginSendTo(e.SessionKey, actorHandshakeResponseBuffer);
 
                 _log.InfoFormat("Handshake with remote [{0}] successfully, SessionKey[{1}].", remoteActor, e.SessionKey);
                 _remoteActors.Add(e.SessionKey, remoteActor);
@@ -140,12 +140,7 @@ namespace Redola.ActorModel
 
         public void Send(string actorType, string actorName, byte[] data)
         {
-            var actorKey = ActorDescription.GetKey(actorType, actorName);
-            var sessionKey = _actorKeys.Get(actorKey);
-            if (!string.IsNullOrEmpty(sessionKey))
-            {
-                _listener.SendTo(sessionKey, data);
-            }
+            Send(actorType, actorName, data, 0, data.Length);
         }
 
         public void Send(string actorType, string actorName, byte[] data, int offset, int count)
@@ -158,34 +153,24 @@ namespace Redola.ActorModel
             }
         }
 
-        public void SendAsync(string actorType, string actorName, byte[] data)
+        public void BeginSend(string actorType, string actorName, byte[] data)
         {
-            var actorKey = ActorDescription.GetKey(actorType, actorName);
-            var sessionKey = _actorKeys.Get(actorKey);
-            if (!string.IsNullOrEmpty(sessionKey))
-            {
-                _listener.SendToAsync(sessionKey, data);
-            }
+            BeginSend(actorType, actorName, data, 0, data.Length);
         }
 
-        public void SendAsync(string actorType, string actorName, byte[] data, int offset, int count)
+        public void BeginSend(string actorType, string actorName, byte[] data, int offset, int count)
         {
             var actorKey = ActorDescription.GetKey(actorType, actorName);
             var sessionKey = _actorKeys.Get(actorKey);
             if (!string.IsNullOrEmpty(sessionKey))
             {
-                _listener.SendToAsync(sessionKey, data, offset, count);
+                _listener.BeginSendTo(sessionKey, data, offset, count);
             }
         }
 
         public void Send(string actorType, byte[] data)
         {
-            var actor = _remoteActors.Values.Where(a => a.Type == actorType).OrderBy(t => Guid.NewGuid()).FirstOrDefault();
-            if (actor != null)
-            {
-                var sessionKey = _actorKeys.Get(actor.GetKey());
-                _listener.SendTo(sessionKey, data);
-            }
+            Send(actorType, data, 0, data.Length);
         }
 
         public void Send(string actorType, byte[] data, int offset, int count)
@@ -198,23 +183,45 @@ namespace Redola.ActorModel
             }
         }
 
-        public void SendAsync(string actorType, byte[] data)
+        public void BeginSend(string actorType, byte[] data)
+        {
+            BeginSend(actorType, data, 0, data.Length);
+        }
+
+        public void BeginSend(string actorType, byte[] data, int offset, int count)
         {
             var actor = _remoteActors.Values.Where(a => a.Type == actorType).OrderBy(t => Guid.NewGuid()).FirstOrDefault();
             if (actor != null)
             {
                 var sessionKey = _actorKeys.Get(actor.GetKey());
-                _listener.SendToAsync(sessionKey, data);
+                _listener.BeginSendTo(sessionKey, data, offset, count);
             }
         }
 
-        public void SendAsync(string actorType, byte[] data, int offset, int count)
+        public IAsyncResult BeginSend(string actorType, string actorName, byte[] data, AsyncCallback callback, object state)
         {
-            var actor = _remoteActors.Values.Where(a => a.Type == actorType).OrderBy(t => Guid.NewGuid()).FirstOrDefault();
-            if (actor != null)
+            return BeginSend(actorType, actorName, data, 0, data.Length, callback, state);
+        }
+
+        public IAsyncResult BeginSend(string actorType, string actorName, byte[] data, int offset, int count, AsyncCallback callback, object state)
+        {
+            var actorKey = ActorDescription.GetKey(actorType, actorName);
+            var sessionKey = _actorKeys.Get(actorKey);
+            if (!string.IsNullOrEmpty(sessionKey))
             {
-                var sessionKey = _actorKeys.Get(actor.GetKey());
-                _listener.SendToAsync(sessionKey, data, offset, count);
+                return _listener.BeginSendTo(sessionKey, data, offset, count, callback, state);
+            }
+
+            return null;
+        }
+
+        public void EndSend(string actorType, string actorName, IAsyncResult asyncResult)
+        {
+            var actorKey = ActorDescription.GetKey(actorType, actorName);
+            var sessionKey = _actorKeys.Get(actorKey);
+            if (!string.IsNullOrEmpty(sessionKey))
+            {
+                _listener.EndSendTo(sessionKey, asyncResult);
             }
         }
     }

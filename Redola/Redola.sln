@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redola.ActorModel", "Redola.ActorModel\Redola.ActorModel.csproj", "{05E69E70-97FF-4FFF-B106-E423B6F51A00}"
 EndProject
@@ -12,6 +12,13 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redola.Rpc.TestRpcServer", "..\Tests\Redola.Rpc.TestRpcServer\Redola.Rpc.TestRpcServer.csproj", "{C06D311C-BD6A-4E5C-86DF-1BDA937A5FE0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redola.Rpc.TestRpcClient", "..\Tests\Redola.Rpc.TestRpcClient\Redola.Rpc.TestRpcClient.csproj", "{94B31D55-C3A9-43C9-8819-61753B4B2435}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{595851A8-E320-48C2-A09E-33BD17647DD2}"
+	ProjectSection(SolutionItems) = preProject
+		..\LICENSE = ..\LICENSE
+		..\README.md = ..\README.md
+		SolutionVersion.cs = SolutionVersion.cs
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,10 +1,10 @@
 ﻿using System.Reflection;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyDescription("Redola")]
+[assembly: AssemblyDescription("Redola is a simple C# based RPC framework.")]
 [assembly: AssemblyCompany("Dennis Gao")]
 [assembly: AssemblyProduct("Redola")]
-[assembly: AssemblyCopyright("Copyright © 2016, Dennis Gao, All rights reserved.")]
+[assembly: AssemblyCopyright("Copyright © 2015-2016 Dennis Gao")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCulture("")]
