@@ -72,6 +72,16 @@ namespace Redola.ActorModel.Framing
             }
         }
 
+        public byte[] EncodeFrame(WhereFrame frame)
+        {
+            return Encode(frame.OpCode, frame.Data, 0, frame.Data.Length, isMasked: frame.IsMasked);
+        }
+
+        public byte[] EncodeFrame(HereFrame frame)
+        {
+            return Encode(frame.OpCode, frame.Data, 0, frame.Data.Length, isMasked: frame.IsMasked);
+        }
+
         public byte[] EncodeFrame(BinaryFrame frame)
         {
             return Encode(frame.OpCode, frame.Data, frame.Offset, frame.Count, isMasked: frame.IsMasked);

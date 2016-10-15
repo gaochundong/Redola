@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Logrila.Logging;
+using Redola.ActorModel.Framing;
 
 namespace Redola.ActorModel
 {
@@ -15,20 +16,20 @@ namespace Redola.ActorModel
 
         protected override void OnActorDataReceived(object sender, ActorDataReceivedEventArgs e)
         {
-            var requestMessage = this.Decoder.DecodeEnvelope(e.Data, e.DataOffset, e.DataLength);
-            if (requestMessage.MessageType == typeof(ActorLookupRequest).Name)
+            ActorFrameHeader actorLookupRequestFrameHeader = null;
+            bool isHeaderDecoded = this.FrameBuilder.TryDecodeFrameHeader(
+                e.Data, e.DataOffset, e.DataLength,
+                out actorLookupRequestFrameHeader);
+            if (isHeaderDecoded && actorLookupRequestFrameHeader.OpCode == OpCode.Where)
             {
-                var request = this.Decoder.DecodeMessage<ActorLookupRequest>(
-                    requestMessage.MessageData, 0, requestMessage.MessageData.Length);
-                if (request != null)
-                {
-                    var response = new ActorLookupResponse();
-                    response.Actors = this.GetAllActors().ToList();
-                    var responseBuffer = this.Encoder.EncodeMessageEnvelope(response);
+                var actorCollection = new ActorDescriptionCollection();
+                actorCollection.Items.AddRange(this.GetAllActors().ToList());
+                var actorLookupResponseData = this.Encoder.EncodeMessage(actorCollection);
+                var actorLookupResponse = new HereFrame(actorLookupResponseData);
+                var actorLookupRequestBuffer = this.FrameBuilder.EncodeFrame(actorLookupResponse);
 
-                    _log.InfoFormat("Lookup actors [{0}], RemoteActor[{1}].", response.Actors.Count, e.RemoteActor);
-                    this.BeginSend(e.RemoteActor.Type, e.RemoteActor.Name, responseBuffer);
-                }
+                _log.InfoFormat("Lookup actors [{0}], RemoteActor[{1}].", actorCollection.Items.Count, e.RemoteActor);
+                this.BeginSend(e.RemoteActor.Type, e.RemoteActor.Name, actorLookupRequestBuffer);
             }
             else
             {

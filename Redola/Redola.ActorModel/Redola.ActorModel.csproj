@@ -79,8 +79,6 @@
     <Compile Include="Actor\Description\ActorDescription.cs" />
     <Compile Include="Actor\Description\ActorDescriptionCollection.cs" />
     <Compile Include="Extensions\ConcurrentDictionaryExtensions.cs" />
-    <Compile Include="Actor\Message\ActorLookupRequest.cs" />
-    <Compile Include="Actor\Message\ActorLookupResponse.cs" />
     <Compile Include="Actor\Message\Encoding\IActorMessageDecoder.cs" />
     <Compile Include="Actor\Message\Encoding\IActorMessageEncoder.cs" />
     <Compile Include="Actor\Message\Envelope\ActorMessageEnvelope.cs" />
@@ -94,14 +92,15 @@
     <Compile Include="Framing\Frame.cs" />
     <Compile Include="Framing\Header\ActorFrameHeader.cs" />
     <Compile Include="Framing\Header\OpCode.cs" />
+    <Compile Include="Framing\WhereFrame.cs" />
     <Compile Include="Framing\HelloFrame.cs" />
     <Compile Include="Framing\PingFrame.cs" />
+    <Compile Include="Framing\HereFrame.cs" />
     <Compile Include="Framing\WelcomeFrame.cs" />
     <Compile Include="Framing\PongFrame.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Actor\Message\ActorMessage.proto" />
     <None Include="Actor\Message\Envelope\ActorMessageEnvelope.proto" />
     <None Include="packages.config" />
   </ItemGroup>

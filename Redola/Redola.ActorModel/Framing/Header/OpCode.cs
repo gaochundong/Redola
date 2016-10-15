@@ -7,14 +7,18 @@
     // 2	Welcome Frame
     // 3	Ping Frame
     // 4    Pong Frame
-    // 5    Binary Frame
-    // 6-15	Unassigned
+    // 5	Where Frame
+    // 6    Here Frame
+    // 7    Binary Frame
+    // 8-15	Unassigned
     public enum OpCode : byte
     {
         Hello = 1,
         Welcome = 2,
         Ping = 3,
         Pong = 4,
-        Binary = 5,
+        Where = 5,
+        Here = 6,
+        Binary = 7,
     }
 }

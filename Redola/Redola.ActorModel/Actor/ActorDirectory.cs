@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading;
 using Logrila.Logging;
+using Redola.ActorModel.Framing;
 
 namespace Redola.ActorModel
 {
@@ -11,17 +13,23 @@ namespace Redola.ActorModel
         private ILog _log = Logger.Get<ActorDirectory>();
         private ActorDescription _centerActor;
         private IActorChannel _centerChannel;
+        private IActorFrameBuilder _frameBuilder;
         private IActorMessageEncoder _encoder;
         private IActorMessageDecoder _decoder;
 
         public ActorDirectory(
-            ActorDescription centerActor, IActorChannel centerChannel,
-            IActorMessageEncoder encoder, IActorMessageDecoder decoder)
+            ActorDescription centerActor,
+            IActorChannel centerChannel,
+            IActorFrameBuilder frameBuilder,
+            IActorMessageEncoder encoder,
+            IActorMessageDecoder decoder)
         {
             if (centerActor == null)
                 throw new ArgumentNullException("centerActor");
             if (centerChannel == null)
                 throw new ArgumentNullException("centerChannel");
+            if (frameBuilder == null)
+                throw new ArgumentNullException("frameBuilder");
             if (encoder == null)
                 throw new ArgumentNullException("encoder");
             if (decoder == null)
@@ -29,6 +37,7 @@ namespace Redola.ActorModel
 
             _centerActor = centerActor;
             _centerChannel = centerChannel;
+            _frameBuilder = frameBuilder;
             _encoder = encoder;
             _decoder = decoder;
         }
@@ -45,59 +54,45 @@ namespace Redola.ActorModel
 
         public IPEndPoint LookupRemoteActorEndPoint(string actorType, string actorName)
         {
-            var actorLookupRequest = new ActorLookupRequest();
-            var actorLookupRequestBuffer = _encoder.EncodeMessageEnvelope(actorLookupRequest);
-
-            ManualResetEventSlim waitingResponse = new ManualResetEventSlim(false);
-            ActorDataReceivedEventArgs responseEvent = null;
-            EventHandler<ActorDataReceivedEventArgs> onDataReceived =
-                (s, e) =>
+            var endpoint = LookupRemoteActorEndPoint(
+                (actors) =>
                 {
-                    responseEvent = e;
-                    waitingResponse.Set();
-                };
+                    return actors.FirstOrDefault(a => a.Type == actorType && a.Name == actorName);
+                });
 
-            _centerChannel.DataReceived += onDataReceived;
-            _centerChannel.BeginSend(_centerActor.Type, _centerActor.Name, actorLookupRequestBuffer);
+            if (endpoint == null)
+                throw new ActorNotFoundException(string.Format(
+                    "Cannot lookup remote actor, Type[{0}], Name[{1}].", actorType, actorName));
 
-            bool lookedup = waitingResponse.Wait(TimeSpan.FromSeconds(15));
-            _centerChannel.DataReceived -= onDataReceived;
-            waitingResponse.Dispose();
-
-            if (lookedup && responseEvent != null)
-            {
-                var actorLookupResponse = _decoder.DecodeEnvelopeMessage<ActorLookupResponse>(
-                    responseEvent.Data, responseEvent.DataOffset, responseEvent.DataLength);
-                var actors = actorLookupResponse.Actors;
-                if (actors != null)
-                {
-                    _log.InfoFormat("Lookup actors [{0}].", actors.Count);
-                    var actor = actors.FirstOrDefault(a => a.Type == actorType && a.Name == actorName);
-                    if (actor != null)
-                    {
-                        IPAddress actorAddress = ResolveIPAddress(actor.Address);
-                        int actorPort = int.Parse(actor.Port);
-                        var actorEndPoint = new IPEndPoint(actorAddress, actorPort);
-                        return actorEndPoint;
-                    }
-                }
-            }
-
-            throw new ActorNotFoundException(string.Format(
-                "Cannot lookup remote actor, Type[{0}], Name[{1}].", actorType, actorName));
+            return endpoint;
         }
 
         public IPEndPoint LookupRemoteActorEndPoint(string actorType)
         {
-            var actorLookupRequest = new ActorLookupRequest();
-            var actorLookupRequestBuffer = _encoder.EncodeMessageEnvelope(actorLookupRequest);
+            var endpoint = LookupRemoteActorEndPoint(
+                (actors) =>
+                {
+                    return actors.Where(a => a.Type == actorType).OrderBy(t => Guid.NewGuid()).FirstOrDefault();
+                });
+
+            if (endpoint == null)
+                throw new ActorNotFoundException(string.Format(
+                    "Cannot lookup remote actor, Type[{0}].", actorType));
+
+            return endpoint;
+        }
+
+        private IPEndPoint LookupRemoteActorEndPoint(Func<List<ActorDescription>, ActorDescription> matchActorFunc)
+        {
+            var actorLookupRequest = new WhereFrame();
+            var actorLookupRequestBuffer = _frameBuilder.EncodeFrame(actorLookupRequest);
 
             ManualResetEventSlim waitingResponse = new ManualResetEventSlim(false);
-            ActorDataReceivedEventArgs responseEvent = null;
+            ActorDataReceivedEventArgs lookupResponseEvent = null;
             EventHandler<ActorDataReceivedEventArgs> onDataReceived =
                 (s, e) =>
                 {
-                    responseEvent = e;
+                    lookupResponseEvent = e;
                     waitingResponse.Set();
                 };
 
@@ -108,27 +103,40 @@ namespace Redola.ActorModel
             _centerChannel.DataReceived -= onDataReceived;
             waitingResponse.Dispose();
 
-            if (lookedup && responseEvent != null)
+            if (lookedup && lookupResponseEvent != null)
             {
-                var actorLookupResponse = _decoder.DecodeEnvelopeMessage<ActorLookupResponse>(
-                    responseEvent.Data, responseEvent.DataOffset, responseEvent.DataLength);
-                var actors = actorLookupResponse.Actors;
-                if (actors != null)
+                ActorFrameHeader actorLookupResponseFrameHeader = null;
+                bool isHeaderDecoded = _frameBuilder.TryDecodeFrameHeader(
+                    lookupResponseEvent.Data, lookupResponseEvent.DataOffset, lookupResponseEvent.DataLength,
+                    out actorLookupResponseFrameHeader);
+                if (isHeaderDecoded && actorLookupResponseFrameHeader.OpCode == OpCode.Here)
                 {
-                    _log.InfoFormat("Lookup actors [{0}], [{1}].", actors.Count, string.Join(",", actors.Select(a => a.Type).Distinct().ToArray()));
-                    var actor = actors.Where(a => a.Type == actorType).OrderBy(t => Guid.NewGuid()).FirstOrDefault();
-                    if (actor != null)
+                    byte[] payload;
+                    int payloadOffset;
+                    int payloadCount;
+                    _frameBuilder.DecodePayload(
+                        lookupResponseEvent.Data, lookupResponseEvent.DataOffset, actorLookupResponseFrameHeader,
+                        out payload, out payloadOffset, out payloadCount);
+                    var actorLookupResponseData = _decoder.DecodeMessage<ActorDescriptionCollection>(
+                        payload, payloadOffset, payloadCount);
+
+                    var actors = actorLookupResponseData != null ? actorLookupResponseData.Items : null;
+                    if (actors != null)
                     {
-                        IPAddress actorAddress = ResolveIPAddress(actor.Address);
-                        int actorPort = int.Parse(actor.Port);
-                        var actorEndPoint = new IPEndPoint(actorAddress, actorPort);
-                        return actorEndPoint;
+                        _log.InfoFormat("Lookup actors [{0}].", actors.Count);
+                        var actor = matchActorFunc(actors);
+                        if (actor != null)
+                        {
+                            IPAddress actorAddress = ResolveIPAddress(actor.Address);
+                            int actorPort = int.Parse(actor.Port);
+                            var actorEndPoint = new IPEndPoint(actorAddress, actorPort);
+                            return actorEndPoint;
+                        }
                     }
                 }
             }
 
-            throw new ActorNotFoundException(string.Format(
-                "Cannot lookup remote actor, Type[{0}].", actorType));
+            return null;
         }
 
         private IPAddress ResolveIPAddress(string host)

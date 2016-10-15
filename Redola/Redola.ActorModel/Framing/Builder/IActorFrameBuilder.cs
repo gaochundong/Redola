@@ -6,6 +6,8 @@
         byte[] EncodeFrame(WelcomeFrame frame);
         byte[] EncodeFrame(PingFrame frame);
         byte[] EncodeFrame(PongFrame frame);
+        byte[] EncodeFrame(WhereFrame frame);
+        byte[] EncodeFrame(HereFrame frame);
         byte[] EncodeFrame(BinaryFrame frame);
 
         bool TryDecodeFrameHeader(byte[] buffer, int offset, int count, out ActorFrameHeader frameHeader);
