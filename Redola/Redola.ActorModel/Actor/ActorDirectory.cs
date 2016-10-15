@@ -46,7 +46,7 @@ namespace Redola.ActorModel
         public IPEndPoint LookupRemoteActorEndPoint(string actorType, string actorName)
         {
             var actorLookupRequest = new ActorLookupRequest();
-            var actorLookupRequestBuffer = _encoder.Encode(actorLookupRequest);
+            var actorLookupRequestBuffer = _encoder.EncodeMessageEnvelope(actorLookupRequest);
 
             ManualResetEventSlim waitingResponse = new ManualResetEventSlim(false);
             ActorDataReceivedEventArgs responseEvent = null;
@@ -66,7 +66,7 @@ namespace Redola.ActorModel
 
             if (lookedup && responseEvent != null)
             {
-                var actorLookupResponse = _decoder.Decode<ActorLookupResponse>(
+                var actorLookupResponse = _decoder.DecodeEnvelopeMessage<ActorLookupResponse>(
                     responseEvent.Data, responseEvent.DataOffset, responseEvent.DataLength);
                 var actors = actorLookupResponse.Actors;
                 if (actors != null)
@@ -90,7 +90,7 @@ namespace Redola.ActorModel
         public IPEndPoint LookupRemoteActorEndPoint(string actorType)
         {
             var actorLookupRequest = new ActorLookupRequest();
-            var actorLookupRequestBuffer = _encoder.Encode(actorLookupRequest);
+            var actorLookupRequestBuffer = _encoder.EncodeMessageEnvelope(actorLookupRequest);
 
             ManualResetEventSlim waitingResponse = new ManualResetEventSlim(false);
             ActorDataReceivedEventArgs responseEvent = null;
@@ -110,7 +110,7 @@ namespace Redola.ActorModel
 
             if (lookedup && responseEvent != null)
             {
-                var actorLookupResponse = _decoder.Decode<ActorLookupResponse>(
+                var actorLookupResponse = _decoder.DecodeEnvelopeMessage<ActorLookupResponse>(
                     responseEvent.Data, responseEvent.DataOffset, responseEvent.DataLength);
                 var actors = actorLookupResponse.Actors;
                 if (actors != null)

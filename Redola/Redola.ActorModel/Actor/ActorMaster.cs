@@ -24,7 +24,7 @@ namespace Redola.ActorModel
                 {
                     var response = new ActorLookupResponse();
                     response.Actors = this.GetAllActors().ToList();
-                    var responseBuffer = this.Encoder.Encode(response);
+                    var responseBuffer = this.Encoder.EncodeMessageEnvelope(response);
 
                     _log.InfoFormat("Lookup actors [{0}], RemoteActor[{1}].", response.Actors.Count, e.RemoteActor);
                     this.BeginSend(e.RemoteActor.Type, e.RemoteActor.Name, responseBuffer);

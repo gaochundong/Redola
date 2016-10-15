@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Linq;
 using Logrila.Logging;
 using Redola.ActorModel.Extensions;
+using Redola.ActorModel.Framing;
 
 namespace Redola.ActorModel
 {
@@ -11,19 +12,25 @@ namespace Redola.ActorModel
         private ILog _log = Logger.Get<ActorListenerChannel>();
         private ActorDescription _localActor = null;
         private ActorTransportListener _listener = null;
+        private IActorFrameBuilder _frameBuilder;
         private IActorMessageEncoder _encoder;
         private IActorMessageDecoder _decoder;
         private ConcurrentDictionary<string, ActorDescription> _remoteActors = new ConcurrentDictionary<string, ActorDescription>(); // SessionKey -> Actor
         private ConcurrentDictionary<string, string> _actorKeys = new ConcurrentDictionary<string, string>(); // ActorKey -> SessionKey
 
         public ActorListenerChannel(
-            ActorDescription localActor, ActorTransportListener localListener,
-            IActorMessageEncoder encoder, IActorMessageDecoder decoder)
+            ActorDescription localActor, 
+            ActorTransportListener localListener,
+            IActorFrameBuilder frameBuilder,
+            IActorMessageEncoder encoder, 
+            IActorMessageDecoder decoder)
         {
             if (localActor == null)
                 throw new ArgumentNullException("localActor");
             if (localListener == null)
                 throw new ArgumentNullException("localListener");
+            if (frameBuilder == null)
+                throw new ArgumentNullException("frameBuilder");
             if (encoder == null)
                 throw new ArgumentNullException("encoder");
             if (decoder == null)
@@ -31,6 +38,7 @@ namespace Redola.ActorModel
 
             _localActor = localActor;
             _listener = localListener;
+            _frameBuilder = frameBuilder;
             _encoder = encoder;
             _decoder = decoder;
         }
@@ -72,7 +80,7 @@ namespace Redola.ActorModel
 
         private void Handshake(ActorTransportDataReceivedEventArgs e)
         {
-            var actorHandshakeRequest = _decoder.Decode<ActorHandshakeRequest>(e.Data, e.DataOffset, e.DataLength);
+            var actorHandshakeRequest = _decoder.DecodeEnvelopeMessage<ActorHandshakeRequest>(e.Data, e.DataOffset, e.DataLength);
             var remoteActor = actorHandshakeRequest.ActorDescription;
             if (remoteActor == null)
             {
@@ -85,7 +93,7 @@ namespace Redola.ActorModel
                 {
                     ActorDescription = _localActor,
                 };
-                var actorHandshakeResponseBuffer = _encoder.Encode(actorHandshakeResponse);
+                var actorHandshakeResponseBuffer = _encoder.EncodeMessageEnvelope(actorHandshakeResponse);
                 _listener.BeginSendTo(e.SessionKey, actorHandshakeResponseBuffer);
 
                 _log.InfoFormat("Handshake with remote [{0}] successfully, SessionKey[{1}].", remoteActor, e.SessionKey);

@@ -22,7 +22,7 @@ namespace Redola.ActorModel.Framing
     // + - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - +
     // |                     Payload Data continued ...                |
     // +---------------------------------------------------------------+
-    public class ActorFrameBuilder
+    public class ActorFrameBuilder : IActorFrameBuilder
     {
         private static readonly byte[] EmptyArray = new byte[0];
         private static readonly Random _rng = new Random(DateTime.UtcNow.Millisecond);

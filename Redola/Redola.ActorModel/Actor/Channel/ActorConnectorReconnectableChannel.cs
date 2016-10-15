@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using Logrila.Logging;
+using Redola.ActorModel.Framing;
 
 namespace Redola.ActorModel
 {
@@ -11,9 +12,12 @@ namespace Redola.ActorModel
         private readonly object _retryLock = new object();
 
         public ActorConnectorReconnectableChannel(
-            ActorDescription localActor, ActorTransportConnector remoteConnector,
-            IActorMessageEncoder encoder, IActorMessageDecoder decoder)
-            : base(localActor, remoteConnector, encoder, decoder)
+            ActorDescription localActor, 
+            ActorTransportConnector remoteConnector,
+            IActorFrameBuilder frameBuilder,
+            IActorMessageEncoder encoder, 
+            IActorMessageDecoder decoder)
+            : base(localActor, remoteConnector, frameBuilder, encoder, decoder)
         {
             this.RetryPeriod = TimeSpan.FromSeconds(15);
         }

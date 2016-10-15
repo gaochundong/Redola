@@ -1,4 +1,5 @@
 ﻿using System;
+using Redola.ActorModel.Framing;
 
 namespace Redola.ActorModel
 {
@@ -15,6 +16,7 @@ namespace Redola.ActorModel
         public const string ActorPortKey = @"ActorPort";
 
         private ActorConfigurationReader _configReader = ActorConfigurationReader.Singleton();
+        private IActorFrameBuilder _frameBuilder;
         private IActorMessageEncoder _encoder;
         private IActorMessageDecoder _decoder;
         private ActorDescription _centerActor;
@@ -31,6 +33,7 @@ namespace Redola.ActorModel
             _decoder = decoder;
         }
 
+        public IActorFrameBuilder FrameBuilder { get { return _frameBuilder; } }
         public IActorMessageEncoder Encoder { get { return _encoder; } }
         public IActorMessageDecoder Decoder { get { return _decoder; } }
         public ActorDescription CenterActor { get { return _centerActor; } }
@@ -38,6 +41,7 @@ namespace Redola.ActorModel
 
         public void Build()
         {
+            _frameBuilder = new ActorFrameBuilder();
             _centerActor = BuildCenterActor();
             _localActor = BuildLocalActor();
         }

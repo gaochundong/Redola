@@ -3,6 +3,7 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Logrila.Logging;
+using Redola.ActorModel.Framing;
 
 namespace Redola.ActorModel
 {
@@ -12,18 +13,24 @@ namespace Redola.ActorModel
         private ActorDescription _localActor;
         private ActorDescription _remoteActor;
         private ActorTransportConnector _connector;
+        private IActorFrameBuilder _frameBuilder;
         private IActorMessageEncoder _encoder;
         private IActorMessageDecoder _decoder;
         private bool _isHandshaked = false;
 
         public ActorConnectorChannel(
-            ActorDescription localActor, ActorTransportConnector remoteConnector,
-            IActorMessageEncoder encoder, IActorMessageDecoder decoder)
+            ActorDescription localActor, 
+            ActorTransportConnector remoteConnector,
+            IActorFrameBuilder frameBuilder,
+            IActorMessageEncoder encoder, 
+            IActorMessageDecoder decoder)
         {
             if (localActor == null)
                 throw new ArgumentNullException("localActor");
             if (remoteConnector == null)
                 throw new ArgumentNullException("remoteConnector");
+            if (frameBuilder == null)
+                throw new ArgumentNullException("frameBuilder");
             if (encoder == null)
                 throw new ArgumentNullException("encoder");
             if (decoder == null)
@@ -31,6 +38,7 @@ namespace Redola.ActorModel
 
             _localActor = localActor;
             _connector = remoteConnector;
+            _frameBuilder = frameBuilder;
             _encoder = encoder;
             _decoder = decoder;
         }
@@ -127,7 +135,7 @@ namespace Redola.ActorModel
             {
                 ActorDescription = _localActor,
             };
-            var actorHandshakeRequestBuffer = _encoder.Encode(actorHandshakeRequest);
+            var actorHandshakeRequestBuffer = _encoder.EncodeMessageEnvelope(actorHandshakeRequest);
 
             ManualResetEventSlim waitingHandshaked = new ManualResetEventSlim(false);
             ActorTransportDataReceivedEventArgs handshakeResponseEvent = null;
@@ -148,7 +156,7 @@ namespace Redola.ActorModel
 
             if (handshaked && handshakeResponseEvent != null)
             {
-                var actorHandshakeResponse = _decoder.Decode<ActorHandshakeResponse>(
+                var actorHandshakeResponse = _decoder.DecodeEnvelopeMessage<ActorHandshakeResponse>(
                     handshakeResponseEvent.Data, handshakeResponseEvent.DataOffset, handshakeResponseEvent.DataLength);
                 _remoteActor = actorHandshakeResponse.ActorDescription;
                 _log.InfoFormat("Handshake response from remote actor [{0}].", _remoteActor);

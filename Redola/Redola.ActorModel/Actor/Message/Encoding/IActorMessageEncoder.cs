@@ -3,6 +3,6 @@
     public interface IActorMessageEncoder
     {
         byte[] EncodeMessage<T>(T messageData);
-        byte[] Encode<T>(T messageData);
+        byte[] EncodeMessageEnvelope<T>(T messageData);
     }
 }

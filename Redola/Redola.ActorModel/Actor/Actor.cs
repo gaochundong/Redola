@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using Logrila.Logging;
+using Redola.ActorModel.Framing;
 
 namespace Redola.ActorModel
 {
@@ -22,6 +23,7 @@ namespace Redola.ActorModel
             _configuration = configuration;
         }
 
+        public IActorFrameBuilder FrameBuilder { get { return _configuration.FrameBuilder; } }
         public IActorMessageEncoder Encoder { get { return _configuration.Encoder; } }
         public IActorMessageDecoder Decoder { get { return _configuration.Decoder; } }
         public ActorDescription CenterActor { get { return _configuration.CenterActor; } }
@@ -48,7 +50,7 @@ namespace Redola.ActorModel
 
             var centerChannel = BuildActorCenterChannel(this.CenterActor, this.LocalActor);
             _directory = new ActorDirectory(this.CenterActor, centerChannel, this.Encoder, this.Decoder);
-            _factory = new ActorChannelFactory(_directory, this.Encoder, this.Decoder);
+            _factory = new ActorChannelFactory(_directory, this.FrameBuilder, this.Encoder, this.Decoder);
             _manager = new ActorChannelManager(_factory);
             _manager.Connected += OnActorConnected;
             _manager.Disconnected += OnActorDisconnected;
@@ -89,7 +91,8 @@ namespace Redola.ActorModel
             var actorCenterEndPoint = new IPEndPoint(actorCenterAddress, actorCenterPort);
 
             var centerConnector = new ActorTransportConnector(actorCenterEndPoint);
-            var centerChannel = new ActorConnectorReconnectableChannel(localActor, centerConnector, this.Encoder, this.Decoder);
+            var centerChannel = new ActorConnectorReconnectableChannel(
+                localActor, centerConnector, this.FrameBuilder, this.Encoder, this.Decoder);
 
             return centerChannel;
         }

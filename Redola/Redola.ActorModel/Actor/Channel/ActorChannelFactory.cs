@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using Logrila.Logging;
+using Redola.ActorModel.Framing;
 
 namespace Redola.ActorModel
 {
@@ -8,21 +9,27 @@ namespace Redola.ActorModel
     {
         private ILog _log = Logger.Get<ActorChannelFactory>();
         private ActorDirectory _directory;
+        private IActorFrameBuilder _frameBuilder;
         private IActorMessageEncoder _encoder;
         private IActorMessageDecoder _decoder;
 
         public ActorChannelFactory(
-            ActorDirectory directory, 
-            IActorMessageEncoder encoder, IActorMessageDecoder decoder)
+            ActorDirectory directory,
+            IActorFrameBuilder frameBuilder,
+            IActorMessageEncoder encoder, 
+            IActorMessageDecoder decoder)
         {
             if (directory == null)
                 throw new ArgumentNullException("directory");
+            if (frameBuilder == null)
+                throw new ArgumentNullException("frameBuilder");
             if (encoder == null)
                 throw new ArgumentNullException("encoder");
             if (decoder == null)
                 throw new ArgumentNullException("decoder");
 
             _directory = directory;
+            _frameBuilder = frameBuilder;
             _encoder = encoder;
             _decoder = decoder;
         }
@@ -39,7 +46,12 @@ namespace Redola.ActorModel
                     "Invalid local actor port, [{0}].", localActor));
 
             var localEndPoint = new IPEndPoint(IPAddress.Any, localPort);
-            var channel = new ActorListenerChannel(localActor, new ActorTransportListener(localEndPoint), _encoder, _decoder);
+            var channel = new ActorListenerChannel(
+                localActor, 
+                new ActorTransportListener(localEndPoint),
+                _frameBuilder,
+                _encoder, 
+                _decoder);
 
             return channel;
         }
@@ -51,7 +63,12 @@ namespace Redola.ActorModel
                 throw new ActorNotFoundException(string.Format(
                     "Cannot find remote actor endpoint, Type[{0}], Name[{1}].", remoteActorType, remoteActorName));
 
-            var channel = new ActorConnectorChannel(localActor, new ActorTransportConnector(actorEndPoint), _encoder, _decoder);
+            var channel = new ActorConnectorChannel(
+                localActor, 
+                new ActorTransportConnector(actorEndPoint),
+                _frameBuilder,
+                _encoder, 
+                _decoder);
 
             return channel;
         }
@@ -63,7 +80,12 @@ namespace Redola.ActorModel
                 throw new ActorNotFoundException(string.Format(
                     "Cannot find remote actor endpoint, Type[{0}].", remoteActorType));
 
-            var channel = new ActorConnectorChannel(localActor, new ActorTransportConnector(actorEndPoint), _encoder, _decoder);
+            var channel = new ActorConnectorChannel(
+                localActor, 
+                new ActorTransportConnector(actorEndPoint),
+                _frameBuilder,
+                _encoder, 
+                _decoder);
 
             return channel;
         }
