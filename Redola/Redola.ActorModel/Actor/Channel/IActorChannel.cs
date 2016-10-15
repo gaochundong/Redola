@@ -22,5 +22,9 @@ namespace Redola.ActorModel
         void Send(string actorType, byte[] data, int offset, int count);
         void BeginSend(string actorType, byte[] data);
         void BeginSend(string actorType, byte[] data, int offset, int count);
+
+        IAsyncResult BeginSend(string actorType, string actorName, byte[] data, AsyncCallback callback, object state);
+        IAsyncResult BeginSend(string actorType, string actorName, byte[] data, int offset, int count, AsyncCallback callback, object state);
+        void EndSend(string actorType, string actorName, IAsyncResult asyncResult);
     }
 }
