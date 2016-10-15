@@ -96,7 +96,9 @@
     <Compile Include="Framing\Frame.cs" />
     <Compile Include="Framing\Header\ActorFrameHeader.cs" />
     <Compile Include="Framing\Header\OpCode.cs" />
+    <Compile Include="Framing\HelloFrame.cs" />
     <Compile Include="Framing\PingFrame.cs" />
+    <Compile Include="Framing\WelcomeFrame.cs" />
     <Compile Include="Framing\PongFrame.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

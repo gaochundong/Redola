@@ -4,7 +4,7 @@ namespace Redola.ActorModel.Framing
 {
     public sealed class BinaryFrame : DataFrame
     {
-        public BinaryFrame(ArraySegment<byte> segment, bool isMasked = true)
+        public BinaryFrame(ArraySegment<byte> segment, bool isMasked = false)
         {
             ValidateArraySegment(segment, "segment");
 
@@ -14,7 +14,7 @@ namespace Redola.ActorModel.Framing
             this.IsMasked = isMasked;
         }
 
-        public BinaryFrame(byte[] data, int offset, int count, bool isMasked = true)
+        public BinaryFrame(byte[] data, int offset, int count, bool isMasked = false)
         {
             ValidateBuffer(data, offset, count, "data");
 

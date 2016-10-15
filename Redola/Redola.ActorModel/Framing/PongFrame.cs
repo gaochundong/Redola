@@ -4,12 +4,12 @@ namespace Redola.ActorModel.Framing
 {
     public sealed class PongFrame : ControlFrame
     {
-        public PongFrame(bool isMasked = true)
+        public PongFrame(bool isMasked = false)
         {
             this.IsMasked = isMasked;
         }
 
-        public PongFrame(string data, bool isMasked = true)
+        public PongFrame(string data, bool isMasked = false)
             : this(isMasked)
         {
             this.Data = data;

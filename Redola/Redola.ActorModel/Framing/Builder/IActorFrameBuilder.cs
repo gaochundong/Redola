@@ -2,6 +2,8 @@
 {
     public interface IActorFrameBuilder
     {
+        byte[] EncodeFrame(HelloFrame frame);
+        byte[] EncodeFrame(WelcomeFrame frame);
         byte[] EncodeFrame(PingFrame frame);
         byte[] EncodeFrame(PongFrame frame);
         byte[] EncodeFrame(BinaryFrame frame);

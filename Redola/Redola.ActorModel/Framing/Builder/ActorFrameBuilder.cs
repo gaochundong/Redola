@@ -32,6 +32,16 @@ namespace Redola.ActorModel.Framing
         {
         }
 
+        public byte[] EncodeFrame(HelloFrame frame)
+        {
+            return Encode(frame.OpCode, frame.Data, 0, frame.Data.Length, isMasked: frame.IsMasked);
+        }
+
+        public byte[] EncodeFrame(WelcomeFrame frame)
+        {
+            return Encode(frame.OpCode, frame.Data, 0, frame.Data.Length, isMasked: frame.IsMasked);
+        }
+
         public byte[] EncodeFrame(PingFrame frame)
         {
             if (!string.IsNullOrEmpty(frame.Data))
