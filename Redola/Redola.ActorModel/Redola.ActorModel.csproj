@@ -99,22 +99,15 @@
     <Compile Include="Framing\PingFrame.cs" />
     <Compile Include="Framing\PongFrame.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RouteActor\BlockingActorMessageHandlerBase.cs" />
-    <Compile Include="RouteActor\BlockingCallbackHolder.cs" />
-    <Compile Include="RouteActor\BlockingRouteActor.cs" />
-    <Compile Include="RouteActor\IActorMessageHandler.cs" />
-    <Compile Include="RouteActor\IBlockingActorMessageHandler.cs" />
-    <Compile Include="RouteActor\IRouteActorMessageHandler.cs" />
-    <Compile Include="RouteActor\MessageHandleStrategy.cs" />
-    <Compile Include="RouteActor\RouteActor.cs" />
-    <Compile Include="RouteActor\RouteActorMessageHandlerBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Actor\Message\ActorMessage.proto" />
     <None Include="Actor\Message\Envelope\ActorMessageEnvelope.proto" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="RouteActor\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
