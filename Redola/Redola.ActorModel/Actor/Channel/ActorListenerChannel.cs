@@ -19,10 +19,10 @@ namespace Redola.ActorModel
         private ConcurrentDictionary<string, string> _actorKeys = new ConcurrentDictionary<string, string>(); // ActorKey -> SessionKey
 
         public ActorListenerChannel(
-            ActorDescription localActor, 
+            ActorDescription localActor,
             ActorTransportListener localListener,
             IActorFrameBuilder frameBuilder,
-            IActorMessageEncoder encoder, 
+            IActorMessageEncoder encoder,
             IActorMessageDecoder decoder)
         {
             if (localActor == null)
@@ -80,8 +80,25 @@ namespace Redola.ActorModel
 
         private void Handshake(ActorTransportDataReceivedEventArgs e)
         {
-            var actorHandshakeRequest = _decoder.DecodeEnvelopeMessage<ActorHandshakeRequest>(e.Data, e.DataOffset, e.DataLength);
-            var remoteActor = actorHandshakeRequest.ActorDescription;
+            ActorDescription remoteActor = null;
+            ActorFrameHeader actorHandshakeRequestFrameHeader = null;
+            bool isHeaderDecoded = _frameBuilder.TryDecodeFrameHeader(
+                e.Data, e.DataOffset, e.DataLength,
+                out actorHandshakeRequestFrameHeader);
+            if (isHeaderDecoded && actorHandshakeRequestFrameHeader.OpCode == OpCode.Hello)
+            {
+                byte[] payload;
+                int payloadOffset;
+                int payloadCount;
+                _frameBuilder.DecodePayload(
+                    e.Data, e.DataOffset, actorHandshakeRequestFrameHeader,
+                    out payload, out payloadOffset, out payloadCount);
+                var actorHandshakeRequestData = _decoder.DecodeMessage<ActorDescription>(
+                    payload, payloadOffset, payloadCount);
+
+                remoteActor = actorHandshakeRequestData;
+            }
+
             if (remoteActor == null)
             {
                 _log.ErrorFormat("Handshake with remote [{0}] failed, invalid actor description.", e.SessionKey);
@@ -89,11 +106,10 @@ namespace Redola.ActorModel
             }
             else
             {
-                var actorHandshakeResponse = new ActorHandshakeResponse()
-                {
-                    ActorDescription = _localActor,
-                };
-                var actorHandshakeResponseBuffer = _encoder.EncodeMessageEnvelope(actorHandshakeResponse);
+                var actorHandshakeResponseData = _encoder.EncodeMessage(_localActor);
+                var actorHandshakeResponse = new WelcomeFrame(actorHandshakeResponseData);
+                var actorHandshakeResponseBuffer = _frameBuilder.EncodeFrame(actorHandshakeResponse);
+
                 _listener.BeginSendTo(e.SessionKey, actorHandshakeResponseBuffer);
 
                 _log.InfoFormat("Handshake with remote [{0}] successfully, SessionKey[{1}].", remoteActor, e.SessionKey);

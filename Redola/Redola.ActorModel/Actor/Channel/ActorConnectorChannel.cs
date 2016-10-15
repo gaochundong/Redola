@@ -19,10 +19,10 @@ namespace Redola.ActorModel
         private bool _isHandshaked = false;
 
         public ActorConnectorChannel(
-            ActorDescription localActor, 
+            ActorDescription localActor,
             ActorTransportConnector remoteConnector,
             IActorFrameBuilder frameBuilder,
-            IActorMessageEncoder encoder, 
+            IActorMessageEncoder encoder,
             IActorMessageDecoder decoder)
         {
             if (localActor == null)
@@ -131,11 +131,9 @@ namespace Redola.ActorModel
 
         private void Handshake(TimeSpan timeout)
         {
-            var actorHandshakeRequest = new ActorHandshakeRequest()
-            {
-                ActorDescription = _localActor,
-            };
-            var actorHandshakeRequestBuffer = _encoder.EncodeMessageEnvelope(actorHandshakeRequest);
+            var actorHandshakeRequestData = _encoder.EncodeMessage(_localActor);
+            var actorHandshakeRequest = new HelloFrame(actorHandshakeRequestData);
+            var actorHandshakeRequestBuffer = _frameBuilder.EncodeFrame(actorHandshakeRequest);
 
             ManualResetEventSlim waitingHandshaked = new ManualResetEventSlim(false);
             ActorTransportDataReceivedEventArgs handshakeResponseEvent = null;
@@ -156,10 +154,25 @@ namespace Redola.ActorModel
 
             if (handshaked && handshakeResponseEvent != null)
             {
-                var actorHandshakeResponse = _decoder.DecodeEnvelopeMessage<ActorHandshakeResponse>(
-                    handshakeResponseEvent.Data, handshakeResponseEvent.DataOffset, handshakeResponseEvent.DataLength);
-                _remoteActor = actorHandshakeResponse.ActorDescription;
-                _log.InfoFormat("Handshake response from remote actor [{0}].", _remoteActor);
+                ActorFrameHeader actorHandshakeResponseFrameHeader = null;
+                bool isHeaderDecoded = _frameBuilder.TryDecodeFrameHeader(
+                    handshakeResponseEvent.Data, handshakeResponseEvent.DataOffset, handshakeResponseEvent.DataLength,
+                    out actorHandshakeResponseFrameHeader);
+                if (isHeaderDecoded && actorHandshakeResponseFrameHeader.OpCode == OpCode.Welcome)
+                {
+                    byte[] payload;
+                    int payloadOffset;
+                    int payloadCount;
+                    _frameBuilder.DecodePayload(
+                        handshakeResponseEvent.Data, handshakeResponseEvent.DataOffset, actorHandshakeResponseFrameHeader,
+                        out payload, out payloadOffset, out payloadCount);
+                    var actorHandshakeResponseData = _decoder.DecodeMessage<ActorDescription>(
+                        payload, payloadOffset, payloadCount);
+
+                    _remoteActor = actorHandshakeResponseData;
+                    _log.InfoFormat("Handshake response from remote actor [{0}].", _remoteActor);
+                }
+
                 if (_remoteActor == null)
                 {
                     _log.ErrorFormat("Handshake with remote [{0}] failed, invalid actor description.", this.ConnectToEndPoint);

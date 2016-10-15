@@ -79,8 +79,6 @@
     <Compile Include="Actor\Description\ActorDescription.cs" />
     <Compile Include="Actor\Description\ActorDescriptionCollection.cs" />
     <Compile Include="Extensions\ConcurrentDictionaryExtensions.cs" />
-    <Compile Include="Actor\Message\ActorHandshakeRequest.cs" />
-    <Compile Include="Actor\Message\ActorHandshakeResponse.cs" />
     <Compile Include="Actor\Message\ActorLookupRequest.cs" />
     <Compile Include="Actor\Message\ActorLookupResponse.cs" />
     <Compile Include="Actor\Message\Encoding\IActorMessageDecoder.cs" />
