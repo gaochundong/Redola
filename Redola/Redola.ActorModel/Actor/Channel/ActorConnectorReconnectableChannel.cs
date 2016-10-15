@@ -14,10 +14,8 @@ namespace Redola.ActorModel
         public ActorConnectorReconnectableChannel(
             ActorDescription localActor, 
             ActorTransportConnector remoteConnector,
-            IActorFrameBuilder frameBuilder,
-            IActorMessageEncoder encoder, 
-            IActorMessageDecoder decoder)
-            : base(localActor, remoteConnector, frameBuilder, encoder, decoder)
+            IActorFrameBuilder frameBuilder)
+            : base(localActor, remoteConnector, frameBuilder)
         {
             this.RetryPeriod = TimeSpan.FromSeconds(15);
         }

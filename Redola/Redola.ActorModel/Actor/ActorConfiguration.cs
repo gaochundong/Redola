@@ -17,25 +17,14 @@ namespace Redola.ActorModel
 
         private ActorConfigurationReader _configReader = ActorConfigurationReader.Singleton();
         private IActorFrameBuilder _frameBuilder;
-        private IActorMessageEncoder _encoder;
-        private IActorMessageDecoder _decoder;
         private ActorDescription _centerActor;
         private ActorDescription _localActor;
 
-        public ActorConfiguration(IActorMessageEncoder encoder, IActorMessageDecoder decoder)
+        public ActorConfiguration()
         {
-            if (encoder == null)
-                throw new ArgumentNullException("encoder");
-            if (decoder == null)
-                throw new ArgumentNullException("decoder");
-
-            _encoder = encoder;
-            _decoder = decoder;
         }
 
         public IActorFrameBuilder FrameBuilder { get { return _frameBuilder; } }
-        public IActorMessageEncoder Encoder { get { return _encoder; } }
-        public IActorMessageDecoder Decoder { get { return _decoder; } }
         public ActorDescription CenterActor { get { return _centerActor; } }
         public ActorDescription LocalActor { get { return _localActor; } }
 

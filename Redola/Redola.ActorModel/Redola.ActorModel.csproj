@@ -38,10 +38,6 @@
       <HintPath>..\packages\Logrila.Logging.1.0.1.0\lib\net46\Logrila.Logging.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="protobuf-net, Version=2.1.0.0, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
-      <HintPath>..\packages\protobuf-net.2.1.0\lib\net451\protobuf-net.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -78,11 +74,11 @@
     <Compile Include="Actor\Channel\Transport\EventArgs\ActorTransportDisconnectedEventArgs.cs" />
     <Compile Include="Actor\Description\ActorDescription.cs" />
     <Compile Include="Actor\Description\ActorDescriptionCollection.cs" />
+    <Compile Include="Serialization\Compression\GZipCompression.cs" />
+    <Compile Include="Serialization\IMessageDecoder.cs" />
+    <Compile Include="Serialization\IMessageEncoder.cs" />
+    <Compile Include="Serialization\Xml\XmlConvert.cs" />
     <Compile Include="Extensions\ConcurrentDictionaryExtensions.cs" />
-    <Compile Include="Actor\Message\Encoding\IActorMessageDecoder.cs" />
-    <Compile Include="Actor\Message\Encoding\IActorMessageEncoder.cs" />
-    <Compile Include="Actor\Message\Envelope\ActorMessageEnvelope.cs" />
-    <Compile Include="Actor\Message\Envelope\IActorMessageEnvelope.cs" />
     <Compile Include="Framing\BinaryFrame.cs" />
     <Compile Include="Framing\Builder\ActorFrameBuilder.cs" />
     <Compile Include="Framing\Builder\ActorFrameException.cs" />
@@ -99,14 +95,13 @@
     <Compile Include="Framing\WelcomeFrame.cs" />
     <Compile Include="Framing\PongFrame.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Serialization\Xml\XmlMessageDecoder.cs" />
+    <Compile Include="Serialization\Xml\XmlMessageEncoder.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Actor\Message\Envelope\ActorMessageEnvelope.proto" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="RouteActor\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

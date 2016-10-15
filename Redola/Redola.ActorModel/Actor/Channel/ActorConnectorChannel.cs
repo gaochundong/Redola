@@ -14,16 +14,12 @@ namespace Redola.ActorModel
         private ActorDescription _remoteActor;
         private ActorTransportConnector _connector;
         private IActorFrameBuilder _frameBuilder;
-        private IActorMessageEncoder _encoder;
-        private IActorMessageDecoder _decoder;
         private bool _isHandshaked = false;
 
         public ActorConnectorChannel(
             ActorDescription localActor,
             ActorTransportConnector remoteConnector,
-            IActorFrameBuilder frameBuilder,
-            IActorMessageEncoder encoder,
-            IActorMessageDecoder decoder)
+            IActorFrameBuilder frameBuilder)
         {
             if (localActor == null)
                 throw new ArgumentNullException("localActor");
@@ -31,16 +27,10 @@ namespace Redola.ActorModel
                 throw new ArgumentNullException("remoteConnector");
             if (frameBuilder == null)
                 throw new ArgumentNullException("frameBuilder");
-            if (encoder == null)
-                throw new ArgumentNullException("encoder");
-            if (decoder == null)
-                throw new ArgumentNullException("decoder");
 
             _localActor = localActor;
             _connector = remoteConnector;
             _frameBuilder = frameBuilder;
-            _encoder = encoder;
-            _decoder = decoder;
         }
 
         public bool Active

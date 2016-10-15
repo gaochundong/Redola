@@ -14,15 +14,11 @@ namespace Redola.ActorModel
         private ActorDescription _centerActor;
         private IActorChannel _centerChannel;
         private IActorFrameBuilder _frameBuilder;
-        private IActorMessageEncoder _encoder;
-        private IActorMessageDecoder _decoder;
 
         public ActorDirectory(
             ActorDescription centerActor,
             IActorChannel centerChannel,
-            IActorFrameBuilder frameBuilder,
-            IActorMessageEncoder encoder,
-            IActorMessageDecoder decoder)
+            IActorFrameBuilder frameBuilder)
         {
             if (centerActor == null)
                 throw new ArgumentNullException("centerActor");
@@ -30,16 +26,10 @@ namespace Redola.ActorModel
                 throw new ArgumentNullException("centerChannel");
             if (frameBuilder == null)
                 throw new ArgumentNullException("frameBuilder");
-            if (encoder == null)
-                throw new ArgumentNullException("encoder");
-            if (decoder == null)
-                throw new ArgumentNullException("decoder");
 
             _centerActor = centerActor;
             _centerChannel = centerChannel;
             _frameBuilder = frameBuilder;
-            _encoder = encoder;
-            _decoder = decoder;
         }
 
         public ActorDescription GetCenterActor()

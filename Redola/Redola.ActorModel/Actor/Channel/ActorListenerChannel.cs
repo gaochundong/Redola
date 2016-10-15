@@ -13,17 +13,13 @@ namespace Redola.ActorModel
         private ActorDescription _localActor = null;
         private ActorTransportListener _listener = null;
         private IActorFrameBuilder _frameBuilder;
-        private IActorMessageEncoder _encoder;
-        private IActorMessageDecoder _decoder;
         private ConcurrentDictionary<string, ActorDescription> _remoteActors = new ConcurrentDictionary<string, ActorDescription>(); // SessionKey -> Actor
         private ConcurrentDictionary<string, string> _actorKeys = new ConcurrentDictionary<string, string>(); // ActorKey -> SessionKey
 
         public ActorListenerChannel(
             ActorDescription localActor,
             ActorTransportListener localListener,
-            IActorFrameBuilder frameBuilder,
-            IActorMessageEncoder encoder,
-            IActorMessageDecoder decoder)
+            IActorFrameBuilder frameBuilder)
         {
             if (localActor == null)
                 throw new ArgumentNullException("localActor");
@@ -31,16 +27,10 @@ namespace Redola.ActorModel
                 throw new ArgumentNullException("localListener");
             if (frameBuilder == null)
                 throw new ArgumentNullException("frameBuilder");
-            if (encoder == null)
-                throw new ArgumentNullException("encoder");
-            if (decoder == null)
-                throw new ArgumentNullException("decoder");
 
             _localActor = localActor;
             _listener = localListener;
             _frameBuilder = frameBuilder;
-            _encoder = encoder;
-            _decoder = decoder;
         }
 
         public bool Active

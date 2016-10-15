@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
-using ProtoBuf;
+﻿using System;
+using System.Collections.Generic;
+using System.Xml.Serialization;
 
 namespace Redola.ActorModel
 {
-    [ProtoContract]
+    [Serializable]
+    [XmlRoot]
     public class ActorDescriptionCollection
     {
         public ActorDescriptionCollection()
@@ -11,7 +13,7 @@ namespace Redola.ActorModel
             Items = new List<ActorDescription>();
         }
 
-        [ProtoMember(10)]
+        [XmlArray]
         public List<ActorDescription> Items { get; set; }
     }
 }

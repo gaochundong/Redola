@@ -24,8 +24,6 @@ namespace Redola.ActorModel
         }
 
         public IActorFrameBuilder FrameBuilder { get { return _configuration.FrameBuilder; } }
-        public IActorMessageEncoder Encoder { get { return _configuration.Encoder; } }
-        public IActorMessageDecoder Decoder { get { return _configuration.Decoder; } }
         public ActorDescription CenterActor { get { return _configuration.CenterActor; } }
         public ActorDescription LocalActor { get { return _configuration.LocalActor; } }
         public string Type { get { return this.LocalActor.Type; } }

@@ -10,28 +10,18 @@ namespace Redola.ActorModel
         private ILog _log = Logger.Get<ActorChannelFactory>();
         private ActorDirectory _directory;
         private IActorFrameBuilder _frameBuilder;
-        private IActorMessageEncoder _encoder;
-        private IActorMessageDecoder _decoder;
 
         public ActorChannelFactory(
             ActorDirectory directory,
-            IActorFrameBuilder frameBuilder,
-            IActorMessageEncoder encoder, 
-            IActorMessageDecoder decoder)
+            IActorFrameBuilder frameBuilder)
         {
             if (directory == null)
                 throw new ArgumentNullException("directory");
             if (frameBuilder == null)
                 throw new ArgumentNullException("frameBuilder");
-            if (encoder == null)
-                throw new ArgumentNullException("encoder");
-            if (decoder == null)
-                throw new ArgumentNullException("decoder");
 
             _directory = directory;
             _frameBuilder = frameBuilder;
-            _encoder = encoder;
-            _decoder = decoder;
         }
 
         public IActorChannel BuildLocalActor(ActorDescription localActor)
@@ -49,9 +39,7 @@ namespace Redola.ActorModel
             var channel = new ActorListenerChannel(
                 localActor, 
                 new ActorTransportListener(localEndPoint),
-                _frameBuilder,
-                _encoder, 
-                _decoder);
+                _frameBuilder);
 
             return channel;
         }
@@ -66,9 +54,7 @@ namespace Redola.ActorModel
             var channel = new ActorConnectorChannel(
                 localActor, 
                 new ActorTransportConnector(actorEndPoint),
-                _frameBuilder,
-                _encoder, 
-                _decoder);
+                _frameBuilder);
 
             return channel;
         }
@@ -83,9 +69,7 @@ namespace Redola.ActorModel
             var channel = new ActorConnectorChannel(
                 localActor, 
                 new ActorTransportConnector(actorEndPoint),
-                _frameBuilder,
-                _encoder, 
-                _decoder);
+                _frameBuilder);
 
             return channel;
         }

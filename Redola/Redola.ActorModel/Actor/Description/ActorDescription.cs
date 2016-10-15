@@ -1,9 +1,10 @@
 ﻿using System;
-using ProtoBuf;
+using System.Xml.Serialization;
 
 namespace Redola.ActorModel
 {
-    [ProtoContract(SkipConstructor = false, UseProtoMembersOnly = true)]
+    [Serializable]
+    [XmlRoot]
     public class ActorDescription : IEquatable<ActorDescription>
     {
         public ActorDescription()
@@ -16,13 +17,13 @@ namespace Redola.ActorModel
             this.Name = name;
         }
 
-        [ProtoMember(10)]
+        [XmlAttribute]
         public string Name { get; set; }
-        [ProtoMember(20)]
+        [XmlAttribute]
         public string Type { get; set; }
-        [ProtoMember(30)]
+        [XmlAttribute]
         public string Address { get; set; }
-        [ProtoMember(40)]
+        [XmlAttribute]
         public string Port { get; set; }
 
         public string GetKey()
