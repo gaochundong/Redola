@@ -13,23 +13,23 @@ namespace Redola.ActorModel
         private ILog _log = Logger.Get<ActorDirectory>();
         private ActorDescription _centerActor;
         private IActorChannel _centerChannel;
-        private IActorFrameBuilder _frameBuilder;
+        private ActorChannelConfiguration _channelConfiguration;
 
         public ActorDirectory(
             ActorDescription centerActor,
             IActorChannel centerChannel,
-            IActorFrameBuilder frameBuilder)
+            ActorChannelConfiguration channelConfiguration)
         {
             if (centerActor == null)
                 throw new ArgumentNullException("centerActor");
             if (centerChannel == null)
                 throw new ArgumentNullException("centerChannel");
-            if (frameBuilder == null)
-                throw new ArgumentNullException("frameBuilder");
+            if (channelConfiguration == null)
+                throw new ArgumentNullException("channelConfiguration");
 
             _centerActor = centerActor;
             _centerChannel = centerChannel;
-            _frameBuilder = frameBuilder;
+            _channelConfiguration = channelConfiguration;
         }
 
         public ActorDescription GetCenterActor()
@@ -88,9 +88,9 @@ namespace Redola.ActorModel
             {
                 Type = actorType,
             };
-            var actorLookupRequestData = _frameBuilder.ControlFrameDataEncoder.EncodeFrameData(actorLookupCondition);
+            var actorLookupRequestData = _channelConfiguration.FrameBuilder.ControlFrameDataEncoder.EncodeFrameData(actorLookupCondition);
             var actorLookupRequest = new WhereFrame(actorLookupRequestData);
-            var actorLookupRequestBuffer = _frameBuilder.EncodeFrame(actorLookupRequest);
+            var actorLookupRequestBuffer = _channelConfiguration.FrameBuilder.EncodeFrame(actorLookupRequest);
 
             ManualResetEventSlim waitingResponse = new ManualResetEventSlim(false);
             ActorDataReceivedEventArgs lookupResponseEvent = null;
@@ -111,7 +111,7 @@ namespace Redola.ActorModel
             if (lookedup && lookupResponseEvent != null)
             {
                 ActorFrameHeader actorLookupResponseFrameHeader = null;
-                bool isHeaderDecoded = _frameBuilder.TryDecodeFrameHeader(
+                bool isHeaderDecoded = _channelConfiguration.FrameBuilder.TryDecodeFrameHeader(
                     lookupResponseEvent.Data, lookupResponseEvent.DataOffset, lookupResponseEvent.DataLength,
                     out actorLookupResponseFrameHeader);
                 if (isHeaderDecoded && actorLookupResponseFrameHeader.OpCode == OpCode.Here)
@@ -119,10 +119,10 @@ namespace Redola.ActorModel
                     byte[] payload;
                     int payloadOffset;
                     int payloadCount;
-                    _frameBuilder.DecodePayload(
+                    _channelConfiguration.FrameBuilder.DecodePayload(
                         lookupResponseEvent.Data, lookupResponseEvent.DataOffset, actorLookupResponseFrameHeader,
                         out payload, out payloadOffset, out payloadCount);
-                    var actorLookupResponseData = _frameBuilder.ControlFrameDataDecoder.DecodeFrameData<ActorDescriptionCollection>(
+                    var actorLookupResponseData = _channelConfiguration.FrameBuilder.ControlFrameDataDecoder.DecodeFrameData<ActorDescriptionCollection>(
                         payload, payloadOffset, payloadCount);
 
                     var actors = actorLookupResponseData != null ? actorLookupResponseData.Items : null;

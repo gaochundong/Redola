@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading;
 using Logrila.Logging;
-using Redola.ActorModel.Framing;
 
 namespace Redola.ActorModel
 {
@@ -14,8 +13,8 @@ namespace Redola.ActorModel
         public ActorConnectorReconnectableChannel(
             ActorDescription localActor, 
             ActorTransportConnector remoteConnector,
-            IActorFrameBuilder frameBuilder)
-            : base(localActor, remoteConnector, frameBuilder)
+            ActorChannelConfiguration channelConfiguration)
+            : base(localActor, remoteConnector, channelConfiguration)
         {
             this.RetryPeriod = TimeSpan.FromSeconds(15);
         }

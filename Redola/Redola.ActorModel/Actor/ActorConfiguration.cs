@@ -1,8 +1,4 @@
-﻿using System;
-using Redola.ActorModel.Framing;
-using Redola.ActorModel.Serialization;
-
-namespace Redola.ActorModel
+﻿namespace Redola.ActorModel
 {
     public class ActorConfiguration
     {
@@ -17,28 +13,23 @@ namespace Redola.ActorModel
         public const string ActorPortKey = @"ActorPort";
 
         private ActorConfigurationReader _configReader = ActorConfigurationReader.Singleton();
-        private IActorFrameBuilder _frameBuilder;
         private ActorDescription _centerActor;
         private ActorDescription _localActor;
+        private ActorChannelConfiguration _channelConfiguration;
 
         public ActorConfiguration()
         {
         }
 
-        public IActorFrameBuilder FrameBuilder { get { return _frameBuilder; } }
         public ActorDescription CenterActor { get { return _centerActor; } }
         public ActorDescription LocalActor { get { return _localActor; } }
+        public ActorChannelConfiguration ChannelConfiguration { get { return _channelConfiguration; } }
 
         public void Build()
         {
-            var messageEncoder = new XmlMessageEncoder();
-            var messageDecoder = new XmlMessageDecoder();
-            var controlFrameDataEncoder = new XmlActorControlFrameDataEncoder(messageEncoder);
-            var controlFrameDataDecoder = new XmlActorControlFrameDataDecoder(messageDecoder);
-
-            _frameBuilder = new ActorFrameBuilder(controlFrameDataEncoder, controlFrameDataDecoder);
             _centerActor = BuildCenterActor();
             _localActor = BuildLocalActor();
+            _channelConfiguration = new ActorChannelConfiguration();
         }
 
         private ActorDescription BuildCenterActor()

@@ -13,24 +13,31 @@ namespace Redola.ActorModel
         private ActorDescription _localActor;
         private ActorDescription _remoteActor;
         private ActorTransportConnector _connector;
-        private IActorFrameBuilder _frameBuilder;
+        private ActorChannelConfiguration _channelConfiguration;
         private bool _isHandshaked = false;
+
+        private readonly SemaphoreSlim _keepAliveLocker = new SemaphoreSlim(1, 1);
+        private KeepAliveTracker _keepAliveTracker;
+        private Timer _keepAliveTimeoutTimer;
 
         public ActorConnectorChannel(
             ActorDescription localActor,
             ActorTransportConnector remoteConnector,
-            IActorFrameBuilder frameBuilder)
+            ActorChannelConfiguration channelConfiguration)
         {
             if (localActor == null)
                 throw new ArgumentNullException("localActor");
             if (remoteConnector == null)
                 throw new ArgumentNullException("remoteConnector");
-            if (frameBuilder == null)
-                throw new ArgumentNullException("frameBuilder");
+            if (channelConfiguration == null)
+                throw new ArgumentNullException("channelConfiguration");
 
             _localActor = localActor;
             _connector = remoteConnector;
-            _frameBuilder = frameBuilder;
+            _channelConfiguration = channelConfiguration;
+
+            _keepAliveTracker = KeepAliveTracker.Create(KeepAliveInterval, new TimerCallback((s) => OnKeepAlive()));
+            _keepAliveTimeoutTimer = new Timer(new TimerCallback((s) => OnKeepAliveTimeout()), null, Timeout.Infinite, Timeout.Infinite);
         }
 
         public bool Active
@@ -82,6 +89,15 @@ namespace Redola.ActorModel
         {
             try
             {
+                if (_keepAliveTracker != null)
+                {
+                    _keepAliveTracker.Dispose();
+                }
+                if (_keepAliveTimeoutTimer != null)
+                {
+                    _keepAliveTimeoutTimer.Dispose();
+                }
+
                 _connector.Connected -= OnConnected;
                 _connector.Disconnected -= OnDisconnected;
                 _connector.DataReceived -= OnDataReceived;
@@ -121,9 +137,9 @@ namespace Redola.ActorModel
 
         private void Handshake(TimeSpan timeout)
         {
-            var actorHandshakeRequestData = _frameBuilder.ControlFrameDataEncoder.EncodeFrameData(_localActor);
+            var actorHandshakeRequestData = _channelConfiguration.FrameBuilder.ControlFrameDataEncoder.EncodeFrameData(_localActor);
             var actorHandshakeRequest = new HelloFrame(actorHandshakeRequestData);
-            var actorHandshakeRequestBuffer = _frameBuilder.EncodeFrame(actorHandshakeRequest);
+            var actorHandshakeRequestBuffer = _channelConfiguration.FrameBuilder.EncodeFrame(actorHandshakeRequest);
 
             ManualResetEventSlim waitingHandshaked = new ManualResetEventSlim(false);
             ActorTransportDataReceivedEventArgs handshakeResponseEvent = null;
@@ -145,7 +161,7 @@ namespace Redola.ActorModel
             if (handshaked && handshakeResponseEvent != null)
             {
                 ActorFrameHeader actorHandshakeResponseFrameHeader = null;
-                bool isHeaderDecoded = _frameBuilder.TryDecodeFrameHeader(
+                bool isHeaderDecoded = _channelConfiguration.FrameBuilder.TryDecodeFrameHeader(
                     handshakeResponseEvent.Data, handshakeResponseEvent.DataOffset, handshakeResponseEvent.DataLength,
                     out actorHandshakeResponseFrameHeader);
                 if (isHeaderDecoded && actorHandshakeResponseFrameHeader.OpCode == OpCode.Welcome)
@@ -153,10 +169,10 @@ namespace Redola.ActorModel
                     byte[] payload;
                     int payloadOffset;
                     int payloadCount;
-                    _frameBuilder.DecodePayload(
+                    _channelConfiguration.FrameBuilder.DecodePayload(
                         handshakeResponseEvent.Data, handshakeResponseEvent.DataOffset, actorHandshakeResponseFrameHeader,
                         out payload, out payloadOffset, out payloadCount);
-                    var actorHandshakeResponseData = _frameBuilder.ControlFrameDataDecoder.DecodeFrameData<ActorDescription>(
+                    var actorHandshakeResponseData = _channelConfiguration.FrameBuilder.ControlFrameDataDecoder.DecodeFrameData<ActorDescription>(
                         payload, payloadOffset, payloadCount);
 
                     _remoteActor = actorHandshakeResponseData;
@@ -179,6 +195,7 @@ namespace Redola.ActorModel
                     }
 
                     _connector.DataReceived += OnDataReceived;
+                    _keepAliveTracker.StartTimer();
                 }
             }
             else
@@ -200,9 +217,26 @@ namespace Redola.ActorModel
 
         protected virtual void OnDataReceived(object sender, ActorTransportDataReceivedEventArgs e)
         {
-            if (DataReceived != null)
+            _keepAliveTracker.OnDataReceived();
+
+            ActorFrameHeader actorKeepAliveRequestFrameHeader = null;
+            bool isHeaderDecoded = _channelConfiguration.FrameBuilder.TryDecodeFrameHeader(
+                e.Data, e.DataOffset, e.DataLength,
+                out actorKeepAliveRequestFrameHeader);
+            if (isHeaderDecoded && actorKeepAliveRequestFrameHeader.OpCode == OpCode.Ping)
             {
-                DataReceived(this, new ActorDataReceivedEventArgs(this.ConnectToEndPoint.ToString(), _remoteActor, e.Data, e.DataOffset, e.DataLength));
+                var actorKeepAliveResponse = new PongFrame();
+                var actorKeepAliveResponseBuffer = _channelConfiguration.FrameBuilder.EncodeFrame(actorKeepAliveResponse);
+
+                _log.DebugFormat("KeepAlive response from local actor [{0}] to remote actor [{1}].", _localActor, _remoteActor);
+                _connector.BeginSend(actorKeepAliveResponseBuffer);
+            }
+            else
+            {
+                if (DataReceived != null)
+                {
+                    DataReceived(this, new ActorDataReceivedEventArgs(this.ConnectToEndPoint.ToString(), _remoteActor, e.Data, e.DataOffset, e.DataLength));
+                }
             }
         }
 
@@ -227,6 +261,7 @@ namespace Redola.ActorModel
                     string.Format("Remote actor key not matched, [{0}]:[{1}].", _remoteActor.GetKey(), actorKey));
 
             _connector.Send(data, offset, count);
+            _keepAliveTracker.OnDataSent();
         }
 
         public void BeginSend(string actorType, string actorName, byte[] data)
@@ -246,6 +281,7 @@ namespace Redola.ActorModel
                     string.Format("Remote actor key not matched, [{0}]:[{1}].", _remoteActor.GetKey(), actorKey));
 
             _connector.BeginSend(data, offset, count);
+            _keepAliveTracker.OnDataSent();
         }
 
         public void Send(string actorType, byte[] data)
@@ -263,6 +299,7 @@ namespace Redola.ActorModel
                     string.Format("Remote actor type not matched, [{0}]:[{1}].", _remoteActor.Type, actorType));
 
             _connector.Send(data, offset, count);
+            _keepAliveTracker.OnDataSent();
         }
 
         public void BeginSend(string actorType, byte[] data)
@@ -280,6 +317,7 @@ namespace Redola.ActorModel
                     string.Format("Remote actor type not matched, [{0}]:[{1}].", _remoteActor.Type, actorType));
 
             _connector.BeginSend(data, offset, count);
+            _keepAliveTracker.OnDataSent();
         }
 
         public IAsyncResult BeginSend(string actorType, string actorName, byte[] data, AsyncCallback callback, object state)
@@ -298,12 +336,73 @@ namespace Redola.ActorModel
                 throw new InvalidOperationException(
                     string.Format("Remote actor key not matched, [{0}]:[{1}].", _remoteActor.GetKey(), actorKey));
 
-            return _connector.BeginSend(data, offset, count, callback, state);
+            var ar = _connector.BeginSend(data, offset, count, callback, state);
+            _keepAliveTracker.OnDataSent();
+
+            return ar;
         }
 
         public void EndSend(string actorType, string actorName, IAsyncResult asyncResult)
         {
             _connector.EndSend(asyncResult);
         }
+
+        #region Keep Alive
+
+        public TimeSpan KeepAliveInterval { get { return _channelConfiguration.KeepAliveInterval; } }
+
+        public TimeSpan KeepAliveTimeout { get { return _channelConfiguration.KeepAliveTimeout; } }
+
+        private void StartKeepAliveTimeoutTimer()
+        {
+            _keepAliveTimeoutTimer.Change((int)KeepAliveTimeout.TotalMilliseconds, Timeout.Infinite);
+        }
+
+        private void StopKeepAliveTimeoutTimer()
+        {
+            _keepAliveTimeoutTimer.Change(Timeout.Infinite, Timeout.Infinite);
+        }
+
+        private void OnKeepAliveTimeout()
+        {
+            _log.ErrorFormat("Keep-alive timer timeout [{0}].", KeepAliveTimeout);
+            Close();
+        }
+
+        private void OnKeepAlive()
+        {
+            if (_keepAliveLocker.Wait(0))
+            {
+                try
+                {
+                    if (!Active)
+                        return;
+
+                    if (_keepAliveTracker.ShouldSendKeepAlive())
+                    {
+                        var actorKeepAliveRequest = new PingFrame();
+                        var actorKeepAliveRequestBuffer = _channelConfiguration.FrameBuilder.EncodeFrame(actorKeepAliveRequest);
+
+                        _log.DebugFormat("KeepAlive request from local actor [{0}] to remote actor [{1}].", _localActor, _remoteActor);
+
+                        _connector.BeginSend(actorKeepAliveRequestBuffer);
+                        StartKeepAliveTimeoutTimer();
+
+                        _keepAliveTracker.ResetTimer();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _log.Error(ex.Message, ex);
+                    Close();
+                }
+                finally
+                {
+                    _keepAliveLocker.Release();
+                }
+            }
+        }
+
+        #endregion
     }
 }

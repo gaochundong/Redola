@@ -56,6 +56,7 @@
     <Compile Include="Actor\ActorMaster.cs" />
     <Compile Include="Actor\ActorNotFoundException.cs" />
     <Compile Include="Actor\ActorConfigurationReader.cs" />
+    <Compile Include="Actor\Channel\ActorChannelConfiguration.cs" />
     <Compile Include="Actor\Channel\ActorChannelFactory.cs" />
     <Compile Include="Actor\Channel\ActorChannelManager.cs" />
     <Compile Include="Actor\Channel\ActorConnectorChannel.cs" />
@@ -79,6 +80,7 @@
     <Compile Include="Framing\Builder\Encoding\IActorControlFrameDataDecoder.cs" />
     <Compile Include="Framing\Builder\Encoding\IActorControlFrameDataEncoder.cs" />
     <Compile Include="Framing\Builder\Encoding\XmlActorControlFrameDataEncoder.cs" />
+    <Compile Include="KeepAlive\KeepAliveTracker.cs" />
     <Compile Include="Serialization\Compression\GZipCompression.cs" />
     <Compile Include="Serialization\IMessageDecoder.cs" />
     <Compile Include="Serialization\IMessageEncoder.cs" />

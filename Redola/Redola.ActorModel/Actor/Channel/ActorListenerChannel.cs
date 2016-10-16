@@ -12,25 +12,25 @@ namespace Redola.ActorModel
         private ILog _log = Logger.Get<ActorListenerChannel>();
         private ActorDescription _localActor = null;
         private ActorTransportListener _listener = null;
-        private IActorFrameBuilder _frameBuilder;
+        private ActorChannelConfiguration _channelConfiguration = null;
         private ConcurrentDictionary<string, ActorDescription> _remoteActors = new ConcurrentDictionary<string, ActorDescription>(); // SessionKey -> Actor
         private ConcurrentDictionary<string, string> _actorKeys = new ConcurrentDictionary<string, string>(); // ActorKey -> SessionKey
 
         public ActorListenerChannel(
             ActorDescription localActor,
             ActorTransportListener localListener,
-            IActorFrameBuilder frameBuilder)
+            ActorChannelConfiguration channelConfiguration)
         {
             if (localActor == null)
                 throw new ArgumentNullException("localActor");
             if (localListener == null)
                 throw new ArgumentNullException("localListener");
-            if (frameBuilder == null)
-                throw new ArgumentNullException("frameBuilder");
+            if (channelConfiguration == null)
+                throw new ArgumentNullException("channelConfiguration");
 
             _localActor = localActor;
             _listener = localListener;
-            _frameBuilder = frameBuilder;
+            _channelConfiguration = channelConfiguration;
         }
 
         public bool Active
@@ -72,7 +72,7 @@ namespace Redola.ActorModel
         {
             ActorDescription remoteActor = null;
             ActorFrameHeader actorHandshakeRequestFrameHeader = null;
-            bool isHeaderDecoded = _frameBuilder.TryDecodeFrameHeader(
+            bool isHeaderDecoded = _channelConfiguration.FrameBuilder.TryDecodeFrameHeader(
                 e.Data, e.DataOffset, e.DataLength,
                 out actorHandshakeRequestFrameHeader);
             if (isHeaderDecoded && actorHandshakeRequestFrameHeader.OpCode == OpCode.Hello)
@@ -80,10 +80,10 @@ namespace Redola.ActorModel
                 byte[] payload;
                 int payloadOffset;
                 int payloadCount;
-                _frameBuilder.DecodePayload(
+                _channelConfiguration.FrameBuilder.DecodePayload(
                     e.Data, e.DataOffset, actorHandshakeRequestFrameHeader,
                     out payload, out payloadOffset, out payloadCount);
-                var actorHandshakeRequestData = _frameBuilder.ControlFrameDataDecoder.DecodeFrameData<ActorDescription>(
+                var actorHandshakeRequestData = _channelConfiguration.FrameBuilder.ControlFrameDataDecoder.DecodeFrameData<ActorDescription>(
                     payload, payloadOffset, payloadCount);
 
                 remoteActor = actorHandshakeRequestData;
@@ -96,9 +96,9 @@ namespace Redola.ActorModel
             }
             else
             {
-                var actorHandshakeResponseData = _frameBuilder.ControlFrameDataEncoder.EncodeFrameData(_localActor);
+                var actorHandshakeResponseData = _channelConfiguration.FrameBuilder.ControlFrameDataEncoder.EncodeFrameData(_localActor);
                 var actorHandshakeResponse = new WelcomeFrame(actorHandshakeResponseData);
-                var actorHandshakeResponseBuffer = _frameBuilder.EncodeFrame(actorHandshakeResponse);
+                var actorHandshakeResponseBuffer = _channelConfiguration.FrameBuilder.EncodeFrame(actorHandshakeResponse);
 
                 _listener.BeginSendTo(e.SessionKey, actorHandshakeResponseBuffer);
 

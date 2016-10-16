@@ -9,19 +9,19 @@ namespace Redola.ActorModel
     {
         private ILog _log = Logger.Get<ActorChannelFactory>();
         private ActorDirectory _directory;
-        private IActorFrameBuilder _frameBuilder;
+        private ActorChannelConfiguration _channelConfiguration;
 
         public ActorChannelFactory(
             ActorDirectory directory,
-            IActorFrameBuilder frameBuilder)
+            ActorChannelConfiguration channelConfiguration)
         {
             if (directory == null)
                 throw new ArgumentNullException("directory");
-            if (frameBuilder == null)
-                throw new ArgumentNullException("frameBuilder");
+            if (channelConfiguration == null)
+                throw new ArgumentNullException("channelConfiguration");
 
             _directory = directory;
-            _frameBuilder = frameBuilder;
+            _channelConfiguration = channelConfiguration;
         }
 
         public IActorChannel BuildLocalActor(ActorDescription localActor)
@@ -39,7 +39,7 @@ namespace Redola.ActorModel
             var channel = new ActorListenerChannel(
                 localActor, 
                 new ActorTransportListener(localEndPoint),
-                _frameBuilder);
+                _channelConfiguration);
 
             return channel;
         }
@@ -54,7 +54,7 @@ namespace Redola.ActorModel
             var channel = new ActorConnectorChannel(
                 localActor, 
                 new ActorTransportConnector(actorEndPoint),
-                _frameBuilder);
+                _channelConfiguration);
 
             return channel;
         }
@@ -69,7 +69,7 @@ namespace Redola.ActorModel
             var channel = new ActorConnectorChannel(
                 localActor, 
                 new ActorTransportConnector(actorEndPoint),
-                _frameBuilder);
+                _channelConfiguration);
 
             return channel;
         }
