@@ -148,6 +148,109 @@ namespace Redola.ActorModel
             }
         }
 
+        public void Send(string actorType, string actorName, byte[] data)
+        {
+            Send(actorType, actorName, data, 0, data.Length);
+        }
+
+        public void Send(string actorType, string actorName, byte[] data, int offset, int count)
+        {
+            var actorKey = ActorDescription.GetKey(actorType, actorName);
+
+            if (_remoteActor == null)
+                throw new InvalidOperationException(
+                    string.Format("The remote actor has not been connected, Type[{0}], Name[{1}].", actorType, actorName));
+            if (_remoteActor.GetKey() != actorKey)
+                throw new InvalidOperationException(
+                    string.Format("Remote actor key not matched, [{0}]:[{1}].", _remoteActor.GetKey(), actorKey));
+
+            _innerSession.Send(data, offset, count);
+            _keepAliveTracker.OnDataSent();
+        }
+
+        public void BeginSend(string actorType, string actorName, byte[] data)
+        {
+            BeginSend(actorType, actorName, data, 0, data.Length);
+        }
+
+        public void BeginSend(string actorType, string actorName, byte[] data, int offset, int count)
+        {
+            var actorKey = ActorDescription.GetKey(actorType, actorName);
+
+            if (_remoteActor == null)
+                throw new InvalidOperationException(
+                    string.Format("The remote actor has not been connected, Type[{0}], Name[{1}].", actorType, actorName));
+            if (_remoteActor.GetKey() != actorKey)
+                throw new InvalidOperationException(
+                    string.Format("Remote actor key not matched, [{0}]:[{1}].", _remoteActor.GetKey(), actorKey));
+
+            _innerSession.BeginSend(data, offset, count);
+            _keepAliveTracker.OnDataSent();
+        }
+
+        public void Send(string actorType, byte[] data)
+        {
+            Send(actorType, data, 0, data.Length);
+        }
+
+        public void Send(string actorType, byte[] data, int offset, int count)
+        {
+            if (_remoteActor == null)
+                throw new InvalidOperationException(
+                    string.Format("The remote actor has not been connected, Type[{0}].", actorType));
+            if (_remoteActor.Type != actorType)
+                throw new InvalidOperationException(
+                    string.Format("Remote actor type not matched, [{0}]:[{1}].", _remoteActor.Type, actorType));
+
+            _innerSession.Send(data, offset, count);
+            _keepAliveTracker.OnDataSent();
+        }
+
+        public void BeginSend(string actorType, byte[] data)
+        {
+            BeginSend(actorType, data, 0, data.Length);
+        }
+
+        public void BeginSend(string actorType, byte[] data, int offset, int count)
+        {
+            if (_remoteActor == null)
+                throw new InvalidOperationException(
+                    string.Format("The remote actor has not been connected, Type[{0}].", actorType));
+            if (_remoteActor.Type != actorType)
+                throw new InvalidOperationException(
+                    string.Format("Remote actor type not matched, [{0}]:[{1}].", _remoteActor.Type, actorType));
+
+            _innerSession.BeginSend(data, offset, count);
+            _keepAliveTracker.OnDataSent();
+        }
+
+        public IAsyncResult BeginSend(string actorType, string actorName, byte[] data, AsyncCallback callback, object state)
+        {
+            return BeginSend(actorType, actorName, data, 0, data.Length, callback, state);
+        }
+
+        public IAsyncResult BeginSend(string actorType, string actorName, byte[] data, int offset, int count, AsyncCallback callback, object state)
+        {
+            var actorKey = ActorDescription.GetKey(actorType, actorName);
+
+            if (_remoteActor == null)
+                throw new InvalidOperationException(
+                    string.Format("The remote actor has not been connected, Type[{0}], Name[{1}].", actorType, actorName));
+            if (_remoteActor.GetKey() != actorKey)
+                throw new InvalidOperationException(
+                    string.Format("Remote actor key not matched, [{0}]:[{1}].", _remoteActor.GetKey(), actorKey));
+
+            var ar = _innerSession.BeginSend(data, offset, count, callback, state);
+            _keepAliveTracker.OnDataSent();
+
+            return ar;
+        }
+
+        public void EndSend(string actorType, string actorName, IAsyncResult asyncResult)
+        {
+            _innerSession.EndSend(asyncResult);
+        }
+
         #region Keep Alive
 
         public TimeSpan KeepAliveInterval { get { return _channelConfiguration.KeepAliveInterval; } }
