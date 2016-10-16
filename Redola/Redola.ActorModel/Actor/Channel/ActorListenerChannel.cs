@@ -83,7 +83,7 @@ namespace Redola.ActorModel
                 _frameBuilder.DecodePayload(
                     e.Data, e.DataOffset, actorHandshakeRequestFrameHeader,
                     out payload, out payloadOffset, out payloadCount);
-                var actorHandshakeRequestData = _decoder.DecodeMessage<ActorDescription>(
+                var actorHandshakeRequestData = _frameBuilder.ControlFrameDataDecoder.DecodeFrameData<ActorDescription>(
                     payload, payloadOffset, payloadCount);
 
                 remoteActor = actorHandshakeRequestData;
@@ -96,7 +96,7 @@ namespace Redola.ActorModel
             }
             else
             {
-                var actorHandshakeResponseData = _encoder.EncodeMessage(_localActor);
+                var actorHandshakeResponseData = _frameBuilder.ControlFrameDataEncoder.EncodeFrameData(_localActor);
                 var actorHandshakeResponse = new WelcomeFrame(actorHandshakeResponseData);
                 var actorHandshakeResponseBuffer = _frameBuilder.EncodeFrame(actorHandshakeResponse);
 

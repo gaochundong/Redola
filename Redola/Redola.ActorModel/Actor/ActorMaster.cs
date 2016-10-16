@@ -24,7 +24,7 @@ namespace Redola.ActorModel
             {
                 var actorCollection = new ActorDescriptionCollection();
                 actorCollection.Items.AddRange(this.GetAllActors().ToList());
-                var actorLookupResponseData = this.Encoder.EncodeMessage(actorCollection);
+                var actorLookupResponseData = this.FrameBuilder.ControlFrameDataEncoder.EncodeFrameData(actorCollection);
                 var actorLookupResponse = new HereFrame(actorLookupResponseData);
                 var actorLookupRequestBuffer = this.FrameBuilder.EncodeFrame(actorLookupResponse);
 

@@ -47,8 +47,8 @@ namespace Redola.ActorModel
             _log.InfoFormat("Register center actor [{0}].", this.CenterActor);
 
             var centerChannel = BuildActorCenterChannel(this.CenterActor, this.LocalActor);
-            _directory = new ActorDirectory(this.CenterActor, centerChannel, this.FrameBuilder, this.Encoder, this.Decoder);
-            _factory = new ActorChannelFactory(_directory, this.FrameBuilder, this.Encoder, this.Decoder);
+            _directory = new ActorDirectory(this.CenterActor, centerChannel, this.FrameBuilder);
+            _factory = new ActorChannelFactory(_directory, this.FrameBuilder);
             _manager = new ActorChannelManager(_factory);
             _manager.Connected += OnActorConnected;
             _manager.Disconnected += OnActorDisconnected;
@@ -90,7 +90,7 @@ namespace Redola.ActorModel
 
             var centerConnector = new ActorTransportConnector(actorCenterEndPoint);
             var centerChannel = new ActorConnectorReconnectableChannel(
-                localActor, centerConnector, this.FrameBuilder, this.Encoder, this.Decoder);
+                localActor, centerConnector, this.FrameBuilder);
 
             return centerChannel;
         }

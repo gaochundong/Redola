@@ -74,6 +74,10 @@
     <Compile Include="Actor\Channel\Transport\EventArgs\ActorTransportDisconnectedEventArgs.cs" />
     <Compile Include="Actor\Description\ActorDescription.cs" />
     <Compile Include="Actor\Description\ActorDescriptionCollection.cs" />
+    <Compile Include="Framing\Builder\Encoding\XmlActorControlFrameDataDecoder.cs" />
+    <Compile Include="Framing\Builder\Encoding\IActorControlFrameDataDecoder.cs" />
+    <Compile Include="Framing\Builder\Encoding\IActorControlFrameDataEncoder.cs" />
+    <Compile Include="Framing\Builder\Encoding\XmlActorControlFrameDataEncoder.cs" />
     <Compile Include="Serialization\Compression\GZipCompression.cs" />
     <Compile Include="Serialization\IMessageDecoder.cs" />
     <Compile Include="Serialization\IMessageEncoder.cs" />

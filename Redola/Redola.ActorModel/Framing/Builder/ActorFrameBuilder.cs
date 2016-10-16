@@ -28,9 +28,24 @@ namespace Redola.ActorModel.Framing
         private static readonly Random _rng = new Random(DateTime.UtcNow.Millisecond);
         private static readonly int MaskingKeyLength = 4;
 
-        public ActorFrameBuilder()
+        private IActorControlFrameDataEncoder _controlFrameDataEncoder;
+        private IActorControlFrameDataDecoder _controlFrameDataDecoder;
+
+        public ActorFrameBuilder(
+            IActorControlFrameDataEncoder controlFrameDataEncoder,
+            IActorControlFrameDataDecoder controlFrameDataDecoder)
         {
+            if (controlFrameDataEncoder == null)
+                throw new ArgumentNullException("controlFrameDataEncoder");
+            if (controlFrameDataDecoder == null)
+                throw new ArgumentNullException("controlFrameDataDecoder");
+
+            _controlFrameDataEncoder = controlFrameDataEncoder;
+            _controlFrameDataDecoder = controlFrameDataDecoder;
         }
+
+        public IActorControlFrameDataEncoder ControlFrameDataEncoder { get { return _controlFrameDataEncoder; } }
+        public IActorControlFrameDataDecoder ControlFrameDataDecoder { get { return _controlFrameDataDecoder; } }
 
         public byte[] EncodeFrame(HelloFrame frame)
         {

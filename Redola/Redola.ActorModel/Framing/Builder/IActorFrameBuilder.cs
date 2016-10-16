@@ -2,6 +2,9 @@
 {
     public interface IActorFrameBuilder
     {
+        IActorControlFrameDataEncoder ControlFrameDataEncoder { get; }
+        IActorControlFrameDataDecoder ControlFrameDataDecoder { get; }
+
         byte[] EncodeFrame(HelloFrame frame);
         byte[] EncodeFrame(WelcomeFrame frame);
         byte[] EncodeFrame(PingFrame frame);

@@ -107,7 +107,7 @@ namespace Redola.ActorModel
                     _frameBuilder.DecodePayload(
                         lookupResponseEvent.Data, lookupResponseEvent.DataOffset, actorLookupResponseFrameHeader,
                         out payload, out payloadOffset, out payloadCount);
-                    var actorLookupResponseData = _decoder.DecodeMessage<ActorDescriptionCollection>(
+                    var actorLookupResponseData = _frameBuilder.ControlFrameDataDecoder.DecodeFrameData<ActorDescriptionCollection>(
                         payload, payloadOffset, payloadCount);
 
                     var actors = actorLookupResponseData != null ? actorLookupResponseData.Items : null;

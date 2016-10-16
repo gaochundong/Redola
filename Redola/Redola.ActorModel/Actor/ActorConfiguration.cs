@@ -1,5 +1,6 @@
 ﻿using System;
 using Redola.ActorModel.Framing;
+using Redola.ActorModel.Serialization;
 
 namespace Redola.ActorModel
 {
@@ -30,7 +31,12 @@ namespace Redola.ActorModel
 
         public void Build()
         {
-            _frameBuilder = new ActorFrameBuilder();
+            var messageEncoder = new XmlMessageEncoder();
+            var messageDecoder = new XmlMessageDecoder();
+            var controlFrameDataEncoder = new XmlActorControlFrameDataEncoder(messageEncoder);
+            var controlFrameDataDecoder = new XmlActorControlFrameDataDecoder(messageDecoder);
+
+            _frameBuilder = new ActorFrameBuilder(controlFrameDataEncoder, controlFrameDataDecoder);
             _centerActor = BuildCenterActor();
             _localActor = BuildLocalActor();
         }

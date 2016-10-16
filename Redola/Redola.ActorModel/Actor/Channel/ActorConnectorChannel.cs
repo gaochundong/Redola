@@ -121,7 +121,7 @@ namespace Redola.ActorModel
 
         private void Handshake(TimeSpan timeout)
         {
-            var actorHandshakeRequestData = _encoder.EncodeMessage(_localActor);
+            var actorHandshakeRequestData = _frameBuilder.ControlFrameDataEncoder.EncodeFrameData(_localActor);
             var actorHandshakeRequest = new HelloFrame(actorHandshakeRequestData);
             var actorHandshakeRequestBuffer = _frameBuilder.EncodeFrame(actorHandshakeRequest);
 
@@ -156,7 +156,7 @@ namespace Redola.ActorModel
                     _frameBuilder.DecodePayload(
                         handshakeResponseEvent.Data, handshakeResponseEvent.DataOffset, actorHandshakeResponseFrameHeader,
                         out payload, out payloadOffset, out payloadCount);
-                    var actorHandshakeResponseData = _decoder.DecodeMessage<ActorDescription>(
+                    var actorHandshakeResponseData = _frameBuilder.ControlFrameDataDecoder.DecodeFrameData<ActorDescription>(
                         payload, payloadOffset, payloadCount);
 
                     _remoteActor = actorHandshakeResponseData;
