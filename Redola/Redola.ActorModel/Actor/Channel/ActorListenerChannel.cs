@@ -65,6 +65,12 @@ namespace Redola.ActorModel
 
             _listener.Stop();
 
+            foreach (var session in _sessions.Values)
+            {
+                session.Handshaked -= OnSessionHandshaked;
+                session.DataReceived -= OnSessionDataReceived;
+            }
+            _sessions.Clear();
             _remoteActors.Clear();
             _actorKeys.Clear();
         }
