@@ -62,6 +62,7 @@
     <Compile Include="Actor\Channel\ActorConnectorChannel.cs" />
     <Compile Include="Actor\Channel\ActorConnectorReconnectableChannel.cs" />
     <Compile Include="Actor\Channel\ActorListenerChannel.cs" />
+    <Compile Include="Actor\Channel\ActorSessionChannel.cs" />
     <Compile Include="Actor\Channel\EventArgs\ActorConnectedEventArgs.cs" />
     <Compile Include="Actor\Channel\EventArgs\ActorDataReceivedEventArgs.cs" />
     <Compile Include="Actor\Channel\EventArgs\ActorDisconnectedEventArgs.cs" />
