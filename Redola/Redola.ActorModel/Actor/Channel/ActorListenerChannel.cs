@@ -69,6 +69,7 @@ namespace Redola.ActorModel
             {
                 session.Handshaked -= OnSessionHandshaked;
                 session.DataReceived -= OnSessionDataReceived;
+                session.Close();
             }
             _sessions.Clear();
             _remoteActors.Clear();
@@ -90,6 +91,7 @@ namespace Redola.ActorModel
             {
                 session.Handshaked -= OnSessionHandshaked;
                 session.DataReceived -= OnSessionDataReceived;
+                session.Close();
             }
 
             ActorDescription remoteActor = null;

@@ -14,7 +14,6 @@ namespace Redola.ActorModel
         private ActorDescription _remoteActor;
         private ActorTransportConnector _connector;
         private ActorChannelConfiguration _channelConfiguration;
-        private bool _isHandshaked = false;
 
         private readonly SemaphoreSlim _keepAliveLocker = new SemaphoreSlim(1, 1);
         private KeepAliveTracker _keepAliveTracker;
@@ -47,7 +46,7 @@ namespace Redola.ActorModel
                 if (_connector == null)
                     return false;
                 else
-                    return _connector.IsConnected && _isHandshaked;
+                    return _connector.IsConnected && IsHandshaked;
             }
         }
 
@@ -58,6 +57,8 @@ namespace Redola.ActorModel
                 return _connector.ConnectToEndPoint;
             }
         }
+
+        public bool IsHandshaked { get; private set; }
 
         public void Open()
         {
@@ -117,7 +118,7 @@ namespace Redola.ActorModel
             finally
             {
                 _remoteActor = null;
-                _isHandshaked = false;
+                IsHandshaked = false;
                 OnClose();
             }
         }
@@ -188,7 +189,7 @@ namespace Redola.ActorModel
                 {
                     _log.InfoFormat("Handshake with remote [{0}] successfully, RemoteActor[{1}].", this.ConnectToEndPoint, _remoteActor);
 
-                    _isHandshaked = true;
+                    IsHandshaked = true;
                     if (Connected != null)
                     {
                         Connected(this, new ActorConnectedEventArgs(this.ConnectToEndPoint.ToString(), _remoteActor));
