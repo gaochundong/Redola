@@ -44,6 +44,11 @@ namespace Redola.ActorModel
 
         public IPEndPoint LookupRemoteActorEndPoint(string actorType, string actorName)
         {
+            if (string.IsNullOrEmpty(actorType))
+                throw new ArgumentNullException("actorType");
+            if (string.IsNullOrEmpty(actorName))
+                throw new ArgumentNullException("actorName");
+
             var endpoint = LookupRemoteActorEndPoint(
                 actorType,
                 (actors) =>
@@ -60,6 +65,9 @@ namespace Redola.ActorModel
 
         public IPEndPoint LookupRemoteActorEndPoint(string actorType)
         {
+            if (string.IsNullOrEmpty(actorType))
+                throw new ArgumentNullException("actorType");
+
             var endpoint = LookupRemoteActorEndPoint(
                 actorType,
                 (actors) =>
