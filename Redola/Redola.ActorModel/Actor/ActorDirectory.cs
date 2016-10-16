@@ -45,6 +45,7 @@ namespace Redola.ActorModel
         public IPEndPoint LookupRemoteActorEndPoint(string actorType, string actorName)
         {
             var endpoint = LookupRemoteActorEndPoint(
+                actorType,
                 (actors) =>
                 {
                     return actors.FirstOrDefault(a => a.Type == actorType && a.Name == actorName);
@@ -60,6 +61,7 @@ namespace Redola.ActorModel
         public IPEndPoint LookupRemoteActorEndPoint(string actorType)
         {
             var endpoint = LookupRemoteActorEndPoint(
+                actorType,
                 (actors) =>
                 {
                     return actors.Where(a => a.Type == actorType).OrderBy(t => Guid.NewGuid()).FirstOrDefault();
@@ -72,9 +74,14 @@ namespace Redola.ActorModel
             return endpoint;
         }
 
-        private IPEndPoint LookupRemoteActorEndPoint(Func<List<ActorDescription>, ActorDescription> matchActorFunc)
+        private IPEndPoint LookupRemoteActorEndPoint(string actorType, Func<List<ActorDescription>, ActorDescription> matchActorFunc)
         {
-            var actorLookupRequest = new WhereFrame();
+            var actorLookupCondition = new ActorDescriptionLookup()
+            {
+                Type = actorType,
+            };
+            var actorLookupRequestData = _frameBuilder.ControlFrameDataEncoder.EncodeFrameData(actorLookupCondition);
+            var actorLookupRequest = new WhereFrame(actorLookupRequestData);
             var actorLookupRequestBuffer = _frameBuilder.EncodeFrame(actorLookupRequest);
 
             ManualResetEventSlim waitingResponse = new ManualResetEventSlim(false);

@@ -72,6 +72,7 @@
     <Compile Include="Actor\Channel\Transport\EventArgs\ActorTransportConnectedEventArgs.cs" />
     <Compile Include="Actor\Channel\Transport\EventArgs\ActorTransportDataReceivedEventArgs.cs" />
     <Compile Include="Actor\Channel\Transport\EventArgs\ActorTransportDisconnectedEventArgs.cs" />
+    <Compile Include="Actor\Description\ActorDescriptionLookup.cs" />
     <Compile Include="Actor\Description\ActorDescription.cs" />
     <Compile Include="Actor\Description\ActorDescriptionCollection.cs" />
     <Compile Include="Framing\Builder\Encoding\XmlActorControlFrameDataDecoder.cs" />

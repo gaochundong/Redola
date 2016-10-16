@@ -22,8 +22,18 @@ namespace Redola.ActorModel
                 out actorLookupRequestFrameHeader);
             if (isHeaderDecoded && actorLookupRequestFrameHeader.OpCode == OpCode.Where)
             {
+                byte[] payload;
+                int payloadOffset;
+                int payloadCount;
+                this.FrameBuilder.DecodePayload(
+                    e.Data, e.DataOffset, actorLookupRequestFrameHeader,
+                    out payload, out payloadOffset, out payloadCount);
+                var actorLookupRequestData = this.FrameBuilder.ControlFrameDataDecoder.DecodeFrameData<ActorDescriptionLookup>(
+                    payload, payloadOffset, payloadCount);
+                var lookupActorType = actorLookupRequestData != null ? actorLookupRequestData.Type : null;
+
                 var actorCollection = new ActorDescriptionCollection();
-                actorCollection.Items.AddRange(this.GetAllActors().ToList());
+                actorCollection.Items.AddRange(this.GetAllActors().Where(a => a.Type == lookupActorType).ToList());
                 var actorLookupResponseData = this.FrameBuilder.ControlFrameDataEncoder.EncodeFrameData(actorCollection);
                 var actorLookupResponse = new HereFrame(actorLookupResponseData);
                 var actorLookupRequestBuffer = this.FrameBuilder.EncodeFrame(actorLookupResponse);
