@@ -6,7 +6,7 @@ using Cowboy.Sockets;
 
 namespace Redola.ActorModel
 {
-    internal class ActorTransportSession
+    public class ActorTransportSession
     {
         private TcpSocketSession _session;
 

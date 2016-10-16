@@ -87,30 +87,37 @@ namespace Redola.ActorModel
         private void OnClientConnected(object sender, TcpClientConnectedEventArgs e)
         {
             _log.InfoFormat("TCP client [{0}] has connected.", e.Session.RemoteEndPoint);
-            _sessions.Add(e.Session.SessionKey, new ActorTransportSession(e.Session));
+            var session = new ActorTransportSession(e.Session);
+            _sessions.Add(e.Session.SessionKey, session);
 
             if (Connected != null)
             {
-                Connected(this, new ActorTransportConnectedEventArgs(e.Session.SessionKey));
+                Connected(this, new ActorTransportSessionConnectedEventArgs(session));
             }
         }
 
         private void OnClientDisconnected(object sender, TcpClientDisconnectedEventArgs e)
         {
             _log.InfoFormat("TCP client [{0}] has disconnected.", e.Session.RemoteEndPoint);
-            _sessions.Remove(e.Session.SessionKey);
-
-            if (Disconnected != null)
+            ActorTransportSession session = null;
+            if (_sessions.TryRemove(e.Session.SessionKey, out session))
             {
-                Disconnected(this, new ActorTransportDisconnectedEventArgs(e.Session.SessionKey));
+                if (Disconnected != null)
+                {
+                    Disconnected(this, new ActorTransportSessionDisconnectedEventArgs(session));
+                }
             }
         }
 
         private void OnClientDataReceived(object sender, TcpClientDataReceivedEventArgs e)
         {
-            if (DataReceived != null)
+            ActorTransportSession session = null;
+            if (_sessions.TryRemove(e.Session.SessionKey, out session))
             {
-                DataReceived(this, new ActorTransportDataReceivedEventArgs(e.Session.SessionKey, e.Data, e.DataOffset, e.DataLength));
+                if (DataReceived != null)
+                {
+                    DataReceived(this, new ActorTransportSessionDataReceivedEventArgs(session, e.Data, e.DataOffset, e.DataLength));
+                }
             }
         }
 
@@ -208,8 +215,8 @@ namespace Redola.ActorModel
             _server.BroadcastAsync(data);
         }
 
-        public event EventHandler<ActorTransportConnectedEventArgs> Connected;
-        public event EventHandler<ActorTransportDisconnectedEventArgs> Disconnected;
-        public event EventHandler<ActorTransportDataReceivedEventArgs> DataReceived;
+        public event EventHandler<ActorTransportSessionConnectedEventArgs> Connected;
+        public event EventHandler<ActorTransportSessionDisconnectedEventArgs> Disconnected;
+        public event EventHandler<ActorTransportSessionDataReceivedEventArgs> DataReceived;
     }
 }

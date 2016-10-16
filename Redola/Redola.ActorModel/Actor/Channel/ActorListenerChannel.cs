@@ -13,6 +13,7 @@ namespace Redola.ActorModel
         private ActorDescription _localActor = null;
         private ActorTransportListener _listener = null;
         private ActorChannelConfiguration _channelConfiguration = null;
+        private ConcurrentDictionary<string, ActorChannelSession> _sessions = new ConcurrentDictionary<string, ActorChannelSession>(); // SessionKey -> Session
         private ConcurrentDictionary<string, ActorDescription> _remoteActors = new ConcurrentDictionary<string, ActorDescription>(); // SessionKey -> Actor
         private ConcurrentDictionary<string, string> _actorKeys = new ConcurrentDictionary<string, string>(); // ActorKey -> SessionKey
 
@@ -67,62 +68,28 @@ namespace Redola.ActorModel
             _remoteActors.Clear();
             _actorKeys.Clear();
         }
-
-        private void Handshake(ActorTransportDataReceivedEventArgs e)
+        
+        private void OnConnected(object sender, ActorTransportSessionConnectedEventArgs e)
         {
-            ActorDescription remoteActor = null;
-            ActorFrameHeader actorHandshakeRequestFrameHeader = null;
-            bool isHeaderDecoded = _channelConfiguration.FrameBuilder.TryDecodeFrameHeader(
-                e.Data, e.DataOffset, e.DataLength,
-                out actorHandshakeRequestFrameHeader);
-            if (isHeaderDecoded && actorHandshakeRequestFrameHeader.OpCode == OpCode.Hello)
-            {
-                byte[] payload;
-                int payloadOffset;
-                int payloadCount;
-                _channelConfiguration.FrameBuilder.DecodePayload(
-                    e.Data, e.DataOffset, actorHandshakeRequestFrameHeader,
-                    out payload, out payloadOffset, out payloadCount);
-                var actorHandshakeRequestData = _channelConfiguration.FrameBuilder.ControlFrameDataDecoder.DecodeFrameData<ActorDescription>(
-                    payload, payloadOffset, payloadCount);
-
-                remoteActor = actorHandshakeRequestData;
-            }
-
-            if (remoteActor == null)
-            {
-                _log.ErrorFormat("Handshake with remote [{0}] failed, invalid actor description.", e.SessionKey);
-                _listener.CloseSession(e.SessionKey);
-            }
-            else
-            {
-                var actorHandshakeResponseData = _channelConfiguration.FrameBuilder.ControlFrameDataEncoder.EncodeFrameData(_localActor);
-                var actorHandshakeResponse = new WelcomeFrame(actorHandshakeResponseData);
-                var actorHandshakeResponseBuffer = _channelConfiguration.FrameBuilder.EncodeFrame(actorHandshakeResponse);
-
-                _listener.BeginSendTo(e.SessionKey, actorHandshakeResponseBuffer);
-
-                _log.InfoFormat("Handshake with remote [{0}] successfully, SessionKey[{1}].", remoteActor, e.SessionKey);
-                _remoteActors.Add(e.SessionKey, remoteActor);
-                _actorKeys.Add(remoteActor.GetKey(), e.SessionKey);
-
-                if (Connected != null)
-                {
-                    Connected(this, new ActorConnectedEventArgs(e.SessionKey, remoteActor));
-                }
-            }
+            var session = new ActorChannelSession(_localActor, _channelConfiguration, e.Session);
+            session.Handshaked += OnSessionHandshaked;
+            session.DataReceived += OnSessionDataReceived;
+            _sessions.Add(session.SessionKey, session);
         }
 
-        private void OnConnected(object sender, ActorTransportConnectedEventArgs e)
+        private void OnDisconnected(object sender, ActorTransportSessionDisconnectedEventArgs e)
         {
-        }
+            ActorChannelSession session = null;
+            if (_sessions.TryRemove(e.SessionKey, out session))
+            {
+                session.Handshaked -= OnSessionHandshaked;
+                session.DataReceived -= OnSessionDataReceived;
+            }
 
-        private void OnDisconnected(object sender, ActorTransportDisconnectedEventArgs e)
-        {
             ActorDescription remoteActor = null;
             if (_remoteActors.TryRemove(e.SessionKey, out remoteActor))
             {
-                _actorKeys.Remove(remoteActor.GetKey());
+                _actorKeys.Remove(remoteActor.GetKey());                
                 _log.InfoFormat("Disconnected with remote [{0}], SessionKey[{1}].", remoteActor, e.SessionKey);
 
                 if (Disconnected != null)
@@ -132,19 +99,32 @@ namespace Redola.ActorModel
             }
         }
 
-        private void OnDataReceived(object sender, ActorTransportDataReceivedEventArgs e)
+        private void OnDataReceived(object sender, ActorTransportSessionDataReceivedEventArgs e)
         {
-            var remoteActor = _remoteActors.Get(e.SessionKey);
-            if (remoteActor != null)
+            ActorChannelSession session = null;
+            if(_sessions.TryGetValue(e.SessionKey, out session))
             {
-                if (DataReceived != null)
-                {
-                    DataReceived(this, new ActorDataReceivedEventArgs(e.SessionKey, remoteActor, e.Data, e.DataOffset, e.DataLength));
-                }
+                session.OnDataReceived(e.Data, e.DataOffset, e.DataLength);
             }
-            else
+        }
+
+        private void OnSessionHandshaked(object sender, ActorChannelSessionHandshakedEventArgs e)
+        {
+            _remoteActors.Add(e.SessionKey, e.RemoteActor);
+            _actorKeys.Add(e.RemoteActor.GetKey(), e.SessionKey);
+
+            if (Connected != null)
             {
-                Handshake(e);
+                Connected(this, new ActorConnectedEventArgs(e.SessionKey, e.RemoteActor));
+            }
+        }
+
+        private void OnSessionDataReceived(object sender, ActorChannelSessionDataReceivedEventArgs e)
+        {
+            if (DataReceived != null)
+            {
+                DataReceived(this, new ActorDataReceivedEventArgs(
+                    e.SessionKey, e.RemoteActor, e.Data, e.DataOffset, e.DataLength));
             }
         }
 
