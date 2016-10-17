@@ -1,0 +1,30 @@
+package Redola.Rpc.TestContracts;
+
+option java_package = "com.redola.rpc.testcontracts";
+option java_outer_classname = "Orders";
+
+message Order
+{
+	required string OrderID = 10;
+	required string ItemID = 20;
+	required double BuyCount = 70;	
+}
+
+message PlaceOrderRequest
+{
+	required Order Contract = 15;
+}
+
+message PlaceOrderResponse
+{
+	required Order OrderContract = 15;
+	
+	optional Order Order = 60;
+	required PlaceOrderErrorCode ErrorCode = 70;
+}
+
+enum PlaceOrderErrorCode
+{
+	OrderPlaced = 0;
+	UnknownPlaceOrderError = 1;
+}
