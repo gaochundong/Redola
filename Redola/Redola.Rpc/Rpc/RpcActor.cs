@@ -7,7 +7,7 @@ namespace Redola.Rpc
         private static readonly IActorMessageEncoder _encoder = new ActorMessageEncoder(new ProtocolBuffersMessageEncoder());
         private static readonly IActorMessageDecoder _decoder = new ActorMessageDecoder(new ProtocolBuffersMessageDecoder());
 
-        public RpcActor(ActorConfiguration configuration)
+        public RpcActor(RpcActorConfiguration configuration)
             : base(configuration, _encoder, _decoder)
         {
         }

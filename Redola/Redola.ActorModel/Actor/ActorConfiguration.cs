@@ -15,7 +15,7 @@
         public ActorDescription LocalActor { get { return _localActor; } }
         public ActorChannelConfiguration ChannelConfiguration { get { return _channelConfiguration; } }
 
-        public void Build()
+        public virtual void Build()
         {
             _centerActor = BuildCenterActor();
             _localActor = BuildLocalActor();
