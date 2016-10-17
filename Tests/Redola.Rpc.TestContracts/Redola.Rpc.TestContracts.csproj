@@ -4,17 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{94B31D55-C3A9-43C9-8819-61753B4B2435}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{FACCBF0D-1634-42F6-8011-22D3DDA54F18}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Redola.Rpc.TestRpcClient</RootNamespace>
-    <AssemblyName>Redola.Rpc.TestRpcClient</AssemblyName>
+    <RootNamespace>Redola.Rpc.TestContracts</RootNamespace>
+    <AssemblyName>Redola.Rpc.TestContracts</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -41,21 +38,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\Redola\Redola.Rpc\Redola.Rpc.csproj">
-      <Project>{465f580d-f09f-4362-a6ee-40b2627b11a4}</Project>
-      <Name>Redola.Rpc</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Redola.Rpc.TestContracts\Redola.Rpc.TestContracts.csproj">
-      <Project>{faccbf0d-1634-42f6-8011-22d3dda54f18}</Project>
-      <Name>Redola.Rpc.TestContracts</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
