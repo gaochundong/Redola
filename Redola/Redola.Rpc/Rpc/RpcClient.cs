@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace Redola.Rpc
 {
-    public abstract class RpcService : RouteActorMessageHandlerBase
+    public abstract class RpcClient : BlockingActorMessageHandlerBase
     {
-        public RpcService(RpcServiceActor localActor)
+        public RpcClient(RpcClientActor localActor)
             : base(localActor.Actor)
         {
         }
@@ -19,7 +19,7 @@ namespace Redola.Rpc
             {
                 foreach (var pair in rpcMessages)
                 {
-                    admissibleMessages.Add(pair.Item1.Name, new MessageHandleStrategy(pair.Item1));
+                    admissibleMessages.Add(pair.Item2.Name, new MessageHandleStrategy(pair.Item2));
                 }
             }
         }

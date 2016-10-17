@@ -2,18 +2,18 @@
 
 namespace Redola.Rpc
 {
-    public class RpcActor
+    public class RpcClientActor
     {
         private static readonly IActorMessageEncoder _encoder = new ActorMessageEncoder(new ProtocolBuffersMessageEncoder());
         private static readonly IActorMessageDecoder _decoder = new ActorMessageDecoder(new ProtocolBuffersMessageDecoder());
 
         private BlockingRouteActor _localActor = null;
 
-        public RpcActor()
+        public RpcClientActor()
         {
         }
 
-        internal BlockingRouteActor Actor { get { return _localActor; } }
+        public BlockingRouteActor Actor { get { return _localActor; } }
 
         public void Bootup()
         {
@@ -32,12 +32,13 @@ namespace Redola.Rpc
             if (_localActor != null)
             {
                 _localActor.Shutdown();
+                _localActor = null;
             }
         }
 
-        public void RegisterRpcService(RpcService service)
+        public void RegisterRpcClient(RpcClient client)
         {
-            _localActor.RegisterMessageHandler(service);
+            _localActor.RegisterMessageHandler(client);
         }
 
         public ActorMessageEnvelope<P> Send<R, P>(string remoteActorType, ActorMessageEnvelope<R> request)

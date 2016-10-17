@@ -73,7 +73,9 @@
     <Compile Include="RouteActor\RouteActor.cs" />
     <Compile Include="RouteActor\RouteActorMessageHandlerBase.cs" />
     <Compile Include="Rpc\RpcActorConfiguration.cs" />
-    <Compile Include="Rpc\RpcActor.cs" />
+    <Compile Include="Rpc\RpcClient.cs" />
+    <Compile Include="Rpc\RpcServiceActor.cs" />
+    <Compile Include="Rpc\RpcClientActor.cs" />
     <Compile Include="Rpc\RpcService.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -12,7 +12,7 @@ namespace Redola.Rpc.TestRpcServer
 
             ILog log = Logger.Get<Program>();
 
-            var actor = new RpcActor();
+            var actor = new RpcServiceActor();
 
             try
             {

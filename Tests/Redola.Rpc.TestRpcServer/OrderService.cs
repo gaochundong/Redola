@@ -10,7 +10,7 @@ namespace Redola.Rpc.TestRpcServer
     {
         private ILog _log = Logger.Get<OrderService>();
 
-        public OrderService(RpcActor localActor)
+        public OrderService(RpcServiceActor localActor)
             : base(localActor)
         {
         }
