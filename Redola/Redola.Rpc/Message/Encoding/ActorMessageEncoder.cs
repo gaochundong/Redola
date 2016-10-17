@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Redola.Rpc
+﻿namespace Redola.Rpc
 {
     public class ActorMessageEncoder : IActorMessageEncoder
     {
