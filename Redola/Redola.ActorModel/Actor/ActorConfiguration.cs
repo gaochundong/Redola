@@ -2,17 +2,7 @@
 {
     public class ActorConfiguration
     {
-        public const string ActorCenterTypeKey = @"ActorCenterType";
-        public const string ActorCenterNameKey = @"ActorCenterName";
-        public const string ActorCenterAddressKey = @"ActorCenterAddress";
-        public const string ActorCenterPortKey = @"ActorCenterPort";
-
-        public const string ActorTypeKey = @"ActorType";
-        public const string ActorNameKey = @"ActorName";
-        public const string ActorAddressKey = @"ActorAddress";
-        public const string ActorPortKey = @"ActorPort";
-
-        private ActorConfigurationReader _configReader = ActorConfigurationReader.Singleton();
+        private ActorSettingItems _configReader = ActorSettingItems.Singleton();
         private ActorDescription _centerActor;
         private ActorDescription _localActor;
         private ActorChannelConfiguration _channelConfiguration;
@@ -34,10 +24,10 @@
 
         private ActorDescription BuildCenterActor()
         {
-            var actorType = _configReader.GetItem<string>(ActorCenterTypeKey);
-            var actorName = _configReader.GetItem<string>(ActorCenterNameKey);
-            var actorAddress = _configReader.GetItem<string>(ActorCenterAddressKey);
-            var actorPort = _configReader.GetItem<string>(ActorCenterPortKey);
+            var actorType = _configReader.GetItem<string>(ActorSettingItems.ActorCenterTypeKey);
+            var actorName = _configReader.GetItem<string>(ActorSettingItems.ActorCenterNameKey);
+            var actorAddress = _configReader.GetItem<string>(ActorSettingItems.ActorCenterAddressKey);
+            var actorPort = _configReader.GetItem<string>(ActorSettingItems.ActorCenterPortKey);
 
             var actor = new ActorDescription(actorType, actorName);
             actor.Address = actorAddress;
@@ -48,10 +38,10 @@
 
         private ActorDescription BuildLocalActor()
         {
-            var actorType = _configReader.GetItem<string>(ActorTypeKey);
-            var actorName = _configReader.GetItem<string>(ActorNameKey);
-            var actorAddress = _configReader.GetItem<string>(ActorAddressKey);
-            var actorPort = _configReader.GetItem<string>(ActorPortKey);
+            var actorType = _configReader.GetItem<string>(ActorSettingItems.ActorTypeKey);
+            var actorName = _configReader.GetItem<string>(ActorSettingItems.ActorNameKey);
+            var actorAddress = _configReader.GetItem<string>(ActorSettingItems.ActorAddressKey);
+            var actorPort = _configReader.GetItem<string>(ActorSettingItems.ActorPortKey);
 
             var actor = new ActorDescription(actorType, actorName);
             actor.Address = actorAddress;

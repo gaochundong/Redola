@@ -55,7 +55,7 @@
     <Compile Include="Actor\ActorDirectory.cs" />
     <Compile Include="Actor\ActorMaster.cs" />
     <Compile Include="Actor\ActorNotFoundException.cs" />
-    <Compile Include="Actor\ActorConfigurationReader.cs" />
+    <Compile Include="Actor\ActorSettingItems.cs" />
     <Compile Include="Actor\Channel\ActorChannelConfiguration.cs" />
     <Compile Include="Actor\Channel\ActorChannelFactory.cs" />
     <Compile Include="Actor\Channel\ActorChannelManager.cs" />
