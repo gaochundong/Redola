@@ -41,79 +41,44 @@ namespace Redola.Rpc
             _localActor.RegisterMessageHandler(service);
         }
 
-        public void Send(string remoteActorType, string remoteActorName, byte[] data)
+        public void Send<T>(string remoteActorType, string remoteActorName, ActorMessageEnvelope<T> message)
         {
-            Send(remoteActorType, remoteActorName, data, 0, data.Length);
+            _localActor.Send(remoteActorType, remoteActorName, message);
         }
 
-        public void Send(string remoteActorType, string remoteActorName, byte[] data, int offset, int count)
+        public void BeginSend<T>(string remoteActorType, string remoteActorName, ActorMessageEnvelope<T> message)
         {
-            _localActor.Send(remoteActorType, remoteActorName, data, offset, count);
+            _localActor.BeginSend(remoteActorType, remoteActorName, message);
         }
 
-        public void BeginSend(string remoteActorType, string remoteActorName, byte[] data)
+        public IAsyncResult BeginSend<T>(string remoteActorType, string remoteActorName, ActorMessageEnvelope<T> message, AsyncCallback callback, object state)
         {
-            BeginSend(remoteActorType, remoteActorName, data, 0, data.Length);
+            return _localActor.BeginSend(remoteActorType, remoteActorName, message, callback, state);
         }
 
-        public void BeginSend(string remoteActorType, string remoteActorName, byte[] data, int offset, int count)
+        public void Send<T>(string remoteActorType, ActorMessageEnvelope<T> message)
         {
-            _localActor.BeginSend(remoteActorType, remoteActorName, data, offset, count);
+            _localActor.BeginSend(remoteActorType, message);
         }
 
-        public IAsyncResult BeginSend(string remoteActorType, string remoteActorName, byte[] data, AsyncCallback callback, object state)
+        public void BeginSend<T>(string remoteActorType, ActorMessageEnvelope<T> message)
         {
-            return BeginSend(remoteActorType, remoteActorName, data, 0, data.Length, callback, state);
+            _localActor.BeginSend(remoteActorType, message);
         }
 
-        public IAsyncResult BeginSend(string remoteActorType, string remoteActorName, byte[] data, int offset, int count, AsyncCallback callback, object state)
+        public void Broadcast<T>(string remoteActorType, ActorMessageEnvelope<T> message)
         {
-            return _localActor.BeginSend(remoteActorType, remoteActorName, data, offset, count, callback, state);
+            _localActor.Broadcast(remoteActorType, message);
+        }
+
+        public void BeginBroadcast<T>(string remoteActorType, ActorMessageEnvelope<T> message)
+        {
+            _localActor.BeginBroadcast(remoteActorType, message);
         }
 
         public void EndSend(string remoteActorType, string remoteActorName, IAsyncResult asyncResult)
         {
             _localActor.EndSend(remoteActorType, remoteActorName, asyncResult);
-        }
-
-        public void Send(string remoteActorType, byte[] data)
-        {
-            BeginSend(remoteActorType, data, 0, data.Length);
-        }
-
-        public void Send(string remoteActorType, byte[] data, int offset, int count)
-        {
-            _localActor.Send(remoteActorType, data, offset, count);
-        }
-
-        public void BeginSend(string remoteActorType, byte[] data)
-        {
-            BeginSend(remoteActorType, data, 0, data.Length);
-        }
-
-        public void BeginSend(string remoteActorType, byte[] data, int offset, int count)
-        {
-            _localActor.BeginSend(remoteActorType, data, offset, count);
-        }
-
-        public void Broadcast(string remoteActorType, byte[] data)
-        {
-            Broadcast(remoteActorType, data, 0, data.Length);
-        }
-
-        public void Broadcast(string remoteActorType, byte[] data, int offset, int count)
-        {
-            _localActor.Broadcast(remoteActorType, data, offset, count);
-        }
-
-        public void BeginBroadcast(string remoteActorType, byte[] data)
-        {
-            BeginBroadcast(remoteActorType, data, 0, data.Length);
-        }
-
-        public void BeginBroadcast(string remoteActorType, byte[] data, int offset, int count)
-        {
-            _localActor.BeginBroadcast(remoteActorType, data, offset, count);
         }
     }
 }

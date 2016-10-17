@@ -10,6 +10,12 @@ message Order
 	required double BuyCount = 70;	
 }
 
+enum PlaceOrderErrorCode
+{
+	OrderPlaced = 0;
+	UnknownPlaceOrderError = 1;
+}
+
 message PlaceOrderRequest
 {
 	required Order Contract = 15;
@@ -23,8 +29,8 @@ message PlaceOrderResponse
 	required PlaceOrderErrorCode ErrorCode = 70;
 }
 
-enum PlaceOrderErrorCode
+message OrderStatusChangedNotification
 {
-	OrderPlaced = 0;
-	UnknownPlaceOrderError = 1;
+	required string OrderID = 10;
+	required int32 OrderStatus = 15;
 }

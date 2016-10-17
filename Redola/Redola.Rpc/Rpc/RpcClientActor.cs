@@ -50,5 +50,45 @@ namespace Redola.Rpc
         {
             return _localActor.SendMessage<R, P>(remoteActorType, request, timeout);
         }
+
+        public void Send<T>(string remoteActorType, string remoteActorName, ActorMessageEnvelope<T> message)
+        {
+            _localActor.Send(remoteActorType, remoteActorName, message);
+        }
+
+        public void BeginSend<T>(string remoteActorType, string remoteActorName, ActorMessageEnvelope<T> message)
+        {
+            _localActor.BeginSend(remoteActorType, remoteActorName, message);
+        }
+
+        public IAsyncResult BeginSend<T>(string remoteActorType, string remoteActorName, ActorMessageEnvelope<T> message, AsyncCallback callback, object state)
+        {
+            return _localActor.BeginSend(remoteActorType, remoteActorName, message, callback, state);
+        }
+
+        public void Send<T>(string remoteActorType, ActorMessageEnvelope<T> message)
+        {
+            _localActor.BeginSend(remoteActorType, message);
+        }
+
+        public void BeginSend<T>(string remoteActorType, ActorMessageEnvelope<T> message)
+        {
+            _localActor.BeginSend(remoteActorType, message);
+        }
+
+        public void Broadcast<T>(string remoteActorType, ActorMessageEnvelope<T> message)
+        {
+            _localActor.Broadcast(remoteActorType, message);
+        }
+
+        public void BeginBroadcast<T>(string remoteActorType, ActorMessageEnvelope<T> message)
+        {
+            _localActor.BeginBroadcast(remoteActorType, message);
+        }
+
+        public void EndSend(string remoteActorType, string remoteActorName, IAsyncResult asyncResult)
+        {
+            _localActor.EndSend(remoteActorType, remoteActorName, asyncResult);
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Logrila.Logging;
 using Redola.ActorModel;
 
@@ -58,6 +59,41 @@ namespace Redola.Rpc
                     envelope.MessageType, e.RemoteActor);
 
             base.OnActorDataReceived(sender, e);
+        }
+
+        public void Send<T>(string remoteActorType, string remoteActorName, ActorMessageEnvelope<T> message)
+        {
+            Send(remoteActorType, remoteActorName, message.ToBytes(this.Encoder));
+        }
+
+        public void BeginSend<T>(string remoteActorType, string remoteActorName, ActorMessageEnvelope<T> message)
+        {
+            BeginSend(remoteActorType, remoteActorName, message.ToBytes(this.Encoder));
+        }
+
+        public IAsyncResult BeginSend<T>(string remoteActorType, string remoteActorName, ActorMessageEnvelope<T> message, AsyncCallback callback, object state)
+        {
+            return BeginSend(remoteActorType, remoteActorName, message.ToBytes(this.Encoder), callback, state);
+        }
+
+        public void Send<T>(string remoteActorType, ActorMessageEnvelope<T> message)
+        {
+            BeginSend(remoteActorType, message.ToBytes(this.Encoder));
+        }
+
+        public void BeginSend<T>(string remoteActorType, ActorMessageEnvelope<T> message)
+        {
+            BeginSend(remoteActorType, message.ToBytes(this.Encoder));
+        }
+
+        public void Broadcast<T>(string remoteActorType, ActorMessageEnvelope<T> message)
+        {
+            Broadcast(remoteActorType, message.ToBytes(this.Encoder));
+        }
+
+        public void BeginBroadcast<T>(string remoteActorType, ActorMessageEnvelope<T> message)
+        {
+            BeginBroadcast(remoteActorType, message.ToBytes(this.Encoder));
         }
     }
 }

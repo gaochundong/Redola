@@ -1,6 +1,7 @@
 ﻿using System;
 using Logrila.Logging;
 using Logrila.Logging.NLogIntegration;
+using Redola.Rpc.TestContracts;
 
 namespace Redola.Rpc.TestRpcServer
 {
@@ -32,7 +33,20 @@ namespace Redola.Rpc.TestRpcServer
                 {
                     string text = Console.ReadLine().ToLowerInvariant();
                     if (text == "quit" || text == "exit")
+                    {
                         break;
+                    }
+                    else
+                    {
+                        int times = 0;
+                        if (int.TryParse(text, out times))
+                        {
+                            for (int i = 0; i < times; i++)
+                            {
+                                NotifyOrderChanged(log, actor);
+                            }
+                        }
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -41,6 +55,22 @@ namespace Redola.Rpc.TestRpcServer
             }
 
             actor.Shutdown();
+        }
+
+        private static void NotifyOrderChanged(ILog log, RpcServiceActor actor)
+        {
+            var notification = new ActorMessageEnvelope<OrderStatusChangedNotification>()
+            {
+                Message = new OrderStatusChangedNotification()
+                {
+                    OrderID = Guid.NewGuid().ToString(),
+                    OrderStatus = 1,
+                },
+            };
+
+            log.DebugFormat("NotifyOrderChanged, notify order changed with MessageID[{0}].",
+                notification.MessageID);
+            actor.BeginSend("client", notification);
         }
     }
 }

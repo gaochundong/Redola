@@ -20,6 +20,8 @@ namespace Redola.Rpc.TestRpcClient
 
             messages.Add(new Tuple<Type, Type>(typeof(PlaceOrderRequest), typeof(PlaceOrderResponse)));
 
+            messages.Add(new Tuple<Type, Type>(typeof(OrderStatusChangedNotification), typeof(OrderStatusChangedNotification)));
+
             return messages;
         }
     }
