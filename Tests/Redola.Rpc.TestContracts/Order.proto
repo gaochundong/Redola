@@ -17,7 +17,7 @@ message PlaceOrderRequest
 
 message PlaceOrderResponse
 {
-	required Order OrderContract = 15;
+	required Order Contract = 15;
 	
 	optional Order Order = 60;
 	required PlaceOrderErrorCode ErrorCode = 70;

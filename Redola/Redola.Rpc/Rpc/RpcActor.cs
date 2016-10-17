@@ -17,15 +17,22 @@ namespace Redola.Rpc
 
         public void Bootup()
         {
+            if (_localActor != null)
+                throw new InvalidOperationException("Already bootup.");
+
             var configruation = new RpcActorConfiguration();
             configruation.Build();
 
             _localActor = new BlockingRouteActor(configruation, _encoder, _decoder);
+            _localActor.Bootup();
         }
 
         public void Shutdown()
         {
-            _localActor.Shutdown();
+            if (_localActor != null)
+            {
+                _localActor.Shutdown();
+            }
         }
 
         public void RegisterRpcService(RpcService service)

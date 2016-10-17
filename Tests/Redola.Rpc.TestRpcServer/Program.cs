@@ -14,12 +14,12 @@ namespace Redola.Rpc.TestRpcServer
 
             var actor = new RpcActor();
 
-            var orderService = new OrderService(actor);
-            actor.RegisterRpcService(orderService);
-
             try
             {
                 actor.Bootup();
+
+                var orderService = new OrderService(actor);
+                actor.RegisterRpcService(orderService);
             }
             catch (Exception ex)
             {

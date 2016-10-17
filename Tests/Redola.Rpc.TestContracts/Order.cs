@@ -63,12 +63,12 @@ namespace Redola.Rpc.TestContracts
   {
     public PlaceOrderResponse() {}
     
-    private Redola.Rpc.TestContracts.Order _OrderContract;
-    [global::ProtoBuf.ProtoMember(15, IsRequired = true, Name=@"OrderContract", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public Redola.Rpc.TestContracts.Order OrderContract
+    private Redola.Rpc.TestContracts.Order _Contract;
+    [global::ProtoBuf.ProtoMember(15, IsRequired = true, Name=@"Contract", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public Redola.Rpc.TestContracts.Order Contract
     {
-      get { return _OrderContract; }
-      set { _OrderContract = value; }
+      get { return _Contract; }
+      set { _Contract = value; }
     }
     private Redola.Rpc.TestContracts.Order _Order = null;
     [global::ProtoBuf.ProtoMember(60, IsRequired = false, Name=@"Order", DataFormat = global::ProtoBuf.DataFormat.Default)]

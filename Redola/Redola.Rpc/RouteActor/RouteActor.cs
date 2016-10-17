@@ -17,6 +17,8 @@ namespace Redola.Rpc
             IActorMessageDecoder decoder)
             : base(configuration)
         {
+            _encoder = encoder;
+            _decoder = decoder;
         }
 
         public IActorMessageEncoder Encoder { get { return _encoder; } }
