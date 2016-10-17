@@ -1,10 +1,10 @@
 ﻿using System;
 using ProtoBuf;
 
-namespace Redola.ActorModel
+namespace Redola.Rpc
 {
     [ProtoContract(SkipConstructor = false, UseProtoMembersOnly = true)]
-    public class ActorMessageEnvelope : IActorMessageEnvelope
+    public class ActorMessageEnvelope
     {
         private static readonly DateTime _unixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
 

@@ -1,4 +1,6 @@
-﻿namespace Redola.ActorModel
+﻿using System;
+
+namespace Redola.Rpc
 {
     public class ActorMessageEncoder : IActorMessageEncoder
     {
@@ -14,7 +16,7 @@
             return _encoder.EncodeMessage(messageData);
         }
 
-        public byte[] Encode<T>(T messageData)
+        public byte[] EncodeMessageEnvelope<T>(T messageData)
         {
             var message = new ActorMessageEnvelope()
             {

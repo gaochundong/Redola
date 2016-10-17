@@ -1,6 +1,6 @@
 package Redola.ActorModel;
 
-option java_package = "com.tcminplay.fida.servicemodel";
+option java_package = "com.redola.actormodel";
 option java_outer_classname = "ActorEnvelope";
 
 message ActorMessageEnvelope

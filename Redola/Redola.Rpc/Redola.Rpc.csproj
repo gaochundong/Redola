@@ -45,6 +45,13 @@
     <Compile Include="..\SolutionVersion.cs">
       <Link>SolutionVersion.cs</Link>
     </Compile>
+    <Compile Include="Message\Encoding\ActorMessageDecoder.cs" />
+    <Compile Include="Message\Encoding\ActorMessageEncoder.cs" />
+    <Compile Include="Message\Encoding\IActorMessageDecoder.cs" />
+    <Compile Include="Message\Encoding\IActorMessageEncoder.cs" />
+    <Compile Include="Message\Encoding\IMessageDecoder.cs" />
+    <Compile Include="Message\Encoding\IMessageEncoder.cs" />
+    <Compile Include="Message\Envelope\ActorMessageEnvelope.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -54,6 +61,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Message\Envelope\ActorMessageEnvelope.proto" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
