@@ -51,10 +51,14 @@
     </Compile>
     <Compile Include="Message\Encoding\ActorMessageDecoder.cs" />
     <Compile Include="Message\Encoding\ActorMessageEncoder.cs" />
+    <Compile Include="Message\Encoding\Compression\GZipCompression.cs" />
     <Compile Include="Message\Encoding\IActorMessageDecoder.cs" />
     <Compile Include="Message\Encoding\IActorMessageEncoder.cs" />
     <Compile Include="Message\Encoding\IMessageDecoder.cs" />
     <Compile Include="Message\Encoding\IMessageEncoder.cs" />
+    <Compile Include="Message\Encoding\Protobuf\ProtocolBuffersConvert.cs" />
+    <Compile Include="Message\Encoding\Protobuf\ProtocolBuffersMessageDecoder.cs" />
+    <Compile Include="Message\Encoding\Protobuf\ProtocolBuffersMessageEncoder.cs" />
     <Compile Include="Message\Envelope\ActorMessageEnvelopeExtensions.cs" />
     <Compile Include="Message\Envelope\ActorMessageEnvelopeGeneric.cs" />
     <Compile Include="Message\Envelope\ActorMessageEnvelope.cs" />

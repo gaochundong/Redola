@@ -4,11 +4,11 @@ namespace Redola.Rpc
 {
     public class RpcActor : BlockingRouteActor
     {
-        public RpcActor(
-            ActorConfiguration configuration,
-            IActorMessageEncoder encoder,
-            IActorMessageDecoder decoder)
-            : base(configuration, encoder, decoder)
+        private static readonly IActorMessageEncoder _encoder = new ActorMessageEncoder(new ProtocolBuffersMessageEncoder());
+        private static readonly IActorMessageDecoder _decoder = new ActorMessageDecoder(new ProtocolBuffersMessageDecoder());
+
+        public RpcActor(ActorConfiguration configuration)
+            : base(configuration, _encoder, _decoder)
         {
         }
     }
