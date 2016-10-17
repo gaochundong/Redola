@@ -7,8 +7,8 @@ namespace Redola.Rpc
     public class RouteActor : Actor
     {
         private ILog _log = Logger.Get<RouteActor>();
-        private IActorMessageEncoder _encoder;
-        private IActorMessageDecoder _decoder;
+        private IActorMessageEncoder _encoder = null;
+        private IActorMessageDecoder _decoder = null;
         private List<IRouteActorMessageHandler> _messageHandlers = new List<IRouteActorMessageHandler>();
 
         public RouteActor(
