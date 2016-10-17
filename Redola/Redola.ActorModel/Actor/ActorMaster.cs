@@ -28,8 +28,10 @@ namespace Redola.ActorModel
                 this.ChannelConfiguration.FrameBuilder.DecodePayload(
                     e.Data, e.DataOffset, actorLookupRequestFrameHeader,
                     out payload, out payloadOffset, out payloadCount);
-                var actorLookupRequestData = this.ChannelConfiguration.FrameBuilder.ControlFrameDataDecoder.DecodeFrameData<ActorDescriptionLookup>(
-                    payload, payloadOffset, payloadCount);
+                var actorLookupRequestData = this.ChannelConfiguration
+                    .FrameBuilder
+                    .ControlFrameDataDecoder
+                    .DecodeFrameData<ActorDescriptionLookup>(payload, payloadOffset, payloadCount);
                 var lookupActorType = actorLookupRequestData != null ? actorLookupRequestData.Type : null;
 
                 var actorCollection = new ActorDescriptionCollection();
