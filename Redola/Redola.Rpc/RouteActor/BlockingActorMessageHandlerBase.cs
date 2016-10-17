@@ -1,6 +1,7 @@
 ﻿using System;
+using Redola.ActorModel;
 
-namespace Redola.ActorModel
+namespace Redola.Rpc
 {
     public abstract class BlockingActorMessageHandlerBase : RouteActorMessageHandlerBase, IBlockingActorMessageHandler
     {
@@ -16,7 +17,7 @@ namespace Redola.ActorModel
 
         public new BlockingRouteActor Actor { get { return _localActor; } }
 
-        protected override void DoHandleMessage(ActorDescription remoteActor, MessageEnvelope envelope)
+        protected override void DoHandleMessage(ActorDescription remoteActor, ActorMessageEnvelope envelope)
         {
             envelope.HandledBy(this.Actor, GetAdmissibleMessageType(envelope.MessageType), this.Actor.Decoder, remoteActor,
                 (object o) =>

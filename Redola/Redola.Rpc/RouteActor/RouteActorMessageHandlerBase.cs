@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Logrila.Logging;
+using Redola.ActorModel;
 
-namespace Redola.ActorModel
+namespace Redola.Rpc
 {
     public abstract class RouteActorMessageHandlerBase : IRouteActorMessageHandler
     {
@@ -33,15 +34,15 @@ namespace Redola.ActorModel
 
         public bool IsMessageHandledAsyncWay(string messageType)
         {
-            return _admissibleMessages[messageType].AsyncWay;
+            return _admissibleMessages[messageType].IsHandledInSeparateThread;
         }
 
-        public bool CanHandleMessage(MessageEnvelope envelope)
+        public bool CanHandleMessage(ActorMessageEnvelope envelope)
         {
             return _admissibleMessages.ContainsKey(envelope.MessageType);
         }
 
-        public virtual void HandleMessage(ActorDescription remoteActor, MessageEnvelope envelope)
+        public void HandleMessage(ActorDescription remoteActor, ActorMessageEnvelope envelope)
         {
             if (!IsMessageHandledAsyncWay(envelope.MessageType))
             {
@@ -63,7 +64,7 @@ namespace Redola.ActorModel
             }
         }
 
-        protected virtual void DoHandleMessage(ActorDescription remoteActor, MessageEnvelope envelope)
+        protected virtual void DoHandleMessage(ActorDescription remoteActor, ActorMessageEnvelope envelope)
         {
             envelope.HandledBy(this, GetAdmissibleMessageType(envelope.MessageType), this.Actor.Decoder, remoteActor);
         }

@@ -1,17 +1,26 @@
 ﻿using System.Collections.Generic;
 using Logrila.Logging;
+using Redola.ActorModel;
 
-namespace Redola.ActorModel
+namespace Redola.Rpc
 {
     public class RouteActor : Actor
     {
         private ILog _log = Logger.Get<RouteActor>();
+        private IActorMessageEncoder _encoder;
+        private IActorMessageDecoder _decoder;
         private List<IRouteActorMessageHandler> _messageHandlers = new List<IRouteActorMessageHandler>();
 
-        public RouteActor(ActorConfiguration configuration)
+        public RouteActor(
+            ActorConfiguration configuration,
+            IActorMessageEncoder encoder,
+            IActorMessageDecoder decoder)
             : base(configuration)
         {
         }
+
+        public IActorMessageEncoder Encoder { get { return _encoder; } }
+        public IActorMessageDecoder Decoder { get { return _decoder; } }
 
         public void RegisterMessageHandler(IRouteActorMessageHandler messageHandler)
         {
@@ -24,32 +33,10 @@ namespace Redola.ActorModel
         }
 
         protected override void OnActorDataReceived(object sender, ActorDataReceivedEventArgs e)
-        {         
-            var envelope = this.Decoder.Decode<MessageEnvelope>(e.Data, e.DataOffset, e.DataLength);
-
-            if (envelope.Source == null)
-                envelope.Source = Endpoint.CreateEndpoint();
-            envelope.Source.AttachPath(e.RemoteActor.GetKey());
-
-            if (envelope.Target != null)
-                envelope.Target.DetachPath();
+        {
+            var envelope = this.Decoder.DecodeEnvelope(e.Data, e.DataOffset, e.DataLength);
 
             bool handled = false;
-
-            if (!handled)
-            {
-                if (envelope.Target != null)
-                {
-                    var target = envelope.Target.PeakPath();
-                    if (!string.IsNullOrEmpty(target))
-                    {
-                        string remoteActorType, remoteActorName;
-                        ActorDescription.Decode(target, out remoteActorType, out remoteActorName);
-                        this.SendAsync(remoteActorType, remoteActorName, envelope.ToBytes(this.Encoder));
-                        handled = true;
-                    }
-                }
-            }
 
             if (!handled)
             {

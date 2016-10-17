@@ -2,9 +2,10 @@
 using System.Collections.Concurrent;
 using System.Threading;
 using Logrila.Logging;
+using Redola.ActorModel;
 using Redola.ActorModel.Extensions;
 
-namespace Redola.ActorModel
+namespace Redola.Rpc
 {
     public class BlockingRouteActor : RouteActor
     {
@@ -12,17 +13,20 @@ namespace Redola.ActorModel
         private ConcurrentDictionary<string, BlockingCallbackHolder> _callbacks
             = new ConcurrentDictionary<string, BlockingCallbackHolder>();
 
-        public BlockingRouteActor(ActorConfiguration configuration)
-            : base(configuration)
+        public BlockingRouteActor(
+            ActorConfiguration configuration,
+            IActorMessageEncoder encoder,
+            IActorMessageDecoder decoder)
+            : base(configuration, encoder, decoder)
         {
         }
 
-        public P SendMessage<R, P>(string remoteActorType, MessageEnvelope<R> request)
+        public P SendMessage<R, P>(string remoteActorType, ActorMessageEnvelope<R> request)
         {
             return SendMessage<R, P>(remoteActorType, request, TimeSpan.FromSeconds(30));
         }
 
-        public P SendMessage<R, P>(string remoteActorType, MessageEnvelope<R> request, TimeSpan timeout)
+        public P SendMessage<R, P>(string remoteActorType, ActorMessageEnvelope<R> request, TimeSpan timeout)
         {
             P response = default(P);
             Action<P> callback = (r) => { response = r; };
@@ -32,7 +36,7 @@ namespace Redola.ActorModel
                 ManualResetEvent waiter = new ManualResetEvent(false);
                 _callbacks.Add(request.MessageID, new BlockingCallbackHolder(request.MessageID, waiter, callback));
 
-                this.SendAsync(remoteActorType, request.ToBytes(this.Encoder));
+                this.BeginSend(remoteActorType, request.ToBytes(this.Encoder));
 
                 if (!waiter.WaitOne(timeout))
                 {
@@ -52,7 +56,7 @@ namespace Redola.ActorModel
             return response;
         }
 
-        public void OnSyncMessage<P>(ActorDescription remoteActor, MessageEnvelope<P> response)
+        public void OnSyncMessage<P>(ActorDescription remoteActor, ActorMessageEnvelope<P> response)
         {
             BlockingCallbackHolder callback = null;
             if (_callbacks.TryRemove(response.CorrelationID, out callback)

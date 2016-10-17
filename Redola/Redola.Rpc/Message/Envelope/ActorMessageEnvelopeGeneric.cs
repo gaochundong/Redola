@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Xml.Serialization;
 using ProtoBuf;
 
 namespace Redola.Rpc
 {
+    [Serializable]
+    [XmlType(TypeName = "Message")]
     [ProtoContract(SkipConstructor = false, UseProtoMembersOnly = true)]
-    public class ActorMessageEnvelope
+    public sealed class ActorMessageEnvelope<T>
     {
         private static readonly DateTime _unixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
 
@@ -12,6 +15,7 @@ namespace Redola.Rpc
         {
             this.MessageID = Guid.NewGuid().ToString();
             this.MessageTime = DateTime.UtcNow;
+            this.MessageType = typeof(T).Name;
         }
 
         [ProtoMember(10)]
@@ -50,24 +54,25 @@ namespace Redola.Rpc
 
         [ProtoMember(80)]
         public string MessageType { get; set; }
-        [ProtoMember(90)]
-        public byte[] MessageData { get; set; }
 
-        public ActorMessageEnvelope<T> ConvertTo<T>()
+        [XmlIgnore]
+        public T Message { get; set; }
+
+        public ActorMessageEnvelope ConvertToNonGeneric()
         {
-            var envelope = new ActorMessageEnvelope<T>();
+            var envelope = new ActorMessageEnvelope();
             envelope.CopyFrom(this);
             return envelope;
         }
 
-        public static ActorMessageEnvelope NewFrom<T>(ActorMessageEnvelope<T> source)
+        public static ActorMessageEnvelope<T> NewFrom(ActorMessageEnvelope source)
         {
-            var envelope = new ActorMessageEnvelope();
+            var envelope = new ActorMessageEnvelope<T>();
             envelope.CopyFrom(source);
             return envelope;
         }
 
-        public void CopyFrom<T>(ActorMessageEnvelope<T> source)
+        public void CopyFrom(ActorMessageEnvelope source)
         {
             this.MessageID = source.MessageID;
             this.MessageTime = source.MessageTime;

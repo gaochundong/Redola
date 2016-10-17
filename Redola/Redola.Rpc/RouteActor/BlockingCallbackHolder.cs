@@ -1,6 +1,6 @@
 ﻿using System.Threading;
 
-namespace Redola.ActorModel
+namespace Redola.Rpc
 {
     public class BlockingCallbackHolder
     {

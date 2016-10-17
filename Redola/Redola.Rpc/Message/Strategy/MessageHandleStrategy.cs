@@ -1,12 +1,12 @@
 ﻿using System;
 
-namespace Redola.ActorModel
+namespace Redola.Rpc
 {
     public sealed class MessageHandleStrategy
     {
         public MessageHandleStrategy()
         {
-            this.AsyncWay = true;
+            this.IsHandledInSeparateThread = true;
         }
 
         public MessageHandleStrategy(Type messageType)
@@ -17,12 +17,12 @@ namespace Redola.ActorModel
 
         public Type MessageType { get; set; }
 
-        public bool AsyncWay { get; set; }
+        public bool IsHandledInSeparateThread { get; set; }
 
         public override string ToString()
         {
-            return string.Format("MessageType[{0}], AsyncWay[{1}]",
-                this.MessageType, this.AsyncWay);
+            return string.Format("MessageType[{0}], IsHandledInSeparateThread[{1}]",
+                this.MessageType, this.IsHandledInSeparateThread);
         }
     }
 }

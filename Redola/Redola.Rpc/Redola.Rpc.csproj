@@ -30,6 +30,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Logrila.Logging, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Logrila.Logging.1.0.1.0\lib\net46\Logrila.Logging.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="protobuf-net, Version=2.1.0.0, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
       <HintPath>..\packages\protobuf-net.2.1.0\lib\net451\protobuf-net.dll</HintPath>
       <Private>True</Private>
@@ -51,8 +55,19 @@
     <Compile Include="Message\Encoding\IActorMessageEncoder.cs" />
     <Compile Include="Message\Encoding\IMessageDecoder.cs" />
     <Compile Include="Message\Encoding\IMessageEncoder.cs" />
+    <Compile Include="Message\Envelope\ActorMessageEnvelopeExtensions.cs" />
+    <Compile Include="Message\Envelope\ActorMessageEnvelopeGeneric.cs" />
     <Compile Include="Message\Envelope\ActorMessageEnvelope.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RouteActor\BlockingActorMessageHandlerBase.cs" />
+    <Compile Include="RouteActor\BlockingCallbackHolder.cs" />
+    <Compile Include="RouteActor\BlockingRouteActor.cs" />
+    <Compile Include="RouteActor\Interfaces\IActorMessageHandler.cs" />
+    <Compile Include="RouteActor\Interfaces\IBlockingActorMessageHandler.cs" />
+    <Compile Include="RouteActor\Interfaces\IRouteActorMessageHandler.cs" />
+    <Compile Include="Message\Strategy\MessageHandleStrategy.cs" />
+    <Compile Include="RouteActor\RouteActor.cs" />
+    <Compile Include="RouteActor\RouteActorMessageHandlerBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Redola.ActorModel\Redola.ActorModel.csproj">

@@ -1,12 +1,16 @@
 package Redola.ActorModel;
 
-option java_package = "com.redola.actormodel";
+option java_package = "com.redola.rpc";
 option java_outer_classname = "ActorEnvelope";
 
 message ActorMessageEnvelope
 {
 	required string MessageID = 10;
 	required int64 MessageTime = 20;
+
+	optional string CorrelationID = 30;
+	optional int64 CorrelationTime = 40;
+
 	required string MessageType = 80;
 	optional bytes MessageData = 90;
 }

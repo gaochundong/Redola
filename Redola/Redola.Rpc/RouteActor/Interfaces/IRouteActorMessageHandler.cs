@@ -1,4 +1,4 @@
-﻿namespace Redola.ActorModel
+﻿namespace Redola.Rpc
 {
     public interface IRouteActorMessageHandler : IActorMessageHandler
     {
