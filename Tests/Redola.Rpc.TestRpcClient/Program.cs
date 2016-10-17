@@ -20,7 +20,7 @@ namespace Redola.Rpc.TestRpcClient
                 actor.Bootup();
 
                 var orderClient = new OrderClient(actor);
-                actor.RegisterRpcClient(orderClient);
+                actor.RegisterRpcService(orderClient);
             }
             catch (Exception ex)
             {

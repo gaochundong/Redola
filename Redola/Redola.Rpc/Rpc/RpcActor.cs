@@ -36,11 +36,6 @@ namespace Redola.Rpc
             }
         }
 
-        public void RegisterRpcClient(RpcClient client)
-        {
-            _localActor.RegisterMessageHandler(client);
-        }
-
         public void RegisterRpcService(RpcService service)
         {
             _localActor.RegisterMessageHandler(service);

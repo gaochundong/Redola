@@ -6,7 +6,7 @@ using Redola.Rpc.TestContracts;
 
 namespace Redola.Rpc.TestRpcClient
 {
-    public class OrderClient : RpcClient
+    public class OrderClient : RpcService
     {
         private ILog _log = Logger.Get<OrderClient>();
 
