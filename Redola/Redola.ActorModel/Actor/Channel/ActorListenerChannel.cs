@@ -75,7 +75,7 @@ namespace Redola.ActorModel
             _remoteActors.Clear();
             _actorKeys.Clear();
         }
-        
+
         private void OnConnected(object sender, ActorTransportSessionConnectedEventArgs e)
         {
             var session = new ActorChannelSession(_localActor, _channelConfiguration, e.Session);
@@ -97,7 +97,7 @@ namespace Redola.ActorModel
             ActorDescription remoteActor = null;
             if (_remoteActors.TryRemove(e.SessionKey, out remoteActor))
             {
-                _actorKeys.Remove(remoteActor.GetKey());                
+                _actorKeys.Remove(remoteActor.GetKey());
                 _log.InfoFormat("Disconnected with remote [{0}], SessionKey[{1}].", remoteActor, e.SessionKey);
 
                 if (Disconnected != null)
@@ -110,7 +110,7 @@ namespace Redola.ActorModel
         private void OnDataReceived(object sender, ActorTransportSessionDataReceivedEventArgs e)
         {
             ActorChannelSession session = null;
-            if(_sessions.TryGetValue(e.SessionKey, out session))
+            if (_sessions.TryGetValue(e.SessionKey, out session))
             {
                 session.OnDataReceived(e.Data, e.DataOffset, e.DataLength);
             }
@@ -151,7 +151,11 @@ namespace Redola.ActorModel
             var sessionKey = _actorKeys.Get(actorKey);
             if (!string.IsNullOrEmpty(sessionKey))
             {
-                _listener.SendTo(sessionKey, data, offset, count);
+                ActorChannelSession session = null;
+                if (_sessions.TryGetValue(sessionKey, out session))
+                {
+                    session.Send(actorType, actorName, data, offset, count);
+                }
             }
         }
 
@@ -166,7 +170,11 @@ namespace Redola.ActorModel
             var sessionKey = _actorKeys.Get(actorKey);
             if (!string.IsNullOrEmpty(sessionKey))
             {
-                _listener.BeginSendTo(sessionKey, data, offset, count);
+                ActorChannelSession session = null;
+                if (_sessions.TryGetValue(sessionKey, out session))
+                {
+                    session.BeginSend(actorType, actorName, data, offset, count);
+                }
             }
         }
 
@@ -181,7 +189,11 @@ namespace Redola.ActorModel
             if (actor != null)
             {
                 var sessionKey = _actorKeys.Get(actor.GetKey());
-                _listener.SendTo(sessionKey, data, offset, count);
+                ActorChannelSession session = null;
+                if (_sessions.TryGetValue(sessionKey, out session))
+                {
+                    session.Send(actorType, data, offset, count);
+                }
             }
         }
 
@@ -196,7 +208,11 @@ namespace Redola.ActorModel
             if (actor != null)
             {
                 var sessionKey = _actorKeys.Get(actor.GetKey());
-                _listener.BeginSendTo(sessionKey, data, offset, count);
+                ActorChannelSession session = null;
+                if (_sessions.TryGetValue(sessionKey, out session))
+                {
+                    session.BeginSend(actorType, data, offset, count);
+                }
             }
         }
 
@@ -211,7 +227,11 @@ namespace Redola.ActorModel
             var sessionKey = _actorKeys.Get(actorKey);
             if (!string.IsNullOrEmpty(sessionKey))
             {
-                return _listener.BeginSendTo(sessionKey, data, offset, count, callback, state);
+                ActorChannelSession session = null;
+                if (_sessions.TryGetValue(sessionKey, out session))
+                {
+                    return session.BeginSend(actorType, actorName, data, offset, count, callback, state);
+                }
             }
 
             return null;
