@@ -1,4 +1,5 @@
 ﻿using System;
+using Logrila.Logging;
 using Logrila.Logging.NLogIntegration;
 using Redola.ActorModel;
 
@@ -10,11 +11,21 @@ namespace Redola.Rpc.TestRpcMaster
         {
             NLogLogger.Use();
 
+            ILog log = Logger.Get<Program>();
+
             var configruation = new RpcActorConfiguration();
             configruation.Build();
 
             var master = new ActorMaster(configruation);
-            master.Bootup();
+
+            try
+            {
+                master.Bootup();
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex.Message, ex);
+            }
 
             while (true)
             {
@@ -26,7 +37,7 @@ namespace Redola.Rpc.TestRpcMaster
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.Message);
+                    log.Error(ex.Message, ex);
                 }
             }
 

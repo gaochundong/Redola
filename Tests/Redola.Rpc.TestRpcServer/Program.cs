@@ -1,4 +1,5 @@
 ﻿using System;
+using Logrila.Logging;
 using Logrila.Logging.NLogIntegration;
 
 namespace Redola.Rpc.TestRpcServer
@@ -9,6 +10,8 @@ namespace Redola.Rpc.TestRpcServer
         {
             NLogLogger.Use();
 
+            ILog log = Logger.Get<Program>();
+
             var configruation = new RpcActorConfiguration();
             configruation.Build();
 
@@ -17,7 +20,14 @@ namespace Redola.Rpc.TestRpcServer
             var orderService = new OrderService(actor);
             actor.RegisterRpcService(orderService);
 
-            actor.Bootup();
+            try
+            {
+                actor.Bootup();
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex.Message, ex);
+            }
 
             while (true)
             {
@@ -29,7 +39,7 @@ namespace Redola.Rpc.TestRpcServer
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.Message);
+                    log.Error(ex.Message, ex);
                 }
             }
 
