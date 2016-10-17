@@ -32,9 +32,9 @@ namespace Redola.Rpc
             return _admissibleMessages[messageType].MessageType;
         }
 
-        public bool IsMessageHandledAsyncWay(string messageType)
+        public MessageHandleStrategy GetAdmissibleMessageHandleStrategy(string messageType)
         {
-            return _admissibleMessages[messageType].IsHandledInSeparateThread;
+            return _admissibleMessages[messageType];
         }
 
         public bool CanHandleMessage(ActorMessageEnvelope envelope)
@@ -44,7 +44,7 @@ namespace Redola.Rpc
 
         public void HandleMessage(ActorDescription remoteActor, ActorMessageEnvelope envelope)
         {
-            if (!IsMessageHandledAsyncWay(envelope.MessageType))
+            if (!GetAdmissibleMessageHandleStrategy(envelope.MessageType).IsHandledInSeparateThread)
             {
                 DoHandleMessage(remoteActor, envelope);
             }

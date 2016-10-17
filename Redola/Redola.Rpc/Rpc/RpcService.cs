@@ -5,7 +5,7 @@ namespace Redola.Rpc
 {
     public abstract class RpcService : RouteActorMessageHandlerBase
     {
-        public RpcService(RpcServiceActor localActor)
+        public RpcService(RpcActor localActor)
             : base(localActor.Actor)
         {
         }
@@ -14,16 +14,16 @@ namespace Redola.Rpc
         {
             base.RegisterAdmissibleMessages(admissibleMessages);
 
-            var rpcMessages = RegisterRpcMessages();
-            if (rpcMessages != null)
+            var registrations = RegisterRpcMessages();
+            if (registrations != null)
             {
-                foreach (var pair in rpcMessages)
+                foreach (var registration in registrations)
                 {
-                    admissibleMessages.Add(pair.Item1.Name, new MessageHandleStrategy(pair.Item1));
+                    admissibleMessages.Add(registration.MessageType.Name, registration.ToStrategy());
                 }
             }
         }
 
-        protected abstract IEnumerable<Tuple<Type, Type>> RegisterRpcMessages();
+        protected abstract IEnumerable<RpcMessageRegistration> RegisterRpcMessages();
     }
 }

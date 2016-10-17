@@ -2,15 +2,15 @@
 
 namespace Redola.Rpc
 {
-    public sealed class MessageHandleStrategy
+    public class RpcMessageRegistration
     {
-        public MessageHandleStrategy()
+        public RpcMessageRegistration()
         {
             this.IsHandledInSeparateThread = true;
             this.IsRequestResponseModel = false;
         }
 
-        public MessageHandleStrategy(Type messageType)
+        public RpcMessageRegistration(Type messageType)
             : this()
         {
             this.MessageType = messageType;
@@ -26,6 +26,15 @@ namespace Redola.Rpc
         {
             return string.Format("MessageType[{0}], IsHandledInSeparateThread[{1}], IsRequestResponseModel[{2}]",
                 this.MessageType, this.IsHandledInSeparateThread, this.IsRequestResponseModel);
+        }
+
+        public MessageHandleStrategy ToStrategy()
+        {
+            return new MessageHandleStrategy(this.MessageType)
+            {
+                IsHandledInSeparateThread = this.IsHandledInSeparateThread,
+                IsRequestResponseModel = this.IsRequestResponseModel,
+            };
         }
     }
 }

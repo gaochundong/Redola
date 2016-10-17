@@ -13,7 +13,7 @@ namespace Redola.Rpc.TestRpcServer
 
             ILog log = Logger.Get<Program>();
 
-            var actor = new RpcServiceActor();
+            var actor = new RpcActor();
 
             try
             {
@@ -57,7 +57,7 @@ namespace Redola.Rpc.TestRpcServer
             actor.Shutdown();
         }
 
-        private static void NotifyOrderChanged(ILog log, RpcServiceActor actor)
+        private static void NotifyOrderChanged(ILog log, RpcActor actor)
         {
             var notification = new ActorMessageEnvelope<OrderStatusChangedNotification>()
             {

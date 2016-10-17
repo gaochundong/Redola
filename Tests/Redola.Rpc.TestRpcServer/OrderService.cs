@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Logrila.Logging;
 using Redola.ActorModel;
 using Redola.Rpc.TestContracts;
@@ -10,16 +9,16 @@ namespace Redola.Rpc.TestRpcServer
     {
         private ILog _log = Logger.Get<OrderService>();
 
-        public OrderService(RpcServiceActor localActor)
+        public OrderService(RpcActor localActor)
             : base(localActor)
         {
         }
 
-        protected override IEnumerable<Tuple<Type, Type>> RegisterRpcMessages()
+        protected override IEnumerable<RpcMessageRegistration> RegisterRpcMessages()
         {
-            var messages = new List<Tuple<Type, Type>>();
+            var messages = new List<RpcMessageRegistration>();
 
-            messages.Add(new Tuple<Type, Type>(typeof(PlaceOrderRequest), typeof(PlaceOrderResponse)));
+            messages.Add(new RpcMessageRegistration(typeof(PlaceOrderRequest)) { IsRequestResponseModel = false });
 
             return messages;
         }

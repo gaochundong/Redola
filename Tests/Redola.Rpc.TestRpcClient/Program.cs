@@ -13,7 +13,7 @@ namespace Redola.Rpc.TestRpcClient
 
             ILog log = Logger.Get<Program>();
 
-            var actor = new RpcClientActor();
+            var actor = new RpcActor();
 
             try
             {
@@ -57,7 +57,7 @@ namespace Redola.Rpc.TestRpcClient
             actor.Shutdown();
         }
 
-        private static void PlaceOrder(ILog log, RpcClientActor actor)
+        private static void PlaceOrder(ILog log, RpcActor actor)
         {
             var request = new ActorMessageEnvelope<PlaceOrderRequest>()
             {
