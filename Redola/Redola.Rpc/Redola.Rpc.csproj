@@ -68,7 +68,8 @@
     <Compile Include="Message\Strategy\MessageHandleStrategy.cs" />
     <Compile Include="RouteActor\RouteActor.cs" />
     <Compile Include="RouteActor\RouteActorMessageHandlerBase.cs" />
-    <Compile Include="Rpc\RpcMessageHandler.cs" />
+    <Compile Include="Rpc\RpcActor.cs" />
+    <Compile Include="Rpc\RpcService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Redola.ActorModel\Redola.ActorModel.csproj">
