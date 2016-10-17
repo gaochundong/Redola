@@ -1,6 +1,4 @@
-﻿using Redola.ActorModel;
-
-namespace Redola.Rpc
+﻿namespace Redola.Rpc
 {
     public class RpcActor : BlockingRouteActor
     {
@@ -10,6 +8,11 @@ namespace Redola.Rpc
         public RpcActor(RpcActorConfiguration configuration)
             : base(configuration, _encoder, _decoder)
         {
+        }
+
+        public void RegisterRpcService(RpcService service)
+        {
+            this.RegisterMessageHandler(service);
         }
     }
 }

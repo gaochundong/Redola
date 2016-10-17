@@ -62,6 +62,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Redola\Redola.ActorModel\Redola.ActorModel.csproj">
+      <Project>{05e69e70-97ff-4fff-b106-e423b6f51a00}</Project>
+      <Name>Redola.ActorModel</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Redola\Redola.Rpc\Redola.Rpc.csproj">
       <Project>{465f580d-f09f-4362-a6ee-40b2627b11a4}</Project>
       <Name>Redola.Rpc</Name>
