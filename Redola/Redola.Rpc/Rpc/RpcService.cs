@@ -19,7 +19,7 @@ namespace Redola.Rpc
             {
                 foreach (var pair in rpcMessages)
                 {
-                    admissibleMessages.Add(pair.Item2.Name, new MessageHandleStrategy(pair.Item2));
+                    admissibleMessages.Add(pair.Item1.Name, new MessageHandleStrategy(pair.Item1));
                 }
             }
         }

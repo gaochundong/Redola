@@ -24,7 +24,7 @@ namespace Redola.Rpc
 
         public static byte[] ToBytes(this ActorMessageEnvelope envelope, IActorMessageEncoder encoder)
         {
-            return encoder.EncodeMessageEnvelope(envelope);
+            return encoder.EncodeMessage(envelope);
         }
 
         public static byte[] ToBytes<T>(this ActorMessageEnvelope<T> envelope, IActorMessageEncoder encoder)
