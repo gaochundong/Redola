@@ -6,7 +6,7 @@ namespace Redola.Rpc
     public abstract class RpcService : BlockingActorMessageHandlerBase
     {
         public RpcService(RpcActor localActor)
-            : base(localActor)
+            : base(localActor.Actor)
         {
         }
 

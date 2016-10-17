@@ -13,10 +13,7 @@ namespace Redola.Rpc.TestRpcClient
 
             ILog log = Logger.Get<Program>();
 
-            var configruation = new RpcActorConfiguration();
-            configruation.Build();
-
-            var actor = new RpcActor(configruation);
+            var actor = new RpcActor();
 
             try
             {
@@ -72,9 +69,13 @@ namespace Redola.Rpc.TestRpcClient
                 },
             };
 
-            log.DebugFormat("PlaceOrder, request order contract [{0}] to server.", request.Message.Contract.OrderID);
-            var response = actor.SendMessage<PlaceOrderRequest, PlaceOrderResponse>("server", request);
-            log.DebugFormat("PlaceOrder, response order [{0}] from server.", "");
+            log.DebugFormat("PlaceOrder, send place order request to server with MessageID[{0}].",
+                request.MessageID);
+
+            var response = actor.Send<PlaceOrderRequest, PlaceOrderResponse>("server", request);
+
+            log.DebugFormat("PlaceOrder, receive place order response from server with MessageID[{0}] and CorrelationID[{1}].",
+                response.MessageID, response.CorrelationID);
         }
     }
 }

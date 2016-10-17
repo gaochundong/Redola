@@ -21,15 +21,15 @@ namespace Redola.Rpc
         {
         }
 
-        public P SendMessage<R, P>(string remoteActorType, ActorMessageEnvelope<R> request)
+        public ActorMessageEnvelope<P> SendMessage<R, P>(string remoteActorType, ActorMessageEnvelope<R> request)
         {
             return SendMessage<R, P>(remoteActorType, request, TimeSpan.FromSeconds(30));
         }
 
-        public P SendMessage<R, P>(string remoteActorType, ActorMessageEnvelope<R> request, TimeSpan timeout)
+        public ActorMessageEnvelope<P> SendMessage<R, P>(string remoteActorType, ActorMessageEnvelope<R> request, TimeSpan timeout)
         {
-            P response = default(P);
-            Action<P> callback = (r) => { response = r; };
+            ActorMessageEnvelope<P> response = default(ActorMessageEnvelope<P>);
+            Action<ActorMessageEnvelope<P>> callback = (r) => { response = r; };
 
             try
             {
@@ -62,10 +62,10 @@ namespace Redola.Rpc
             if (_callbacks.TryRemove(response.CorrelationID, out callback)
                 && callback != null)
             {
-                var action = callback.Action as Action<P>;
+                var action = callback.Action as Action<ActorMessageEnvelope<P>>;
                 if (action != null)
                 {
-                    action.Invoke(response.Message);
+                    action.Invoke(response);
                 }
 
                 try
