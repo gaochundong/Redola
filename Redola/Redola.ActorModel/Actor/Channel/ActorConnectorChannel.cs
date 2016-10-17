@@ -226,11 +226,18 @@ namespace Redola.ActorModel
                 out actorKeepAliveRequestFrameHeader);
             if (isHeaderDecoded && actorKeepAliveRequestFrameHeader.OpCode == OpCode.Ping)
             {
+                _log.DebugFormat("KeepAlive receive request from remote actor [{0}] to local actor [{1}].", _remoteActor, _localActor);
+
                 var actorKeepAliveResponse = new PongFrame();
                 var actorKeepAliveResponseBuffer = _channelConfiguration.FrameBuilder.EncodeFrame(actorKeepAliveResponse);
 
-                _log.DebugFormat("KeepAlive response from local actor [{0}] to remote actor [{1}].", _localActor, _remoteActor);
+                _log.DebugFormat("KeepAlive send response from local actor [{0}] to remote actor [{1}].", _localActor, _remoteActor);
                 _connector.BeginSend(actorKeepAliveResponseBuffer);
+            }
+            else if (isHeaderDecoded && actorKeepAliveRequestFrameHeader.OpCode == OpCode.Pong)
+            {
+                _log.DebugFormat("KeepAlive receive response from remote actor [{0}] to local actor [{1}].", _remoteActor, _localActor);
+                StopKeepAliveTimeoutTimer();
             }
             else
             {
@@ -379,12 +386,16 @@ namespace Redola.ActorModel
                     if (!Active)
                         return;
 
+                    if (_localActor.Type == _remoteActor.Type
+                        && _localActor.Name == _remoteActor.Name)
+                        return;
+
                     if (_keepAliveTracker.ShouldSendKeepAlive())
                     {
                         var actorKeepAliveRequest = new PingFrame();
                         var actorKeepAliveRequestBuffer = _channelConfiguration.FrameBuilder.EncodeFrame(actorKeepAliveRequest);
 
-                        _log.DebugFormat("KeepAlive request from local actor [{0}] to remote actor [{1}].", _localActor, _remoteActor);
+                        _log.DebugFormat("KeepAlive send request from local actor [{0}] to remote actor [{1}].", _localActor, _remoteActor);
 
                         _connector.BeginSend(actorKeepAliveRequestBuffer);
                         StartKeepAliveTimeoutTimer();

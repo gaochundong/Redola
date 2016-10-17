@@ -112,7 +112,7 @@ namespace Redola.ActorModel
         private void OnClientDataReceived(object sender, TcpClientDataReceivedEventArgs e)
         {
             ActorTransportSession session = null;
-            if (_sessions.TryRemove(e.Session.SessionKey, out session))
+            if (_sessions.TryGetValue(e.Session.SessionKey, out session))
             {
                 if (DataReceived != null)
                 {

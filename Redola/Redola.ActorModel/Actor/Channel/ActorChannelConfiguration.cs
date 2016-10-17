@@ -17,7 +17,7 @@ namespace Redola.ActorModel
             _frameBuilder = new ActorFrameBuilder(controlFrameDataEncoder, controlFrameDataDecoder);
 
             this.KeepAliveInterval = TimeSpan.FromSeconds(30);
-            this.KeepAliveTimeout = TimeSpan.FromSeconds(5);
+            this.KeepAliveTimeout = TimeSpan.FromSeconds(10);
         }
 
         public IActorFrameBuilder FrameBuilder { get { return _frameBuilder; } }
