@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Net;
 using Logrila.Logging;
-using Redola.ActorModel.Framing;
 
 namespace Redola.ActorModel
 {

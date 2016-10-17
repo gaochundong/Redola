@@ -1,5 +1,4 @@
-﻿using System;
-using Redola.ActorModel.Serialization;
+﻿using Redola.ActorModel.Serialization;
 
 namespace Redola.ActorModel.Framing
 {

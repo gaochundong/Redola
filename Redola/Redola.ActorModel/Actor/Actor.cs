@@ -4,7 +4,6 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using Logrila.Logging;
-using Redola.ActorModel.Framing;
 
 namespace Redola.ActorModel
 {

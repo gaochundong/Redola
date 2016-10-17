@@ -3,7 +3,6 @@ using System.Collections.Concurrent;
 using System.Linq;
 using Logrila.Logging;
 using Redola.ActorModel.Extensions;
-using Redola.ActorModel.Framing;
 
 namespace Redola.ActorModel
 {
