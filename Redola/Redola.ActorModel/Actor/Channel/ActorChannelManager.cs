@@ -45,9 +45,9 @@ namespace Redola.ActorModel
 
         public IActorChannel GetActorChannel(string actorType, string actorName)
         {
+            IActorChannel channel = null;
             var actorKey = ActorDescription.GetKey(actorType, actorName);
 
-            IActorChannel channel;
             if (_channels.TryGetValue(actorKey, out channel))
             {
                 return channel;
@@ -100,9 +100,9 @@ namespace Redola.ActorModel
 
         public IActorChannel GetActorChannel(string actorType)
         {
+            IActorChannel channel = null;
             var actor = _actorKeys.Values.Where(a => a.Type == actorType).OrderBy(t => Guid.NewGuid()).FirstOrDefault();
 
-            IActorChannel channel;
             if (actor != null && _channels.TryGetValue(actor.GetKey(), out channel))
             {
                 return channel;
@@ -110,6 +110,8 @@ namespace Redola.ActorModel
 
             lock (_syncLock)
             {
+                actor = _actorKeys.Values.Where(a => a.Type == actorType).OrderBy(t => Guid.NewGuid()).FirstOrDefault();
+
                 if (actor != null && _channels.TryGetValue(actor.GetKey(), out channel))
                 {
                     return channel;
