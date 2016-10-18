@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Logrila.Logging;
 using Redola.ActorModel;
 using Redola.Rpc.TestContracts;
@@ -29,7 +30,7 @@ namespace Redola.Rpc.TestRpcServer
             {
                 CorrelationID = request.MessageID,
                 CorrelationTime = request.MessageTime,
-                Message = new HelloResponse(),
+                Message = new HelloResponse() { Text = DateTime.Now.ToString(@"yyyy-MM-dd HH:mm:ss.fffffff") },
             };
 
             _log.DebugFormat("OnHelloRequest, say hello, MessageID[{0}], CorrelationID[{1}].",

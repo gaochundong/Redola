@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Logrila.Logging;
 using Redola.Rpc.TestContracts;
 
@@ -26,7 +27,7 @@ namespace Redola.Rpc.TestHttpServer
         {
             var request = new ActorMessageEnvelope<HelloRequest>()
             {
-                Message = new HelloRequest(),
+                Message = new HelloRequest() { Text = DateTime.Now.ToString(@"yyyy-MM-dd HH:mm:ss.fffffff") },
             };
 
             return this.Actor.Send<HelloRequest, HelloResponse>("server", request);

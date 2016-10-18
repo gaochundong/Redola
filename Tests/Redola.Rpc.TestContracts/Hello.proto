@@ -5,8 +5,10 @@ option java_outer_classname = "Hello";
 
 message HelloRequest
 {
+	required string Text = 10;
 }
 
 message HelloResponse
 {
+	required string Text = 10;
 }

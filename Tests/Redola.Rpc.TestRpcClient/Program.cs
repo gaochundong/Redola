@@ -68,7 +68,7 @@ namespace Redola.Rpc.TestRpcClient
         {
             var request = new ActorMessageEnvelope<HelloRequest>()
             {
-                Message = new HelloRequest(),
+                Message = new HelloRequest() { Text = DateTime.Now.ToString(@"yyyy-MM-dd HH:mm:ss.fffffff") },
             };
 
             log.DebugFormat("HelloWorld, say hello to server with MessageID[{0}].",

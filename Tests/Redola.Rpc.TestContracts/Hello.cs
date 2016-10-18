@@ -15,6 +15,13 @@ namespace Redola.Rpc.TestContracts
   {
     public HelloRequest() {}
     
+    private string _Text;
+    [global::ProtoBuf.ProtoMember(10, IsRequired = true, Name=@"Text", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public string Text
+    {
+      get { return _Text; }
+      set { _Text = value; }
+    }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
@@ -25,6 +32,13 @@ namespace Redola.Rpc.TestContracts
   {
     public HelloResponse() {}
     
+    private string _Text;
+    [global::ProtoBuf.ProtoMember(10, IsRequired = true, Name=@"Text", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public string Text
+    {
+      get { return _Text; }
+      set { _Text = value; }
+    }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
