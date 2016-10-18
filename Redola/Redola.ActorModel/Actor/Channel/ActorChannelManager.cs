@@ -136,7 +136,7 @@ namespace Redola.ActorModel
                 channel.Connected += onConnected;
                 channel.Open();
 
-                bool connected = waitingConnected.Wait(TimeSpan.FromSeconds(5));
+                bool connected = waitingConnected.Wait(TimeSpan.FromSeconds(30));
                 channel.Connected -= onConnected;
                 waitingConnected.Dispose();
 
