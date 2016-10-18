@@ -19,7 +19,10 @@ namespace Redola.Rpc.TestRpcServer
             {
                 actor.Bootup();
 
+                var helloService = new HelloService(actor);
                 var orderService = new OrderService(actor);
+
+                actor.RegisterRpcService(helloService);
                 actor.RegisterRpcService(orderService);
             }
             catch (Exception ex)

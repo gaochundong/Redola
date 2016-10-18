@@ -19,7 +19,10 @@ namespace Redola.Rpc.TestRpcClient
             {
                 actor.Bootup();
 
+                var helloClient = new HelloClient(actor);
                 var orderClient = new OrderClient(actor);
+
+                actor.RegisterRpcService(helloClient);
                 actor.RegisterRpcService(orderClient);
             }
             catch (Exception ex)
@@ -35,6 +38,10 @@ namespace Redola.Rpc.TestRpcClient
                     if (text == "quit" || text == "exit")
                     {
                         break;
+                    }
+                    else if (text == "hello")
+                    {
+                        HelloWorld(log, actor);
                     }
                     else
                     {
@@ -55,6 +62,22 @@ namespace Redola.Rpc.TestRpcClient
             }
 
             actor.Shutdown();
+        }
+
+        private static void HelloWorld(ILog log, RpcActor actor)
+        {
+            var request = new ActorMessageEnvelope<HelloRequest>()
+            {
+                Message = new HelloRequest(),
+            };
+
+            log.DebugFormat("HelloWorld, say hello to server with MessageID[{0}].",
+                request.MessageID);
+
+            var response = actor.Send<HelloRequest, HelloResponse>("server", request);
+
+            log.DebugFormat("HelloWorld, receive hello response from server with MessageID[{0}] and CorrelationID[{1}].",
+                response.MessageID, response.CorrelationID);
         }
 
         private static void PlaceOrder(ILog log, RpcActor actor)

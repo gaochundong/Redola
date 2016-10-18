@@ -1,0 +1,12 @@
+package Redola.Rpc.TestContracts;
+
+option java_package = "com.redola.rpc.testcontracts";
+option java_outer_classname = "Hello";
+
+message HelloRequest
+{
+}
+
+message HelloResponse
+{
+}
