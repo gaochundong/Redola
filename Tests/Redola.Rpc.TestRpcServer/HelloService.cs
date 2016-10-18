@@ -34,7 +34,7 @@ namespace Redola.Rpc.TestRpcServer
 
             _log.DebugFormat("OnHelloRequest, say hello, MessageID[{0}], CorrelationID[{1}].",
                 response.MessageID, response.CorrelationID);
-            this.Actor.BeginSend(remoteActor, response.ToBytes(this.Actor.Encoder));
+            this.Actor.BeginSend(remoteActor, response);
         }
     }
 }

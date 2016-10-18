@@ -2,7 +2,7 @@
 using Logrila.Logging;
 using Redola.Rpc.TestContracts;
 
-namespace Redola.Rpc.TestRpcClient
+namespace Redola.Rpc.TestHttpServer
 {
     public class HelloClient : RpcService
     {
@@ -20,6 +20,16 @@ namespace Redola.Rpc.TestRpcClient
             messages.Add(new RpcMessageRegistration(typeof(HelloResponse)) { IsRequestResponseModel = true });
 
             return messages;
+        }
+
+        public ActorMessageEnvelope<HelloResponse> SayHello()
+        {
+            var request = new ActorMessageEnvelope<HelloRequest>()
+            {
+                Message = new HelloRequest(),
+            };
+
+            return this.Actor.Send<HelloRequest, HelloResponse>("server", request);
         }
     }
 }

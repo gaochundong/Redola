@@ -1,4 +1,5 @@
 ﻿using System;
+using Redola.ActorModel;
 
 namespace Redola.Rpc
 {
@@ -14,6 +15,8 @@ namespace Redola.Rpc
         }
 
         public BlockingRouteActor Actor { get { return _localActor; } }
+        public IActorMessageEncoder Encoder { get { return _localActor.Encoder; } }
+        public IActorMessageDecoder Decoder { get { return _localActor.Decoder; } }
 
         public void Bootup()
         {
@@ -49,6 +52,26 @@ namespace Redola.Rpc
         public ActorMessageEnvelope<P> Send<R, P>(string remoteActorType, ActorMessageEnvelope<R> request, TimeSpan timeout)
         {
             return _localActor.SendMessage<R, P>(remoteActorType, request, timeout);
+        }
+
+        public void Send<T>(ActorDescription remoteActor, ActorMessageEnvelope<T> message)
+        {
+            _localActor.Send(remoteActor, message);
+        }
+
+        public void BeginSend<T>(ActorDescription remoteActor, ActorMessageEnvelope<T> message)
+        {
+            _localActor.BeginSend(remoteActor, message);
+        }
+
+        public IAsyncResult BeginSend<T>(ActorDescription remoteActor, ActorMessageEnvelope<T> message, AsyncCallback callback, object state)
+        {
+            return _localActor.BeginSend(remoteActor, message, callback, state);
+        }
+
+        public void EndSend(ActorDescription remoteActor, IAsyncResult asyncResult)
+        {
+            _localActor.EndSend(remoteActor, asyncResult);
         }
 
         public void Send<T>(string remoteActorType, string remoteActorName, ActorMessageEnvelope<T> message)

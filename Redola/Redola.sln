@@ -24,6 +24,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redola.Rpc.TestContracts", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redola.Rpc.TestRpcMaster", "..\Tests\Redola.Rpc.TestRpcMaster\Redola.Rpc.TestRpcMaster.csproj", "{DCB0784A-622E-4EF6-BA1B-79099DA8D648}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redola.Rpc.TestHttpServer", "..\Tests\Redola.Rpc.TestHttpServer\Redola.Rpc.TestHttpServer.csproj", "{01EAA9D3-A299-4EC2-BADE-843BA7500174}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -54,6 +56,10 @@ Global
 		{DCB0784A-622E-4EF6-BA1B-79099DA8D648}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DCB0784A-622E-4EF6-BA1B-79099DA8D648}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DCB0784A-622E-4EF6-BA1B-79099DA8D648}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01EAA9D3-A299-4EC2-BADE-843BA7500174}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01EAA9D3-A299-4EC2-BADE-843BA7500174}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01EAA9D3-A299-4EC2-BADE-843BA7500174}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01EAA9D3-A299-4EC2-BADE-843BA7500174}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -63,5 +69,6 @@ Global
 		{94B31D55-C3A9-43C9-8819-61753B4B2435} = {49D4F9A0-5E09-4CE9-B9C3-49766ABACD19}
 		{FACCBF0D-1634-42F6-8011-22D3DDA54F18} = {49D4F9A0-5E09-4CE9-B9C3-49766ABACD19}
 		{DCB0784A-622E-4EF6-BA1B-79099DA8D648} = {49D4F9A0-5E09-4CE9-B9C3-49766ABACD19}
+		{01EAA9D3-A299-4EC2-BADE-843BA7500174} = {49D4F9A0-5E09-4CE9-B9C3-49766ABACD19}
 	EndGlobalSection
 EndGlobal
