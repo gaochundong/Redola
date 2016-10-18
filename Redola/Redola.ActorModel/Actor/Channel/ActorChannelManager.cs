@@ -13,6 +13,7 @@ namespace Redola.ActorModel
         private ActorChannelFactory _factory;
         private ConcurrentDictionary<string, IActorChannel> _channels = new ConcurrentDictionary<string, IActorChannel>(); // ActorKey -> IActorChannel
         private ConcurrentDictionary<string, ActorDescription> _actorKeys = new ConcurrentDictionary<string, ActorDescription>(); // ActorKey -> ActorDescription
+        private readonly object _syncLock = new object();
 
         public ActorChannelManager(ActorChannelFactory factory)
         {
@@ -52,40 +53,48 @@ namespace Redola.ActorModel
                 return channel;
             }
 
-            channel = _factory.BuildActorChannel(_localActor, actorType, actorName);
-            channel.Connected += OnActorConnected;
-            channel.Disconnected += OnActorDisconnected;
-            channel.DataReceived += OnActorDataReceived;
-
-            ManualResetEventSlim waitingConnected = new ManualResetEventSlim(false);
-            object connectedSender = null;
-            ActorConnectedEventArgs connectedEvent = null;
-            EventHandler<ActorConnectedEventArgs> onConnected =
-                (s, e) =>
+            lock (_syncLock)
+            {
+                if (_channels.TryGetValue(actorKey, out channel))
                 {
-                    connectedSender = s;
-                    connectedEvent = e;
-                    waitingConnected.Set();
-                };
+                    return channel;
+                }
 
-            channel.Connected += onConnected;
-            channel.Open();
+                channel = _factory.BuildActorChannel(_localActor, actorType, actorName);
+                channel.Connected += OnActorConnected;
+                channel.Disconnected += OnActorDisconnected;
+                channel.DataReceived += OnActorDataReceived;
 
-            bool connected = waitingConnected.Wait(TimeSpan.FromSeconds(5));
-            channel.Connected -= onConnected;
-            waitingConnected.Dispose();
+                ManualResetEventSlim waitingConnected = new ManualResetEventSlim(false);
+                object connectedSender = null;
+                ActorConnectedEventArgs connectedEvent = null;
+                EventHandler<ActorConnectedEventArgs> onConnected =
+                    (s, e) =>
+                    {
+                        connectedSender = s;
+                        connectedEvent = e;
+                        waitingConnected.Set();
+                    };
 
-            if (connected)
-            {
-                _channels.Add(connectedEvent.RemoteActor.GetKey(), (IActorChannel)connectedSender);
-                _actorKeys.Add(connectedEvent.RemoteActor.GetKey(), connectedEvent.RemoteActor);
-                return channel;
-            }
-            else
-            {
-                CloseChannel(channel);
-                throw new ActorNotFoundException(string.Format(
-                    "Cannot connect remote actor, Type[{0}], Name[{1}].", actorType, actorName));
+                channel.Connected += onConnected;
+                channel.Open();
+
+                bool connected = waitingConnected.Wait(TimeSpan.FromSeconds(5));
+                channel.Connected -= onConnected;
+                waitingConnected.Dispose();
+
+                if (connected)
+                {
+                    _channels.Add(connectedEvent.RemoteActor.GetKey(), (IActorChannel)connectedSender);
+                    _actorKeys.Add(connectedEvent.RemoteActor.GetKey(), connectedEvent.RemoteActor);
+                    return channel;
+                }
+                else
+                {
+                    CloseChannel(channel);
+                    throw new ActorNotFoundException(string.Format(
+                        "Cannot connect remote actor, Type[{0}], Name[{1}].", actorType, actorName));
+                }
             }
         }
 
@@ -99,40 +108,48 @@ namespace Redola.ActorModel
                 return channel;
             }
 
-            channel = _factory.BuildActorChannel(_localActor, actorType);
-            channel.Connected += OnActorConnected;
-            channel.Disconnected += OnActorDisconnected;
-            channel.DataReceived += OnActorDataReceived;
-
-            ManualResetEventSlim waitingConnected = new ManualResetEventSlim(false);
-            object connectedSender = null;
-            ActorConnectedEventArgs connectedEvent = null;
-            EventHandler<ActorConnectedEventArgs> onConnected =
-                (s, e) =>
+            lock (_syncLock)
+            {
+                if (actor != null && _channels.TryGetValue(actor.GetKey(), out channel))
                 {
-                    connectedSender = s;
-                    connectedEvent = e;
-                    waitingConnected.Set();
-                };
+                    return channel;
+                }
 
-            channel.Connected += onConnected;
-            channel.Open();
+                channel = _factory.BuildActorChannel(_localActor, actorType);
+                channel.Connected += OnActorConnected;
+                channel.Disconnected += OnActorDisconnected;
+                channel.DataReceived += OnActorDataReceived;
 
-            bool connected = waitingConnected.Wait(TimeSpan.FromSeconds(5));
-            channel.Connected -= onConnected;
-            waitingConnected.Dispose();
+                ManualResetEventSlim waitingConnected = new ManualResetEventSlim(false);
+                object connectedSender = null;
+                ActorConnectedEventArgs connectedEvent = null;
+                EventHandler<ActorConnectedEventArgs> onConnected =
+                    (s, e) =>
+                    {
+                        connectedSender = s;
+                        connectedEvent = e;
+                        waitingConnected.Set();
+                    };
 
-            if (connected)
-            {
-                _channels.Add(connectedEvent.RemoteActor.GetKey(), (IActorChannel)connectedSender);
-                _actorKeys.Add(connectedEvent.RemoteActor.GetKey(), connectedEvent.RemoteActor);
-                return channel;
-            }
-            else
-            {
-                CloseChannel(channel);
-                throw new ActorNotFoundException(string.Format(
-                    "Cannot connect remote actor, Type[{0}].", actorType));
+                channel.Connected += onConnected;
+                channel.Open();
+
+                bool connected = waitingConnected.Wait(TimeSpan.FromSeconds(5));
+                channel.Connected -= onConnected;
+                waitingConnected.Dispose();
+
+                if (connected)
+                {
+                    _channels.Add(connectedEvent.RemoteActor.GetKey(), (IActorChannel)connectedSender);
+                    _actorKeys.Add(connectedEvent.RemoteActor.GetKey(), connectedEvent.RemoteActor);
+                    return channel;
+                }
+                else
+                {
+                    CloseChannel(channel);
+                    throw new ActorNotFoundException(string.Format(
+                        "Cannot connect remote actor, Type[{0}].", actorType));
+                }
             }
         }
 
