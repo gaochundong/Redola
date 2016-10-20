@@ -46,6 +46,10 @@ namespace Redola.Rpc.TestRpcClient
                     {
                         HelloWorld10000MultiThreading(log, helloClient, 10000, 1);
                     }
+                    else if (text == "hello10000x2")
+                    {
+                        HelloWorld10000MultiThreading(log, helloClient, 10000, 2);
+                    }
                     else if (text == "hello10000x4")
                     {
                         HelloWorld10000MultiThreading(log, helloClient, 10000, 4);
@@ -65,6 +69,10 @@ namespace Redola.Rpc.TestRpcClient
                     else if (text == "hello100000x1")
                     {
                         HelloWorld10000MultiThreading(log, helloClient, 100000, 1);
+                    }
+                    else if (text == "hello100000x2")
+                    {
+                        HelloWorld10000MultiThreading(log, helloClient, 100000, 2);
                     }
                     else if (text == "hello100000x4")
                     {
@@ -190,10 +198,17 @@ namespace Redola.Rpc.TestRpcClient
                 taskList[i] = task;
             }
             Task.WaitAll(taskList);
-
             watch.Stop();
-            log.DebugFormat("HelloWorld10000MultiThreading, TotalCalls[{0}], ThreadCount[{1}] end with cost [{2}] ms.",
-                totalCalls, threadCount, watch.ElapsedMilliseconds);
+
+            log.DebugFormat("HelloWorld10000MultiThreading, TotalCalls[{0}], ThreadCount[{1}] end with cost [{2}] ms."
+                + "{3}{4}{5}{6}{7}{8}{9}{10}{11}{12}",
+                totalCalls, threadCount, watch.ElapsedMilliseconds,
+                Environment.NewLine, string.Format("   Concurrency level: {0} threads", threadCount),
+                Environment.NewLine, string.Format("   Complete requests: {0}", totalCalls),
+                Environment.NewLine, string.Format("Time taken for tests: {0} seconds", (decimal)watch.ElapsedMilliseconds / 1000m),
+                Environment.NewLine, string.Format("    Time per request: {0:#####0.000} ms (mean)", (decimal)watch.ElapsedMilliseconds / (decimal)totalCalls),
+                Environment.NewLine, string.Format(" Requests per second: {0} [#/sec] (mean)", (int)((decimal)totalCalls / ((decimal)watch.ElapsedMilliseconds / 1000m)))
+                );
         }
 
         private static void HelloWorld(ILog log, HelloClient helloClient)
