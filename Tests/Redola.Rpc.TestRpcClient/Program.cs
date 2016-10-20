@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Threading.Tasks;
 using Logrila.Logging;
 using Logrila.Logging.NLogIntegration;
 using Redola.Rpc.TestContracts;
@@ -43,6 +45,14 @@ namespace Redola.Rpc.TestRpcClient
                     {
                         HelloWorld(log, actor);
                     }
+                    else if (text == "hello10000")
+                    {
+                        HelloWorld10000(log, actor);
+                    }
+                    else if (text == "hello10000task")
+                    {
+                        HelloWorld10000Task(log, actor);
+                    }
                     else
                     {
                         int times = 0;
@@ -62,6 +72,44 @@ namespace Redola.Rpc.TestRpcClient
             }
 
             actor.Shutdown();
+        }
+
+        private static void HelloWorld10000(ILog log, RpcActor actor)
+        {
+            log.DebugFormat("HelloWorld10000, start ...");
+            var watch = Stopwatch.StartNew();
+            for (var i = 0; i < 10000; i++)
+            {
+                var request = new ActorMessageEnvelope<Hello10000Request>()
+                {
+                    Message = new Hello10000Request() { Text = DateTime.Now.ToString(@"yyyy-MM-dd HH:mm:ss.fffffff") },
+                };
+                actor.Send<Hello10000Request, Hello10000Response>("server", request);
+            }
+            watch.Stop();
+            log.DebugFormat("HelloWorld10000, end with cost {0} ms.", watch.ElapsedMilliseconds);
+        }
+
+        private static void HelloWorld10000Task(ILog log, RpcActor actor)
+        {
+            log.DebugFormat("HelloWorld10000Task, start ...");
+            var taskList = new Task[10000];
+            var watch = Stopwatch.StartNew();
+            for (var i = 0; i < 10000; i++)
+            {
+                var task = Task.Run(() =>
+                {
+                    var request = new ActorMessageEnvelope<Hello10000Request>()
+                    {
+                        Message = new Hello10000Request() { Text = DateTime.Now.ToString(@"yyyy-MM-dd HH:mm:ss.fffffff") },
+                    };
+                    actor.Send<Hello10000Request, Hello10000Response>("server", request);
+                });
+                taskList[i] = task;
+            }
+            Task.WaitAll(taskList);
+            watch.Stop();
+            log.DebugFormat("HelloWorld10000Task, end with cost {0} ms.", watch.ElapsedMilliseconds);
         }
 
         private static void HelloWorld(ILog log, RpcActor actor)

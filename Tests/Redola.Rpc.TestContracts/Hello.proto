@@ -12,3 +12,13 @@ message HelloResponse
 {
 	required string Text = 10;
 }
+
+message Hello10000Request
+{
+	required string Text = 10;
+}
+
+message Hello10000Response
+{
+	required string Text = 10;
+}

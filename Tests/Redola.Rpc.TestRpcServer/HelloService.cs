@@ -20,6 +20,7 @@ namespace Redola.Rpc.TestRpcServer
             var messages = new List<RpcMessageRegistration>();
 
             messages.Add(new RpcMessageRegistration(typeof(HelloRequest)) { IsRequestResponseModel = false });
+            messages.Add(new RpcMessageRegistration(typeof(Hello10000Request)) { IsRequestResponseModel = false });
 
             return messages;
         }
@@ -35,6 +36,18 @@ namespace Redola.Rpc.TestRpcServer
 
             _log.DebugFormat("OnHelloRequest, say hello, MessageID[{0}], CorrelationID[{1}].",
                 response.MessageID, response.CorrelationID);
+            this.Actor.BeginSend(remoteActor, response);
+        }
+
+        private void OnHello10000Request(ActorDescription remoteActor, ActorMessageEnvelope<Hello10000Request> request)
+        {
+            var response = new ActorMessageEnvelope<Hello10000Response>()
+            {
+                CorrelationID = request.MessageID,
+                CorrelationTime = request.MessageTime,
+                Message = new Hello10000Response() { Text = DateTime.Now.ToString(@"yyyy-MM-dd HH:mm:ss.fffffff") },
+            };
+
             this.Actor.BeginSend(remoteActor, response);
         }
     }

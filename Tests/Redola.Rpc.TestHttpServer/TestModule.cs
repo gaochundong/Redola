@@ -24,6 +24,11 @@ namespace Redola.Rpc.TestHttpServer
                 var response = _helloService.SayHello();
                 return response == null ? string.Empty : response.Message.Text;
             };
+            Get["/hello10000"] = x =>
+            {
+                var response = _helloService.SayHello10000();
+                return response == null ? string.Empty : response.Message.Text;
+            };
         }
     }
 }

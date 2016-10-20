@@ -44,4 +44,38 @@ namespace Redola.Rpc.TestContracts
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
   
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"Hello10000Request")]
+  public partial class Hello10000Request : global::ProtoBuf.IExtensible
+  {
+    public Hello10000Request() {}
+    
+    private string _Text;
+    [global::ProtoBuf.ProtoMember(10, IsRequired = true, Name=@"Text", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public string Text
+    {
+      get { return _Text; }
+      set { _Text = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"Hello10000Response")]
+  public partial class Hello10000Response : global::ProtoBuf.IExtensible
+  {
+    public Hello10000Response() {}
+    
+    private string _Text;
+    [global::ProtoBuf.ProtoMember(10, IsRequired = true, Name=@"Text", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public string Text
+    {
+      get { return _Text; }
+      set { _Text = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
 }
