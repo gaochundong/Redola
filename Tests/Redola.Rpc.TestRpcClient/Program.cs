@@ -57,6 +57,18 @@ namespace Redola.Rpc.TestRpcClient
                     {
                         HelloWorld10000Quarter(log, actor);
                     }
+                    else if (text == "hello300000")
+                    {
+                        HelloWorld300000(log, actor);
+                    }
+                    else if (text == "hello300000x2")
+                    {
+                        HelloWorld300000Half(log, actor);
+                    }
+                    else if (text == "hello300000x4")
+                    {
+                        HelloWorld300000Quarter(log, actor);
+                    }
                     else
                     {
                         int times = 0;
@@ -190,6 +202,120 @@ namespace Redola.Rpc.TestRpcClient
             Task.WaitAll(taskList);
             watch.Stop();
             log.DebugFormat("HelloWorld10000Quarter, end with cost {0} ms.", watch.ElapsedMilliseconds);
+        }
+
+        private static void HelloWorld300000(ILog log, RpcActor actor)
+        {
+            log.DebugFormat("HelloWorld300000, start ...");
+            var watch = Stopwatch.StartNew();
+            for (var i = 0; i < 300000; i++)
+            {
+                var request = new ActorMessageEnvelope<Hello10000Request>()
+                {
+                    Message = new Hello10000Request() { Text = DateTime.Now.ToString(@"yyyy-MM-dd HH:mm:ss.fffffff") },
+                };
+                actor.Send<Hello10000Request, Hello10000Response>("server", request);
+            }
+            watch.Stop();
+            log.DebugFormat("HelloWorld300000, end with cost {0} ms.", watch.ElapsedMilliseconds);
+        }
+
+        private static void HelloWorld300000Half(ILog log, RpcActor actor)
+        {
+            log.DebugFormat("HelloWorld300000Half, start ...");
+            var taskList = new Task[2];
+            var watch = Stopwatch.StartNew();
+            var task1 = Task.Run(() =>
+            {
+                for (var i = 0; i < 150000; i++)
+                {
+
+                    var request = new ActorMessageEnvelope<Hello10000Request>()
+                    {
+                        Message = new Hello10000Request() { Text = DateTime.Now.ToString(@"yyyy-MM-dd HH:mm:ss.fffffff") },
+                    };
+                    actor.Send<Hello10000Request, Hello10000Response>("server", request);
+                }
+            });
+            var task2 = Task.Run(() =>
+            {
+                for (var i = 0; i < 150000; i++)
+                {
+
+                    var request = new ActorMessageEnvelope<Hello10000Request>()
+                    {
+                        Message = new Hello10000Request() { Text = DateTime.Now.ToString(@"yyyy-MM-dd HH:mm:ss.fffffff") },
+                    };
+                    actor.Send<Hello10000Request, Hello10000Response>("server", request);
+                }
+            });
+            taskList[0] = task1;
+            taskList[1] = task2;
+            Task.WaitAll(taskList);
+            watch.Stop();
+            log.DebugFormat("HelloWorld300000Half, end with cost {0} ms.", watch.ElapsedMilliseconds);
+        }
+
+        private static void HelloWorld300000Quarter(ILog log, RpcActor actor)
+        {
+            log.DebugFormat("HelloWorld300000Quarter, start ...");
+            var taskList = new Task[4];
+            var watch = Stopwatch.StartNew();
+            var task1 = Task.Run(() =>
+            {
+                for (var i = 0; i < 75000; i++)
+                {
+
+                    var request = new ActorMessageEnvelope<Hello10000Request>()
+                    {
+                        Message = new Hello10000Request() { Text = DateTime.Now.ToString(@"yyyy-MM-dd HH:mm:ss.fffffff") },
+                    };
+                    actor.Send<Hello10000Request, Hello10000Response>("server", request);
+                }
+            });
+            var task2 = Task.Run(() =>
+            {
+                for (var i = 0; i < 75000; i++)
+                {
+
+                    var request = new ActorMessageEnvelope<Hello10000Request>()
+                    {
+                        Message = new Hello10000Request() { Text = DateTime.Now.ToString(@"yyyy-MM-dd HH:mm:ss.fffffff") },
+                    };
+                    actor.Send<Hello10000Request, Hello10000Response>("server", request);
+                }
+            });
+            var task3 = Task.Run(() =>
+            {
+                for (var i = 0; i < 75000; i++)
+                {
+
+                    var request = new ActorMessageEnvelope<Hello10000Request>()
+                    {
+                        Message = new Hello10000Request() { Text = DateTime.Now.ToString(@"yyyy-MM-dd HH:mm:ss.fffffff") },
+                    };
+                    actor.Send<Hello10000Request, Hello10000Response>("server", request);
+                }
+            });
+            var task4 = Task.Run(() =>
+            {
+                for (var i = 0; i < 75000; i++)
+                {
+
+                    var request = new ActorMessageEnvelope<Hello10000Request>()
+                    {
+                        Message = new Hello10000Request() { Text = DateTime.Now.ToString(@"yyyy-MM-dd HH:mm:ss.fffffff") },
+                    };
+                    actor.Send<Hello10000Request, Hello10000Response>("server", request);
+                }
+            });
+            taskList[0] = task1;
+            taskList[1] = task2;
+            taskList[2] = task2;
+            taskList[3] = task3;
+            Task.WaitAll(taskList);
+            watch.Stop();
+            log.DebugFormat("HelloWorld300000Quarter, end with cost {0} ms.", watch.ElapsedMilliseconds);
         }
 
         private static void HelloWorld(ILog log, RpcActor actor)
