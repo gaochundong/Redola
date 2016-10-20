@@ -19,8 +19,8 @@ namespace Redola.Rpc.TestRpcServer
         {
             var messages = new List<RpcMessageRegistration>();
 
-            messages.Add(new RpcMessageRegistration(typeof(HelloRequest)) { IsRequestResponseModel = false });
-            messages.Add(new RpcMessageRegistration(typeof(Hello10000Request)) { IsRequestResponseModel = false });
+            messages.Add(new RpcMessageRegistration(typeof(HelloRequest)));
+            messages.Add(new RpcMessageRegistration(typeof(Hello10000Request)));
 
             return messages;
         }

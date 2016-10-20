@@ -22,5 +22,15 @@ namespace Redola.Rpc.TestRpcClient
 
             return messages;
         }
+
+        public ActorMessageEnvelope<HelloResponse> SayHello(ActorMessageEnvelope<HelloRequest> request)
+        {
+            return this.Actor.Send<HelloRequest, HelloResponse>("server", request);
+        }
+
+        public ActorMessageEnvelope<Hello10000Response> SayHello10000(ActorMessageEnvelope<Hello10000Request> request)
+        {
+            return this.Actor.Send<Hello10000Request, Hello10000Response>("server", request);
+        }
     }
 }

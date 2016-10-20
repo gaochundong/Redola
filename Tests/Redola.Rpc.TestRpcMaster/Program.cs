@@ -18,14 +18,7 @@ namespace Redola.Rpc.TestRpcMaster
 
             var master = new ActorMaster(configruation);
 
-            try
-            {
-                master.Bootup();
-            }
-            catch (Exception ex)
-            {
-                log.Error(ex.Message, ex);
-            }
+            master.Bootup();
 
             while (true)
             {

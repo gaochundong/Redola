@@ -15,20 +15,13 @@ namespace Redola.Rpc.TestRpcServer
 
             var actor = new RpcActor();
 
-            try
-            {
-                actor.Bootup();
+            actor.Bootup();
 
-                var helloService = new HelloService(actor);
-                var orderService = new OrderService(actor);
+            var helloService = new HelloService(actor);
+            var orderService = new OrderService(actor);
 
-                actor.RegisterRpcService(helloService);
-                actor.RegisterRpcService(orderService);
-            }
-            catch (Exception ex)
-            {
-                log.Error(ex.Message, ex);
-            }
+            actor.RegisterRpcService(helloService);
+            actor.RegisterRpcService(orderService);
 
             while (true)
             {
@@ -46,7 +39,7 @@ namespace Redola.Rpc.TestRpcServer
                         {
                             for (int i = 0; i < times; i++)
                             {
-                                NotifyOrderChanged(log, actor);
+                                NotifyOrderChanged(log, orderService);
                             }
                         }
                     }
@@ -60,7 +53,7 @@ namespace Redola.Rpc.TestRpcServer
             actor.Shutdown();
         }
 
-        private static void NotifyOrderChanged(ILog log, RpcActor actor)
+        private static void NotifyOrderChanged(ILog log, OrderService orderService)
         {
             var notification = new ActorMessageEnvelope<OrderStatusChangedNotification>()
             {
@@ -73,7 +66,7 @@ namespace Redola.Rpc.TestRpcServer
 
             log.DebugFormat("NotifyOrderChanged, notify order changed with MessageID[{0}].",
                 notification.MessageID);
-            actor.BeginSend("client", notification);
+            orderService.NotifyOrderChanged(notification);
         }
     }
 }

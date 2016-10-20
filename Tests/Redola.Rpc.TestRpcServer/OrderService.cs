@@ -41,5 +41,10 @@ namespace Redola.Rpc.TestRpcServer
                 response.MessageID, response.CorrelationID);
             this.Actor.BeginSend(remoteActor, response);
         }
+
+        public void NotifyOrderChanged(ActorMessageEnvelope<OrderStatusChangedNotification> notification)
+        {
+            this.Actor.BeginSend("client", notification);
+        }
     }
 }
