@@ -1,4 +1,5 @@
-﻿using Happer.Http;
+﻿using System;
+using Happer.Http;
 
 namespace Redola.Rpc.TestHttpServer
 {
@@ -10,6 +11,14 @@ namespace Redola.Rpc.TestHttpServer
         {
             _helloService = helloService;
 
+            Get["/empty"] = x =>
+            {
+                return string.Empty;
+            };
+            Get["/time"] = x =>
+            {
+                return DateTime.Now.ToString(@"yyyy-MM-dd HH:mm:ss.fffffff");
+            };
             Get["/hello"] = x =>
             {
                 var response = _helloService.SayHello();
