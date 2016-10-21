@@ -12,7 +12,7 @@ namespace Redola.ActorModel
         private ActorIdentity _localActor;
         private ActorChannelFactory _factory;
         private ConcurrentDictionary<string, IActorChannel> _channels = new ConcurrentDictionary<string, IActorChannel>(); // ActorKey -> IActorChannel
-        private ConcurrentDictionary<string, ActorIdentity> _actorKeys = new ConcurrentDictionary<string, ActorIdentity>(); // ActorKey -> ActorDescription
+        private ConcurrentDictionary<string, ActorIdentity> _actorKeys = new ConcurrentDictionary<string, ActorIdentity>(); // ActorKey -> ActorIdentity
         private readonly object _syncLock = new object();
 
         public ActorChannelManager(ActorChannelFactory factory)
