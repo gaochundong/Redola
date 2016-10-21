@@ -8,17 +8,17 @@ namespace Redola.ActorModel
     public class ActorChannelSession
     {
         private ILog _log = Logger.Get<ActorChannelSession>();
-        private ActorDescription _localActor = null;
+        private ActorIdentity _localActor = null;
         private ActorChannelConfiguration _channelConfiguration = null;
         private ActorTransportSession _innerSession = null;
-        private ActorDescription _remoteActor = null;
+        private ActorIdentity _remoteActor = null;
 
         private readonly SemaphoreSlim _keepAliveLocker = new SemaphoreSlim(1, 1);
         private KeepAliveTracker _keepAliveTracker;
         private Timer _keepAliveTimeoutTimer;
 
         public ActorChannelSession(
-            ActorDescription localActor,
+            ActorIdentity localActor,
             ActorChannelConfiguration channelConfiguration,
             ActorTransportSession session)
         {
@@ -103,7 +103,7 @@ namespace Redola.ActorModel
                     _channelConfiguration
                     .FrameBuilder
                     .ControlFrameDataDecoder
-                    .DecodeFrameData<ActorDescription>(payload, payloadOffset, payloadCount);
+                    .DecodeFrameData<ActorIdentity>(payload, payloadOffset, payloadCount);
 
                 _remoteActor = actorHandshakeRequestData;
             }
@@ -162,7 +162,7 @@ namespace Redola.ActorModel
 
         public void Send(string actorType, string actorName, byte[] data, int offset, int count)
         {
-            var actorKey = ActorDescription.GetKey(actorType, actorName);
+            var actorKey = ActorIdentity.GetKey(actorType, actorName);
 
             if (_remoteActor == null)
                 throw new InvalidOperationException(
@@ -182,7 +182,7 @@ namespace Redola.ActorModel
 
         public void BeginSend(string actorType, string actorName, byte[] data, int offset, int count)
         {
-            var actorKey = ActorDescription.GetKey(actorType, actorName);
+            var actorKey = ActorIdentity.GetKey(actorType, actorName);
 
             if (_remoteActor == null)
                 throw new InvalidOperationException(
@@ -238,7 +238,7 @@ namespace Redola.ActorModel
 
         public IAsyncResult BeginSend(string actorType, string actorName, byte[] data, int offset, int count, AsyncCallback callback, object state)
         {
-            var actorKey = ActorDescription.GetKey(actorType, actorName);
+            var actorKey = ActorIdentity.GetKey(actorType, actorName);
 
             if (_remoteActor == null)
                 throw new InvalidOperationException(

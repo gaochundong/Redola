@@ -54,22 +54,22 @@ namespace Redola.Rpc
             return _localActor.SendMessage<R, P>(remoteActorType, request, timeout);
         }
 
-        public void Send<T>(ActorDescription remoteActor, ActorMessageEnvelope<T> message)
+        public void Send<T>(ActorIdentity remoteActor, ActorMessageEnvelope<T> message)
         {
             _localActor.Send(remoteActor, message);
         }
 
-        public void BeginSend<T>(ActorDescription remoteActor, ActorMessageEnvelope<T> message)
+        public void BeginSend<T>(ActorIdentity remoteActor, ActorMessageEnvelope<T> message)
         {
             _localActor.BeginSend(remoteActor, message);
         }
 
-        public IAsyncResult BeginSend<T>(ActorDescription remoteActor, ActorMessageEnvelope<T> message, AsyncCallback callback, object state)
+        public IAsyncResult BeginSend<T>(ActorIdentity remoteActor, ActorMessageEnvelope<T> message, AsyncCallback callback, object state)
         {
             return _localActor.BeginSend(remoteActor, message, callback, state);
         }
 
-        public void EndSend(ActorDescription remoteActor, IAsyncResult asyncResult)
+        public void EndSend(ActorIdentity remoteActor, IAsyncResult asyncResult)
         {
             _localActor.EndSend(remoteActor, asyncResult);
         }

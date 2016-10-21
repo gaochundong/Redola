@@ -6,14 +6,14 @@ namespace Redola.ActorModel
 {
     [Serializable]
     [XmlRoot]
-    public class ActorDescriptionCollection
+    public class ActorIdentityCollection
     {
-        public ActorDescriptionCollection()
+        public ActorIdentityCollection()
         {
-            Items = new List<ActorDescription>();
+            Items = new List<ActorIdentity>();
         }
 
         [XmlArray]
-        public List<ActorDescription> Items { get; set; }
+        public List<ActorIdentity> Items { get; set; }
     }
 }

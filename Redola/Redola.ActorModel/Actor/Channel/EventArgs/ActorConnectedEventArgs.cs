@@ -4,7 +4,7 @@ namespace Redola.ActorModel
 {
     public class ActorConnectedEventArgs : EventArgs
     {
-        public ActorConnectedEventArgs(string sessionKey, ActorDescription remoteActor)
+        public ActorConnectedEventArgs(string sessionKey, ActorIdentity remoteActor)
         {
             if (string.IsNullOrEmpty(sessionKey))
                 throw new ArgumentNullException("sessionKey");
@@ -16,7 +16,7 @@ namespace Redola.ActorModel
         }
 
         public string SessionKey { get; private set; }
-        public ActorDescription RemoteActor { get; private set; }
+        public ActorIdentity RemoteActor { get; private set; }
 
         public override string ToString()
         {

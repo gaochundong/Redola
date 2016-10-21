@@ -25,7 +25,7 @@ namespace Redola.Rpc.TestRpcServer
             return messages;
         }
 
-        private void OnHelloRequest(ActorDescription remoteActor, ActorMessageEnvelope<HelloRequest> request)
+        private void OnHelloRequest(ActorIdentity remoteActor, ActorMessageEnvelope<HelloRequest> request)
         {
             var response = new ActorMessageEnvelope<HelloResponse>()
             {
@@ -39,7 +39,7 @@ namespace Redola.Rpc.TestRpcServer
             this.Actor.BeginSend(remoteActor, response);
         }
 
-        private void OnHello10000Request(ActorDescription remoteActor, ActorMessageEnvelope<Hello10000Request> request)
+        private void OnHello10000Request(ActorIdentity remoteActor, ActorMessageEnvelope<Hello10000Request> request)
         {
             var response = new ActorMessageEnvelope<Hello10000Response>()
             {

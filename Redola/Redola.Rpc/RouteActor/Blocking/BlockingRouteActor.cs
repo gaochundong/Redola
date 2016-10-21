@@ -56,7 +56,7 @@ namespace Redola.Rpc
             return response;
         }
 
-        public void OnSyncMessage<P>(ActorDescription remoteActor, ActorMessageEnvelope<P> response)
+        public void OnSyncMessage<P>(ActorIdentity remoteActor, ActorMessageEnvelope<P> response)
         {
             if (response == null
                 || string.IsNullOrWhiteSpace(response.CorrelationID))

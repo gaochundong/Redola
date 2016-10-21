@@ -61,17 +61,17 @@ namespace Redola.Rpc
             base.OnActorDataReceived(sender, e);
         }
 
-        public void Send<T>(ActorDescription remoteActor, ActorMessageEnvelope<T> message)
+        public void Send<T>(ActorIdentity remoteActor, ActorMessageEnvelope<T> message)
         {
             Send(remoteActor, message.ToBytes(this.Encoder));
         }
 
-        public void BeginSend<T>(ActorDescription remoteActor, ActorMessageEnvelope<T> message)
+        public void BeginSend<T>(ActorIdentity remoteActor, ActorMessageEnvelope<T> message)
         {
             BeginSend(remoteActor, message.ToBytes(this.Encoder));
         }
 
-        public IAsyncResult BeginSend<T>(ActorDescription remoteActor, ActorMessageEnvelope<T> message, AsyncCallback callback, object state)
+        public IAsyncResult BeginSend<T>(ActorIdentity remoteActor, ActorMessageEnvelope<T> message, AsyncCallback callback, object state)
         {
             return BeginSend(remoteActor, message.ToBytes(this.Encoder), callback, state);
         }

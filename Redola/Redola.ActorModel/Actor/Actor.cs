@@ -22,8 +22,8 @@ namespace Redola.ActorModel
             _configuration = configuration;
         }
 
-        public ActorDescription CenterActor { get { return _configuration.CenterActor; } }
-        public ActorDescription LocalActor { get { return _configuration.LocalActor; } }
+        public ActorIdentity CenterActor { get { return _configuration.CenterActor; } }
+        public ActorIdentity LocalActor { get { return _configuration.LocalActor; } }
         public ActorChannelConfiguration ChannelConfiguration { get { return _configuration.ChannelConfiguration; } }
         public string Type { get { return this.LocalActor.Type; } }
         public string Name { get { return this.LocalActor.Name; } }
@@ -81,7 +81,7 @@ namespace Redola.ActorModel
             _directory.GetCenterActorChannel().Close();
         }
 
-        private IActorChannel BuildActorCenterChannel(ActorDescription centerActor, ActorDescription localActor)
+        private IActorChannel BuildActorCenterChannel(ActorIdentity centerActor, ActorIdentity localActor)
         {
             IPAddress actorCenterAddress = ResolveIPAddress(centerActor.Address);
             int actorCenterPort = int.Parse(centerActor.Port);
@@ -94,7 +94,7 @@ namespace Redola.ActorModel
             return centerChannel;
         }
 
-        protected List<ActorDescription> GetAllActors()
+        protected List<ActorIdentity> GetAllActors()
         {
             return _manager.GetAllActors();
         }
@@ -127,40 +127,40 @@ namespace Redola.ActorModel
         public event EventHandler<ActorDisconnectedEventArgs> Disconnected;
         public event EventHandler<ActorDataReceivedEventArgs> DataReceived;
 
-        public void Send(ActorDescription remoteActor, byte[] data)
+        public void Send(ActorIdentity remoteActor, byte[] data)
         {
             Send(remoteActor, data, 0, data.Length);
         }
 
-        public void Send(ActorDescription remoteActor, byte[] data, int offset, int count)
+        public void Send(ActorIdentity remoteActor, byte[] data, int offset, int count)
         {
             var channel = _manager.GetActorChannel(remoteActor);
             channel.Send(remoteActor.Type, remoteActor.Name, data, offset, count);
         }
 
-        public void BeginSend(ActorDescription remoteActor, byte[] data)
+        public void BeginSend(ActorIdentity remoteActor, byte[] data)
         {
             BeginSend(remoteActor, data, 0, data.Length);
         }
 
-        public void BeginSend(ActorDescription remoteActor, byte[] data, int offset, int count)
+        public void BeginSend(ActorIdentity remoteActor, byte[] data, int offset, int count)
         {
             var channel = _manager.GetActorChannel(remoteActor);
             channel.BeginSend(remoteActor.Type, remoteActor.Name, data, offset, count);
         }
 
-        public IAsyncResult BeginSend(ActorDescription remoteActor, byte[] data, AsyncCallback callback, object state)
+        public IAsyncResult BeginSend(ActorIdentity remoteActor, byte[] data, AsyncCallback callback, object state)
         {
             return BeginSend(remoteActor, data, 0, data.Length, callback, state);
         }
 
-        public IAsyncResult BeginSend(ActorDescription remoteActor, byte[] data, int offset, int count, AsyncCallback callback, object state)
+        public IAsyncResult BeginSend(ActorIdentity remoteActor, byte[] data, int offset, int count, AsyncCallback callback, object state)
         {
             var channel = _manager.GetActorChannel(remoteActor);
             return channel.BeginSend(remoteActor.Type, remoteActor.Name, data, offset, count, callback, state);
         }
 
-        public void EndSend(ActorDescription remoteActor, IAsyncResult asyncResult)
+        public void EndSend(ActorIdentity remoteActor, IAsyncResult asyncResult)
         {
             var channel = _manager.GetActorChannel(remoteActor);
             channel.EndSend(remoteActor.Type, remoteActor.Name, asyncResult);

@@ -5,9 +5,9 @@ namespace Redola.ActorModel
 {
     [Serializable]
     [XmlRoot]
-    public class ActorDescriptionLookup
+    public class ActorIdentityLookup
     {
-        public ActorDescriptionLookup()
+        public ActorIdentityLookup()
         {
         }
 

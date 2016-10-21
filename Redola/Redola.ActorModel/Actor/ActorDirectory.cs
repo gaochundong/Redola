@@ -11,12 +11,12 @@ namespace Redola.ActorModel
     public class ActorDirectory
     {
         private ILog _log = Logger.Get<ActorDirectory>();
-        private ActorDescription _centerActor;
+        private ActorIdentity _centerActor;
         private IActorChannel _centerChannel;
         private ActorChannelConfiguration _channelConfiguration;
 
         public ActorDirectory(
-            ActorDescription centerActor,
+            ActorIdentity centerActor,
             IActorChannel centerChannel,
             ActorChannelConfiguration channelConfiguration)
         {
@@ -32,7 +32,7 @@ namespace Redola.ActorModel
             _channelConfiguration = channelConfiguration;
         }
 
-        public ActorDescription GetCenterActor()
+        public ActorIdentity GetCenterActor()
         {
             return _centerActor;
         }
@@ -82,9 +82,9 @@ namespace Redola.ActorModel
             return endpoint;
         }
 
-        private IPEndPoint LookupRemoteActorEndPoint(string actorType, Func<List<ActorDescription>, ActorDescription> matchActorFunc)
+        private IPEndPoint LookupRemoteActorEndPoint(string actorType, Func<List<ActorIdentity>, ActorIdentity> matchActorFunc)
         {
-            var actorLookupCondition = new ActorDescriptionLookup()
+            var actorLookupCondition = new ActorIdentityLookup()
             {
                 Type = actorType,
             };
@@ -122,7 +122,7 @@ namespace Redola.ActorModel
                     _channelConfiguration.FrameBuilder.DecodePayload(
                         lookupResponseEvent.Data, lookupResponseEvent.DataOffset, actorLookupResponseFrameHeader,
                         out payload, out payloadOffset, out payloadCount);
-                    var actorLookupResponseData = _channelConfiguration.FrameBuilder.ControlFrameDataDecoder.DecodeFrameData<ActorDescriptionCollection>(
+                    var actorLookupResponseData = _channelConfiguration.FrameBuilder.ControlFrameDataDecoder.DecodeFrameData<ActorIdentityCollection>(
                         payload, payloadOffset, payloadCount);
 
                     var actors = actorLookupResponseData != null ? actorLookupResponseData.Items : null;

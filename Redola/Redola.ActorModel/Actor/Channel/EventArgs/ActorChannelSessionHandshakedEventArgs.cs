@@ -6,7 +6,7 @@ namespace Redola.ActorModel
     {
         public ActorChannelSessionHandshakedEventArgs(
             ActorChannelSession session,
-            ActorDescription remoteActor)
+            ActorIdentity remoteActor)
         {
             if (session == null)
                 throw new ArgumentNullException("session");
@@ -18,7 +18,7 @@ namespace Redola.ActorModel
 
         public string SessionKey { get { return this.Session.SessionKey; } }
         public ActorChannelSession Session { get; private set; }
-        public ActorDescription RemoteActor { get; private set; }
+        public ActorIdentity RemoteActor { get; private set; }
 
         public override string ToString()
         {

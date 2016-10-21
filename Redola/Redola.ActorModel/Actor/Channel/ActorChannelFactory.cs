@@ -23,7 +23,7 @@ namespace Redola.ActorModel
             _channelConfiguration = channelConfiguration;
         }
 
-        public IActorChannel BuildLocalActor(ActorDescription localActor)
+        public IActorChannel BuildLocalActor(ActorIdentity localActor)
         {
             if (string.IsNullOrWhiteSpace(localActor.Address))
                 throw new InvalidOperationException(string.Format(
@@ -43,7 +43,7 @@ namespace Redola.ActorModel
             return channel;
         }
 
-        public IActorChannel BuildActorChannel(ActorDescription localActor, string remoteActorType, string remoteActorName)
+        public IActorChannel BuildActorChannel(ActorIdentity localActor, string remoteActorType, string remoteActorName)
         {
             var actorEndPoint = _directory.LookupRemoteActorEndPoint(remoteActorType, remoteActorName);
             if (actorEndPoint == null)
@@ -58,7 +58,7 @@ namespace Redola.ActorModel
             return channel;
         }
 
-        public IActorChannel BuildActorChannel(ActorDescription localActor, string remoteActorType)
+        public IActorChannel BuildActorChannel(ActorIdentity localActor, string remoteActorType)
         {
             var actorEndPoint = _directory.LookupRemoteActorEndPoint(remoteActorType);
             if (actorEndPoint == null)

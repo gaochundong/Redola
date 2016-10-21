@@ -23,7 +23,7 @@ namespace Redola.Rpc.TestRpcServer
             return messages;
         }
 
-        private void OnPlaceOrderRequest(ActorDescription remoteActor, ActorMessageEnvelope<PlaceOrderRequest> request)
+        private void OnPlaceOrderRequest(ActorIdentity remoteActor, ActorMessageEnvelope<PlaceOrderRequest> request)
         {
             var response = new ActorMessageEnvelope<PlaceOrderResponse>()
             {

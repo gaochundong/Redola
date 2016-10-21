@@ -9,10 +9,10 @@ namespace Redola.ActorModel
 {
     public class ActorChannelManager
     {
-        private ActorDescription _localActor;
+        private ActorIdentity _localActor;
         private ActorChannelFactory _factory;
         private ConcurrentDictionary<string, IActorChannel> _channels = new ConcurrentDictionary<string, IActorChannel>(); // ActorKey -> IActorChannel
-        private ConcurrentDictionary<string, ActorDescription> _actorKeys = new ConcurrentDictionary<string, ActorDescription>(); // ActorKey -> ActorDescription
+        private ConcurrentDictionary<string, ActorIdentity> _actorKeys = new ConcurrentDictionary<string, ActorIdentity>(); // ActorKey -> ActorDescription
         private readonly object _syncLock = new object();
 
         public ActorChannelManager(ActorChannelFactory factory)
@@ -23,7 +23,7 @@ namespace Redola.ActorModel
             _factory = factory;
         }
 
-        public void ActivateLocalActor(ActorDescription localActor)
+        public void ActivateLocalActor(ActorIdentity localActor)
         {
             var channel = _factory.BuildLocalActor(localActor);
             channel.Connected += OnActorConnected;
@@ -36,7 +36,7 @@ namespace Redola.ActorModel
             _actorKeys.Add(_localActor.GetKey(), _localActor);
         }
 
-        public IActorChannel GetActorChannel(ActorDescription remoteActor)
+        public IActorChannel GetActorChannel(ActorIdentity remoteActor)
         {
             if (remoteActor == null)
                 throw new ArgumentNullException("remoteActor");
@@ -46,7 +46,7 @@ namespace Redola.ActorModel
         public IActorChannel GetActorChannel(string actorType, string actorName)
         {
             IActorChannel channel = null;
-            var actorKey = ActorDescription.GetKey(actorType, actorName);
+            var actorKey = ActorIdentity.GetKey(actorType, actorName);
 
             if (_channels.TryGetValue(actorKey, out channel))
             {
@@ -212,7 +212,7 @@ namespace Redola.ActorModel
         public event EventHandler<ActorDisconnectedEventArgs> Disconnected;
         public event EventHandler<ActorDataReceivedEventArgs> DataReceived;
 
-        public List<ActorDescription> GetAllActors()
+        public List<ActorIdentity> GetAllActors()
         {
             return _actorKeys.Values.ToList();
         }

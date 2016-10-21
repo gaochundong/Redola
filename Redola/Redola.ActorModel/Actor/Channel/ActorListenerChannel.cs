@@ -9,15 +9,15 @@ namespace Redola.ActorModel
     public class ActorListenerChannel : IActorChannel
     {
         private ILog _log = Logger.Get<ActorListenerChannel>();
-        private ActorDescription _localActor = null;
+        private ActorIdentity _localActor = null;
         private ActorTransportListener _listener = null;
         private ActorChannelConfiguration _channelConfiguration = null;
         private ConcurrentDictionary<string, ActorChannelSession> _sessions = new ConcurrentDictionary<string, ActorChannelSession>(); // SessionKey -> Session
-        private ConcurrentDictionary<string, ActorDescription> _remoteActors = new ConcurrentDictionary<string, ActorDescription>(); // SessionKey -> Actor
+        private ConcurrentDictionary<string, ActorIdentity> _remoteActors = new ConcurrentDictionary<string, ActorIdentity>(); // SessionKey -> Actor
         private ConcurrentDictionary<string, string> _actorKeys = new ConcurrentDictionary<string, string>(); // ActorKey -> SessionKey
 
         public ActorListenerChannel(
-            ActorDescription localActor,
+            ActorIdentity localActor,
             ActorTransportListener localListener,
             ActorChannelConfiguration channelConfiguration)
         {
@@ -93,7 +93,7 @@ namespace Redola.ActorModel
                 session.Close();
             }
 
-            ActorDescription remoteActor = null;
+            ActorIdentity remoteActor = null;
             if (_remoteActors.TryRemove(e.SessionKey, out remoteActor))
             {
                 _actorKeys.Remove(remoteActor.GetKey());
@@ -146,7 +146,7 @@ namespace Redola.ActorModel
 
         public void Send(string actorType, string actorName, byte[] data, int offset, int count)
         {
-            var actorKey = ActorDescription.GetKey(actorType, actorName);
+            var actorKey = ActorIdentity.GetKey(actorType, actorName);
             var sessionKey = _actorKeys.Get(actorKey);
             if (!string.IsNullOrEmpty(sessionKey))
             {
@@ -165,7 +165,7 @@ namespace Redola.ActorModel
 
         public void BeginSend(string actorType, string actorName, byte[] data, int offset, int count)
         {
-            var actorKey = ActorDescription.GetKey(actorType, actorName);
+            var actorKey = ActorIdentity.GetKey(actorType, actorName);
             var sessionKey = _actorKeys.Get(actorKey);
             if (!string.IsNullOrEmpty(sessionKey))
             {
@@ -222,7 +222,7 @@ namespace Redola.ActorModel
 
         public IAsyncResult BeginSend(string actorType, string actorName, byte[] data, int offset, int count, AsyncCallback callback, object state)
         {
-            var actorKey = ActorDescription.GetKey(actorType, actorName);
+            var actorKey = ActorIdentity.GetKey(actorType, actorName);
             var sessionKey = _actorKeys.Get(actorKey);
             if (!string.IsNullOrEmpty(sessionKey))
             {
@@ -238,7 +238,7 @@ namespace Redola.ActorModel
 
         public void EndSend(string actorType, string actorName, IAsyncResult asyncResult)
         {
-            var actorKey = ActorDescription.GetKey(actorType, actorName);
+            var actorKey = ActorIdentity.GetKey(actorType, actorName);
             var sessionKey = _actorKeys.Get(actorKey);
             if (!string.IsNullOrEmpty(sessionKey))
             {

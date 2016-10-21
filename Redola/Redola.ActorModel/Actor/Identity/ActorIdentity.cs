@@ -5,13 +5,13 @@ namespace Redola.ActorModel
 {
     [Serializable]
     [XmlRoot]
-    public class ActorDescription : IEquatable<ActorDescription>
+    public class ActorIdentity : IEquatable<ActorIdentity>
     {
-        public ActorDescription()
+        public ActorIdentity()
         {
         }
 
-        public ActorDescription(string type, string name)
+        public ActorIdentity(string type, string name)
         {
             this.Type = type;
             this.Name = name;
@@ -73,7 +73,7 @@ namespace Redola.ActorModel
             return this.GetKey().GetHashCode();
         }
 
-        public bool Equals(ActorDescription other)
+        public bool Equals(ActorIdentity other)
         {
             if (object.ReferenceEquals(other, null)) return false;
             if (object.ReferenceEquals(this, other)) return true;
@@ -85,10 +85,10 @@ namespace Redola.ActorModel
         {
             if (object.ReferenceEquals(obj, null)) return false;
 
-            return Equals(obj as ActorDescription);
+            return Equals(obj as ActorIdentity);
         }
 
-        public static bool operator ==(ActorDescription x, ActorDescription y)
+        public static bool operator ==(ActorIdentity x, ActorIdentity y)
         {
             if (object.ReferenceEquals(x, null))
             {
@@ -103,7 +103,7 @@ namespace Redola.ActorModel
             }
         }
 
-        public static bool operator !=(ActorDescription x, ActorDescription y)
+        public static bool operator !=(ActorIdentity x, ActorIdentity y)
         {
             return !(x == y);
         }

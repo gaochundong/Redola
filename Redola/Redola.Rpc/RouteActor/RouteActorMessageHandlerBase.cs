@@ -42,7 +42,7 @@ namespace Redola.Rpc
             return _admissibleMessages.ContainsKey(envelope.MessageType);
         }
 
-        public void HandleMessage(ActorDescription remoteActor, ActorMessageEnvelope envelope)
+        public void HandleMessage(ActorIdentity remoteActor, ActorMessageEnvelope envelope)
         {
             if (!GetAdmissibleMessageHandleStrategy(envelope.MessageType).IsHandledInSeparateThread)
             {
@@ -64,7 +64,7 @@ namespace Redola.Rpc
             }
         }
 
-        protected virtual void DoHandleMessage(ActorDescription remoteActor, ActorMessageEnvelope envelope)
+        protected virtual void DoHandleMessage(ActorIdentity remoteActor, ActorMessageEnvelope envelope)
         {
             envelope.HandledBy(this, GetAdmissibleMessageType(envelope.MessageType), this.Actor.Decoder, remoteActor);
         }

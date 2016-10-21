@@ -11,7 +11,7 @@ namespace Redola.ActorModel
         private readonly object _retryLock = new object();
 
         public ActorConnectorReconnectableChannel(
-            ActorDescription localActor, 
+            ActorIdentity localActor, 
             ActorTransportConnector remoteConnector,
             ActorChannelConfiguration channelConfiguration)
             : base(localActor, remoteConnector, channelConfiguration)

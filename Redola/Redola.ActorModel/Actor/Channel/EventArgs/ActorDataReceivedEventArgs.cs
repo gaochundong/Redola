@@ -4,12 +4,12 @@ namespace Redola.ActorModel
 {
     public class ActorDataReceivedEventArgs : EventArgs
     {
-        public ActorDataReceivedEventArgs(string sessionKey, ActorDescription remoteActor, byte[] data)
+        public ActorDataReceivedEventArgs(string sessionKey, ActorIdentity remoteActor, byte[] data)
             : this(sessionKey, remoteActor, data, 0, data.Length)
         {
         }
 
-        public ActorDataReceivedEventArgs(string sessionKey, ActorDescription remoteActor, byte[] data, int dataOffset, int dataLength)
+        public ActorDataReceivedEventArgs(string sessionKey, ActorIdentity remoteActor, byte[] data, int dataOffset, int dataLength)
         {
             SessionKey = sessionKey;
             RemoteActor = remoteActor;
@@ -20,7 +20,7 @@ namespace Redola.ActorModel
         }
 
         public string SessionKey { get; private set; }
-        public ActorDescription RemoteActor { get; private set; }
+        public ActorIdentity RemoteActor { get; private set; }
 
         public byte[] Data { get; private set; }
         public int DataOffset { get; private set; }

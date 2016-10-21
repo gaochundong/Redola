@@ -79,9 +79,9 @@
     <Compile Include="Actor\Channel\Transport\EventArgs\ActorTransportDataReceivedEventArgs.cs" />
     <Compile Include="Actor\Channel\Transport\EventArgs\ActorTransportSessionDisconnectedEventArgs.cs" />
     <Compile Include="Actor\Channel\Transport\EventArgs\ActorTransportDisconnectedEventArgs.cs" />
-    <Compile Include="Actor\Description\ActorDescriptionLookup.cs" />
-    <Compile Include="Actor\Description\ActorDescription.cs" />
-    <Compile Include="Actor\Description\ActorDescriptionCollection.cs" />
+    <Compile Include="Actor\Identity\ActorIdentityLookup.cs" />
+    <Compile Include="Actor\Identity\ActorIdentity.cs" />
+    <Compile Include="Actor\Identity\ActorIdentityCollection.cs" />
     <Compile Include="Framing\Builder\Encoding\XmlActorControlFrameDataDecoder.cs" />
     <Compile Include="Framing\Builder\Encoding\IActorControlFrameDataDecoder.cs" />
     <Compile Include="Framing\Builder\Encoding\IActorControlFrameDataEncoder.cs" />

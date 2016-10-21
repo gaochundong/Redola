@@ -31,10 +31,10 @@ namespace Redola.ActorModel
                 var actorLookupRequestData = this.ChannelConfiguration
                     .FrameBuilder
                     .ControlFrameDataDecoder
-                    .DecodeFrameData<ActorDescriptionLookup>(payload, payloadOffset, payloadCount);
+                    .DecodeFrameData<ActorIdentityLookup>(payload, payloadOffset, payloadCount);
                 var lookupActorType = actorLookupRequestData != null ? actorLookupRequestData.Type : null;
 
-                var actorCollection = new ActorDescriptionCollection();
+                var actorCollection = new ActorIdentityCollection();
                 actorCollection.Items.AddRange(this.GetAllActors().Where(a => a.Type == lookupActorType).ToList());
                 var actorLookupResponseData = this.ChannelConfiguration.FrameBuilder.ControlFrameDataEncoder.EncodeFrameData(actorCollection);
                 var actorLookupResponse = new HereFrame(actorLookupResponseData);
@@ -49,12 +49,12 @@ namespace Redola.ActorModel
             }
         }
 
-        public new IEnumerable<ActorDescription> GetAllActors()
+        public new IEnumerable<ActorIdentity> GetAllActors()
         {
             return base.GetAllActors();
         }
 
-        public IEnumerable<ActorDescription> GetAllActors(string actorType)
+        public IEnumerable<ActorIdentity> GetAllActors(string actorType)
         {
             return this.GetAllActors().Where(a => a.Type == actorType);
         }

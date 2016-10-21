@@ -17,7 +17,7 @@ namespace Redola.Rpc
 
         public new BlockingRouteActor Actor { get { return _localActor; } }
 
-        protected override void DoHandleMessage(ActorDescription remoteActor, ActorMessageEnvelope envelope)
+        protected override void DoHandleMessage(ActorIdentity remoteActor, ActorMessageEnvelope envelope)
         {
             if (GetAdmissibleMessageHandleStrategy(envelope.MessageType).IsRequestResponseModel)
             {
