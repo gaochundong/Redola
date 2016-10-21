@@ -212,7 +212,7 @@ namespace Redola.ActorModel
             if (!IsListening)
                 throw new InvalidOperationException("The server has stopped to listen.");
 
-            _server.BroadcastAsync(data);
+            _server.BeginBroadcast(data);
         }
 
         public event EventHandler<ActorTransportSessionConnectedEventArgs> Connected;

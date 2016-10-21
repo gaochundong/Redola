@@ -49,7 +49,7 @@ namespace Redola.ActorModel
 
         public void BeginSend(byte[] data, int offset, int count)
         {
-            _session.SendAsync(data, offset, count);
+            _session.BeginSend(data, offset, count);
         }
 
         public IAsyncResult BeginSend(byte[] data, AsyncCallback callback, object state)
