@@ -2,14 +2,14 @@
 <package >
     <metadata>
         <id>Redola.Rpc</id>
-        <version>0.1.0.0</version>
+        <version>0.1.1.0</version>
         <title>Redola.Rpc</title>
         <authors>Dennis Gao</authors>
         <owners>Dennis Gao</owners>
         <licenseUrl>https://github.com/gaochundong/Redola/blob/master/LICENSE</licenseUrl>
         <projectUrl>https://github.com/gaochundong/Redola</projectUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
-        <description>Redola is a simple C# based RPC framework.</description>
+        <description>Redola is a lightweight C# based RPC framework.</description>
         <copyright>Copyright © 2015-2016 Dennis Gao.</copyright>
         <dependencies>
             <dependency id="protobuf-net" version="2.1.0" />

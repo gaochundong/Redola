@@ -1,2 +1,2 @@
 # Redola
-Redola is a simple C# based RPC framework.
+Redola is a lightweight C# based RPC framework.
