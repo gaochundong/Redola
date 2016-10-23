@@ -31,7 +31,7 @@ namespace Redola.Rpc.TestHttpServer
                 var response = _helloService.SayHello10000();
                 return response == null ? string.Empty : response.Message.Text;
             };
-            Get["/add10000"] = x =>
+            Get["/add"] = x =>
             {
                 var result = _calcService.Add(1, 2);
                 return result.ToString();
