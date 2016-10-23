@@ -17,9 +17,11 @@ namespace Redola.Rpc.TestRpcServer
 
             actor.Bootup();
 
-            var helloService = new HelloService(actor);
-            var calcService = new CalcService(actor);
-            var orderService = new OrderService(actor);
+            var rateLimiter = new RateLimiter();
+
+            var helloService = new HelloService(actor, rateLimiter);
+            var calcService = new CalcService(actor, rateLimiter);
+            var orderService = new OrderService(actor, rateLimiter);
 
             actor.RegisterRpcService(helloService);
             actor.RegisterRpcService(calcService);

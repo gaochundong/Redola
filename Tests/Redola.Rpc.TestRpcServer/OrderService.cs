@@ -14,6 +14,11 @@ namespace Redola.Rpc.TestRpcServer
         {
         }
 
+        public OrderService(RpcActor localActor, IRateLimiter rateLimiter)
+            : base(localActor, rateLimiter)
+        {
+        }
+
         protected override IEnumerable<RpcMessageRegistration> RegisterRpcMessages()
         {
             var messages = new List<RpcMessageRegistration>();
