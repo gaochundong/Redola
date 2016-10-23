@@ -20,13 +20,23 @@ namespace Redola.Rpc
 
         public void Bootup()
         {
+            Bootup(_encoder, _decoder);
+        }
+
+        public void Bootup(IActorMessageEncoder encoder, IActorMessageDecoder decoder)
+        {
+            if (encoder == null)
+                throw new ArgumentNullException("encoder");
+            if (decoder == null)
+                throw new ArgumentNullException("decoder");
+
             if (_localActor != null)
                 throw new InvalidOperationException("Already bootup.");
 
             var configruation = new RpcActorConfiguration();
             configruation.Build();
 
-            _localActor = new BlockingRouteActor(configruation, _encoder, _decoder);
+            _localActor = new BlockingRouteActor(configruation, encoder, decoder);
             _localActor.Bootup();
         }
 
