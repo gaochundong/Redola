@@ -303,8 +303,8 @@ namespace Redola.Rpc.TestRpcClient
                 Environment.NewLine, string.Format("   Concurrency level: {0} threads", threadCount),
                 Environment.NewLine, string.Format("   Complete requests: {0}", totalCalls),
                 Environment.NewLine, string.Format("Time taken for tests: {0} seconds", (decimal)watch.ElapsedMilliseconds / 1000m),
-                Environment.NewLine, string.Format("    Time per request: {0:#####0.000} ms (mean)", (decimal)watch.ElapsedMilliseconds / (decimal)totalCalls),
-                Environment.NewLine, string.Format(" Requests per second: {0} [#/sec] (mean)", (int)((decimal)totalCalls / ((decimal)watch.ElapsedMilliseconds / 1000m)))
+                Environment.NewLine, string.Format("    Time per request: {0:#####0.000} ms (avg)", (decimal)watch.ElapsedMilliseconds / (decimal)totalCalls),
+                Environment.NewLine, string.Format(" Requests per second: {0} [#/sec] (avg)", (int)((decimal)totalCalls / ((decimal)watch.ElapsedMilliseconds / 1000m)))
                 );
         }
 
@@ -350,8 +350,8 @@ namespace Redola.Rpc.TestRpcClient
                 Environment.NewLine, string.Format("   Concurrency level: {0} threads", threadCount),
                 Environment.NewLine, string.Format("   Complete requests: {0}", totalCalls),
                 Environment.NewLine, string.Format("Time taken for tests: {0} seconds", (decimal)watch.ElapsedMilliseconds / 1000m),
-                Environment.NewLine, string.Format("    Time per request: {0:#####0.000} ms (mean)", (decimal)watch.ElapsedMilliseconds / (decimal)totalCalls),
-                Environment.NewLine, string.Format(" Requests per second: {0} [#/sec] (mean)", (int)((decimal)totalCalls / ((decimal)watch.ElapsedMilliseconds / 1000m)))
+                Environment.NewLine, string.Format("    Time per request: {0:#####0.000} ms (avg)", (decimal)watch.ElapsedMilliseconds / (decimal)totalCalls),
+                Environment.NewLine, string.Format(" Requests per second: {0} [#/sec] (avg)", (int)((decimal)totalCalls / ((decimal)watch.ElapsedMilliseconds / 1000m)))
                 );
         }
 
