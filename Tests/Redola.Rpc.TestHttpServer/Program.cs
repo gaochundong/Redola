@@ -19,11 +19,13 @@ namespace Redola.Rpc.TestHttpServer
             actor.Bootup();
 
             var helloClient = new HelloClient(actor);
+            var calcClient = new CalcClient(actor);
 
             actor.RegisterRpcService(helloClient);
+            actor.RegisterRpcService(calcClient);
 
             var container = new TestContainer();
-            container.AddModule(new TestModule(helloClient));
+            container.AddModule(new TestModule(helloClient, calcClient));
 
             var bootstrapper = new Bootstrapper();
             var engine = bootstrapper.BootWith(container);

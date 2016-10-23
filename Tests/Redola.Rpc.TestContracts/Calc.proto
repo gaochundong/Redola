@@ -1,0 +1,15 @@
+package Redola.Rpc.TestContracts;
+
+option java_package = "com.redola.rpc.testcontracts";
+option java_outer_classname = "Calc";
+
+message AddRequest
+{
+	required int32 X = 10;
+	required int32 Y = 20;
+}
+
+message AddResponse
+{
+	required int32 Result = 10;
+}
