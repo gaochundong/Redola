@@ -68,6 +68,30 @@ namespace Redola.Rpc.TestRpcClient
                     {
                         Hello10000MultiThreading(log, helloClient, 10000, 32);
                     }
+                    else if (text == "hello20000x1")
+                    {
+                        Hello10000MultiThreading(log, helloClient, 20000, 1);
+                    }
+                    else if (text == "hello20000x2")
+                    {
+                        Hello10000MultiThreading(log, helloClient, 20000, 2);
+                    }
+                    else if (text == "hello20000x4")
+                    {
+                        Hello10000MultiThreading(log, helloClient, 20000, 4);
+                    }
+                    else if (text == "hello20000x8")
+                    {
+                        Hello10000MultiThreading(log, helloClient, 20000, 8);
+                    }
+                    else if (text == "hello20000x16")
+                    {
+                        Hello10000MultiThreading(log, helloClient, 20000, 16);
+                    }
+                    else if (text == "hello20000x32")
+                    {
+                        Hello10000MultiThreading(log, helloClient, 20000, 32);
+                    }
                     else if (text == "hello100000x1")
                     {
                         Hello10000MultiThreading(log, helloClient, 100000, 1);
