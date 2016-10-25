@@ -44,6 +44,7 @@ namespace Redola.Rpc.TestRpcClient
                     {
                         Hello10000(log, helloClient);
                     }
+                    #region hello10000
                     else if (text == "hello10000x1")
                     {
                         Hello10000MultiThreading(log, helloClient, 10000, 1);
@@ -68,6 +69,8 @@ namespace Redola.Rpc.TestRpcClient
                     {
                         Hello10000MultiThreading(log, helloClient, 10000, 32);
                     }
+                    #endregion
+                    #region hello20000
                     else if (text == "hello20000x1")
                     {
                         Hello10000MultiThreading(log, helloClient, 20000, 1);
@@ -92,6 +95,8 @@ namespace Redola.Rpc.TestRpcClient
                     {
                         Hello10000MultiThreading(log, helloClient, 20000, 32);
                     }
+                    #endregion
+                    #region hello100000
                     else if (text == "hello100000x1")
                     {
                         Hello10000MultiThreading(log, helloClient, 100000, 1);
@@ -116,6 +121,8 @@ namespace Redola.Rpc.TestRpcClient
                     {
                         Hello10000MultiThreading(log, helloClient, 100000, 32);
                     }
+                    #endregion
+                    #region hello300000
                     else if (text == "hello300000x1")
                     {
                         Hello10000MultiThreading(log, helloClient, 300000, 1);
@@ -140,6 +147,8 @@ namespace Redola.Rpc.TestRpcClient
                     {
                         Hello10000MultiThreading(log, helloClient, 300000, 32);
                     }
+                    #endregion
+                    #region hello1500000
                     else if (text == "hello1500000x1")
                     {
                         Hello10000MultiThreading(log, helloClient, 1500000, 1);
@@ -164,6 +173,8 @@ namespace Redola.Rpc.TestRpcClient
                     {
                         Hello10000MultiThreading(log, helloClient, 1500000, 32);
                     }
+                    #endregion
+                    #region add10000
                     else if (text == "add10000x1")
                     {
                         Add10000MultiThreading(log, calcClient, 10000, 1);
@@ -188,6 +199,34 @@ namespace Redola.Rpc.TestRpcClient
                     {
                         Add10000MultiThreading(log, calcClient, 10000, 32);
                     }
+                    #endregion
+                    #region add20000
+                    else if (text == "add20000x1")
+                    {
+                        Add10000MultiThreading(log, calcClient, 20000, 1);
+                    }
+                    else if (text == "add20000x2")
+                    {
+                        Add10000MultiThreading(log, calcClient, 20000, 2);
+                    }
+                    else if (text == "add20000x4")
+                    {
+                        Add10000MultiThreading(log, calcClient, 20000, 4);
+                    }
+                    else if (text == "add20000x8")
+                    {
+                        Add10000MultiThreading(log, calcClient, 20000, 8);
+                    }
+                    else if (text == "add20000x16")
+                    {
+                        Add10000MultiThreading(log, calcClient, 20000, 16);
+                    }
+                    else if (text == "add20000x32")
+                    {
+                        Add10000MultiThreading(log, calcClient, 20000, 32);
+                    }
+                    #endregion
+                    #region add100000
                     else if (text == "add100000x1")
                     {
                         Add10000MultiThreading(log, calcClient, 100000, 1);
@@ -212,6 +251,8 @@ namespace Redola.Rpc.TestRpcClient
                     {
                         Add10000MultiThreading(log, calcClient, 100000, 32);
                     }
+                    #endregion
+                    #region add300000
                     else if (text == "add300000x1")
                     {
                         Add10000MultiThreading(log, calcClient, 300000, 1);
@@ -236,6 +277,8 @@ namespace Redola.Rpc.TestRpcClient
                     {
                         Add10000MultiThreading(log, calcClient, 300000, 32);
                     }
+                    #endregion
+                    #region add1500000
                     else if (text == "add1500000x1")
                     {
                         Add10000MultiThreading(log, calcClient, 1500000, 1);
@@ -260,6 +303,7 @@ namespace Redola.Rpc.TestRpcClient
                     {
                         Add10000MultiThreading(log, calcClient, 1500000, 32);
                     }
+                    #endregion
                     else
                     {
                         int times = 0;
