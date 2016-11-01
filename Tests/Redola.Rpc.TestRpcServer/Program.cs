@@ -17,7 +17,7 @@ namespace Redola.Rpc.TestRpcServer
 
             actor.Bootup();
 
-            var rateLimiter = new RateLimiter();
+            var rateLimiter = new CountableRateLimiter();
 
             var helloService = new HelloService(actor, rateLimiter);
             var calcService = new CalcService(actor);

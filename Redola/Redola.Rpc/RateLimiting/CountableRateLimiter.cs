@@ -4,17 +4,17 @@ using System.Threading.Tasks;
 
 namespace Redola.Rpc
 {
-    public class RateLimiter : IRateLimiter, IDisposable
+    public class CountableRateLimiter : IRateLimiter, IDisposable
     {
         private readonly SemaphoreSlim _semaphore;
         private bool _disposed = false;
 
-        public RateLimiter()
+        public CountableRateLimiter()
             : this(Environment.ProcessorCount)
         {
         }
 
-        public RateLimiter(int limitCount)
+        public CountableRateLimiter(int limitCount)
         {
             if (limitCount <= 0)
                 throw new ArgumentOutOfRangeException("limitCount");
