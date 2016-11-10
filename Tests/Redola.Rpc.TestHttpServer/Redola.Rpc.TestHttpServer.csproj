@@ -33,12 +33,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Happer.Hosting, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\Redola\packages\Happer.1.0.6.0\lib\net46\Happer.Hosting.dll</HintPath>
+    <Reference Include="Happer.Hosting, Version=1.0.13.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\Redola\packages\Happer.1.0.13.0\lib\net46\Happer.Hosting.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Happer.Http, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\Redola\packages\Happer.1.0.6.0\lib\net46\Happer.Http.dll</HintPath>
+    <Reference Include="Happer.Http, Version=1.0.13.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\Redola\packages\Happer.1.0.13.0\lib\net46\Happer.Http.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Logrila.Logging, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
@@ -54,7 +54,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\..\Redola\packages\NLog.4.3.10\lib\net45\NLog.dll</HintPath>
+      <HintPath>..\..\Redola\packages\NLog.4.3.11\lib\net45\NLog.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
