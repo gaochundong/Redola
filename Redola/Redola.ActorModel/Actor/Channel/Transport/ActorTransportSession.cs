@@ -19,7 +19,7 @@ namespace Redola.ActorModel
 
         public string SessionKey { get { return _session.SessionKey; } }
         public DateTime StartTime { get { return _session.StartTime; } }
-        public bool Active { get { return _session.Active; } }
+        public bool Active { get { return _session.State == TcpSocketConnectionState.Connected; } }
         public IPEndPoint RemoteEndPoint { get { return _session.RemoteEndPoint; } }
         public IPEndPoint LocalEndPoint { get { return _session.LocalEndPoint; } }
         public Socket Socket { get { return _session.Socket; } }

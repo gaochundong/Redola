@@ -19,7 +19,7 @@ namespace Redola.ActorModel
         }
 
         public IPEndPoint ConnectToEndPoint { get; private set; }
-        public bool IsConnected { get { return _client == null ? false : _client.Connected; } }
+        public bool IsConnected { get { return _client == null ? false : _client.State == TcpSocketConnectionState.Connected; } }
 
         public void Connect()
         {
