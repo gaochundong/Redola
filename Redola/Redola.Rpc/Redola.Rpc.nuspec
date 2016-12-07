@@ -2,7 +2,7 @@
 <package >
     <metadata>
         <id>Redola.Rpc</id>
-        <version>1.0.5.0</version>
+        <version>0.1.2.0</version>
         <title>Redola.Rpc</title>
         <authors>Dennis Gao</authors>
         <owners>Dennis Gao</owners>
@@ -13,7 +13,7 @@
         <copyright>Copyright © 2015-2016 Dennis Gao.</copyright>
         <dependencies>
             <dependency id="protobuf-net" version="2.1.0" />
-            <dependency id="Cowboy.Sockets" version="1.3.7" />
+            <dependency id="Cowboy.Sockets" version="1.3.8" />
             <dependency id="Logrila.Logging" version="1.0.3" />
         </dependencies>
     </metadata>

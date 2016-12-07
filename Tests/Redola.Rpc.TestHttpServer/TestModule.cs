@@ -13,29 +13,29 @@ namespace Redola.Rpc.TestHttpServer
             _helloService = helloService;
             _calcService = calcService;
 
-            Get["/empty"] = x =>
+            Get("/empty", x =>
             {
                 return string.Empty;
-            };
-            Get["/time"] = x =>
+            });
+            Get("/time", x =>
             {
                 return DateTime.Now.ToString(@"yyyy-MM-dd HH:mm:ss.fffffff");
-            };
-            Get["/hello"] = x =>
+            });
+            Get("/hello", x =>
             {
                 var response = _helloService.SayHello();
                 return response == null ? string.Empty : response.Message.Text;
-            };
-            Get["/hello10000"] = x =>
+            });
+            Get("/hello10000", x =>
             {
                 var response = _helloService.SayHello10000();
                 return response == null ? string.Empty : response.Message.Text;
-            };
-            Get["/add"] = x =>
+            });
+            Get("/add", x =>
             {
                 var result = _calcService.Add(1, 2);
                 return result.ToString();
-            };
+            });
         }
     }
 }
