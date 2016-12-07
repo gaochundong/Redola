@@ -349,7 +349,7 @@ namespace Redola.Rpc.TestRpcClient
             var watch = Stopwatch.StartNew();
             for (int i = 0; i < threadCount; i++)
             {
-                var task = Task.Run(() =>
+                var task = Task.Factory.StartNew(() =>
                 {
                     for (var j = 0; j < totalCalls / threadCount; j++)
                     {
@@ -359,7 +359,8 @@ namespace Redola.Rpc.TestRpcClient
                         };
                         helloClient.SayHello10000(request);
                     }
-                });
+                },
+                TaskCreationOptions.PreferFairness);
                 taskList[i] = task;
             }
             Task.WaitAll(taskList);
@@ -400,13 +401,14 @@ namespace Redola.Rpc.TestRpcClient
             var watch = Stopwatch.StartNew();
             for (int i = 0; i < threadCount; i++)
             {
-                var task = Task.Run(() =>
+                var task = Task.Factory.StartNew(() =>
                 {
                     for (var j = 0; j < totalCalls / threadCount; j++)
                     {
                         calcClient.Add(1, 2);
                     }
-                });
+                },
+                TaskCreationOptions.PreferFairness);
                 taskList[i] = task;
             }
             Task.WaitAll(taskList);

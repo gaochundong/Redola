@@ -208,7 +208,7 @@ namespace Redola.ActorModel
 
         protected virtual void OnConnected(object sender, ActorTransportConnectedEventArgs e)
         {
-            Task.Run(() => { Handshake(); });
+            Task.Factory.StartNew(() => { Handshake(); }, TaskCreationOptions.PreferFairness);
         }
 
         protected virtual void OnDisconnected(object sender, ActorTransportDisconnectedEventArgs e)

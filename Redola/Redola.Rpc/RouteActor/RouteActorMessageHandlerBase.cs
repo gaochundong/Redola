@@ -50,7 +50,7 @@ namespace Redola.Rpc
             }
             else
             {
-                Task.Run(() =>
+                Task.Factory.StartNew(() =>
                 {
                     try
                     {
@@ -60,7 +60,8 @@ namespace Redola.Rpc
                     {
                         _log.Error(ex.Message, ex);
                     }
-                });
+                },
+                TaskCreationOptions.PreferFairness);
             }
         }
 
