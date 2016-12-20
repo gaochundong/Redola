@@ -39,7 +39,29 @@ namespace Redola.Rpc
         {
             var envelope = this.Decoder.DecodeEnvelope(e.Data, e.DataOffset, e.DataLength);
 
+            if (envelope.SourceEndpoint == null)
+                envelope.SourceEndpoint = ActorEndpoint.CreateEndpoint();
+            envelope.SourceEndpoint.AttachPath(e.RemoteActor.GetKey());
+
+            if (envelope.TargetEndpoint != null)
+                envelope.TargetEndpoint.DetachPath();
+
             bool handled = false;
+
+            if (!handled)
+            {
+                if (envelope.TargetEndpoint != null)
+                {
+                    var target = envelope.TargetEndpoint.PeakPath();
+                    if (!string.IsNullOrEmpty(target))
+                    {
+                        string remoteActorType, remoteActorName;
+                        ActorIdentity.Decode(target, out remoteActorType, out remoteActorName);
+                        this.BeginSend(remoteActorType, remoteActorName, envelope.ToBytes(this.Encoder));
+                        handled = true;
+                    }
+                }
+            }
 
             if (!handled)
             {

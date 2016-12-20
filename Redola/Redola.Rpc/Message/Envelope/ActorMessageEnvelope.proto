@@ -11,6 +11,14 @@ message ActorMessageEnvelope
 	optional string CorrelationID = 30;
 	optional int64 CorrelationTime = 40;
 
+	optional ActorEndpoint SourceEndpoint = 50;
+	optional ActorEndpoint TargetEndpoint = 60;
+
 	required string MessageType = 80;
 	optional bytes MessageData = 90;
+}
+
+message ActorEndpoint
+{
+	optional string Address = 1;
 }

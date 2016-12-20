@@ -48,6 +48,11 @@ namespace Redola.Rpc
             }
         }
 
+        [ProtoMember(50)]
+        public ActorEndpoint SourceEndpoint { get; set; }
+        [ProtoMember(60)]
+        public ActorEndpoint TargetEndpoint { get; set; }
+
         [ProtoMember(80)]
         public string MessageType { get; set; }
         [ProtoMember(90)]
@@ -74,6 +79,9 @@ namespace Redola.Rpc
 
             this.CorrelationID = source.CorrelationID;
             this.CorrelationTime = source.CorrelationTime;
+
+            this.SourceEndpoint = source.SourceEndpoint == null ? null : source.SourceEndpoint.Clone();
+            this.TargetEndpoint = source.TargetEndpoint == null ? null : source.TargetEndpoint.Clone();
 
             this.MessageType = source.MessageType;
         }

@@ -59,6 +59,7 @@
     <Compile Include="Message\Encoding\Protobuf\ProtocolBuffersConvert.cs" />
     <Compile Include="Message\Encoding\Protobuf\ProtocolBuffersMessageDecoder.cs" />
     <Compile Include="Message\Encoding\Protobuf\ProtocolBuffersMessageEncoder.cs" />
+    <Compile Include="Message\Envelope\ActorEndpoint.cs" />
     <Compile Include="Message\Envelope\ActorMessageEnvelopeExtensions.cs" />
     <Compile Include="Message\Envelope\ActorMessageEnvelopeGeneric.cs" />
     <Compile Include="Message\Envelope\ActorMessageEnvelope.cs" />
