@@ -16,13 +16,13 @@ namespace Redola.Rpc.TestHttpServer
 
             var actor = new RpcActor();
 
-            actor.Bootup();
-
             var helloClient = new HelloClient(actor);
             var calcClient = new CalcClient(actor);
 
             actor.RegisterRpcService(helloClient);
             actor.RegisterRpcService(calcClient);
+
+            actor.Bootup();
 
             var container = new TestContainer();
             container.AddModule(new TestModule(helloClient, calcClient));
