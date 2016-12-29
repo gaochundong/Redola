@@ -13,7 +13,7 @@ namespace Redola.Rpc.TestRpcMaster
 
             ILog log = Logger.Get<Program>();
 
-            var master = new ActorMaster(AppConfigActorConfiguration.Load());
+            var master = new ActorMaster();
 
             master.Bootup();
 

@@ -9,6 +9,11 @@ namespace Redola.ActorModel
     {
         private ILog _log = Logger.Get<ActorMaster>();
 
+        public ActorMaster()
+            : this(AppConfigActorConfiguration.Load())
+        {
+        }
+
         public ActorMaster(ActorConfiguration configuration)
             : base(configuration)
         {
