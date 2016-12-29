@@ -32,6 +32,9 @@ namespace Redola.ActorModel
         {
             get
             {
+                if (_manager == null)
+                    return false;
+
                 var channel = _manager.GetActorChannel(this.LocalActor);
                 if (channel == null)
                     return false;
@@ -42,6 +45,10 @@ namespace Redola.ActorModel
 
         public void Bootup()
         {
+            if (this.Active)
+                throw new InvalidOperationException(
+                    string.Format("Local actor [{0}] is already bootup.", this.LocalActor));
+
             _log.InfoFormat("Claim local actor [{0}].", this.LocalActor);
             _log.InfoFormat("Register center actor [{0}].", this.CenterActor);
 
@@ -67,18 +74,27 @@ namespace Redola.ActorModel
                 if (retryTimes > 300)
                 {
                     Shutdown();
-                    throw new InvalidOperationException("Cannot connect to center actor.");
+                    throw new InvalidOperationException(
+                        string.Format("Cannot connect to center actor [{0}].", this.CenterActor));
                 }
             }
         }
 
         public void Shutdown()
         {
-            _manager.Connected -= OnActorConnected;
-            _manager.Disconnected -= OnActorDisconnected;
-            _manager.DataReceived -= OnActorDataReceived;
-            _manager.CloseAllChannels();
-            _directory.GetCenterActorChannel().Close();
+            if (_manager != null)
+            {
+                _manager.Connected -= OnActorConnected;
+                _manager.Disconnected -= OnActorDisconnected;
+                _manager.DataReceived -= OnActorDataReceived;
+                _manager.CloseAllChannels();
+                _manager = null;
+            }
+            if (_directory != null)
+            {
+                _directory.GetCenterActorChannel().Close();
+                _directory = null;
+            }
         }
 
         private IActorChannel BuildActorCenterChannel(ActorIdentity centerActor, ActorIdentity localActor)

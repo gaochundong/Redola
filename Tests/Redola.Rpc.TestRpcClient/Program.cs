@@ -17,8 +17,6 @@ namespace Redola.Rpc.TestRpcClient
 
             var actor = new RpcActor();
 
-            actor.Bootup();
-
             var helloClient = new HelloClient(actor);
             var calcClient = new CalcClient(actor);
             var orderClient = new OrderClient(actor);
@@ -26,6 +24,8 @@ namespace Redola.Rpc.TestRpcClient
             actor.RegisterRpcService(helloClient);
             actor.RegisterRpcService(calcClient);
             actor.RegisterRpcService(orderClient);
+
+            actor.Bootup();
 
             while (true)
             {
@@ -35,6 +35,11 @@ namespace Redola.Rpc.TestRpcClient
                     if (text == "quit" || text == "exit")
                     {
                         break;
+                    }
+                    else if (text == "reconnect")
+                    {
+                        actor.Shutdown();
+                        actor.Bootup();
                     }
                     else if (text == "hello")
                     {

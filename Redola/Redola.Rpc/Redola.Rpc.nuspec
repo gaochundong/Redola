@@ -2,7 +2,7 @@
 <package >
     <metadata>
         <id>Redola.Rpc</id>
-        <version>0.1.3.0</version>
+        <version>0.1.4.0</version>
         <title>Redola.Rpc</title>
         <authors>Dennis Gao</authors>
         <owners>Dennis Gao</owners>

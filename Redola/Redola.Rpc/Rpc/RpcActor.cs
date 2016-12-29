@@ -5,13 +5,27 @@ namespace Redola.Rpc
 {
     public class RpcActor
     {
-        private static readonly IActorMessageEncoder _encoder = new ActorMessageEncoder(new ProtocolBuffersMessageEncoder());
-        private static readonly IActorMessageDecoder _decoder = new ActorMessageDecoder(new ProtocolBuffersMessageDecoder());
+        public static readonly IActorMessageEncoder DefaultActorMessageEncoder = new ActorMessageEncoder(new ProtocolBuffersMessageEncoder());
+        public static readonly IActorMessageDecoder DefaultActorMessageDecoder = new ActorMessageDecoder(new ProtocolBuffersMessageDecoder());
 
         private BlockingRouteActor _localActor = null;
 
         public RpcActor()
+            : this(DefaultActorMessageEncoder, DefaultActorMessageDecoder)
         {
+        }
+
+        public RpcActor(IActorMessageEncoder encoder, IActorMessageDecoder decoder)
+        {
+            if (encoder == null)
+                throw new ArgumentNullException("encoder");
+            if (decoder == null)
+                throw new ArgumentNullException("decoder");
+
+            var configruation = new RpcActorConfiguration();
+            configruation.Build();
+
+            _localActor = new BlockingRouteActor(configruation, encoder, decoder);
         }
 
         public BlockingRouteActor Actor { get { return _localActor; } }
@@ -20,33 +34,12 @@ namespace Redola.Rpc
 
         public void Bootup()
         {
-            Bootup(_encoder, _decoder);
-        }
-
-        public void Bootup(IActorMessageEncoder encoder, IActorMessageDecoder decoder)
-        {
-            if (encoder == null)
-                throw new ArgumentNullException("encoder");
-            if (decoder == null)
-                throw new ArgumentNullException("decoder");
-
-            if (_localActor != null)
-                throw new InvalidOperationException("Already bootup.");
-
-            var configruation = new RpcActorConfiguration();
-            configruation.Build();
-
-            _localActor = new BlockingRouteActor(configruation, encoder, decoder);
             _localActor.Bootup();
         }
 
         public void Shutdown()
         {
-            if (_localActor != null)
-            {
-                _localActor.Shutdown();
-                _localActor = null;
-            }
+            _localActor.Shutdown();
         }
 
         public void RegisterRpcService(RpcService service)
