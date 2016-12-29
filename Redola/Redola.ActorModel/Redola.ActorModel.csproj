@@ -51,11 +51,12 @@
       <Link>SolutionVersion.cs</Link>
     </Compile>
     <Compile Include="Actor\Actor.cs" />
-    <Compile Include="Actor\ActorConfiguration.cs" />
+    <Compile Include="Actor\Configuration\AppConfig\AppConfigActorConfiguration.cs" />
+    <Compile Include="Actor\Configuration\ActorConfiguration.cs" />
     <Compile Include="Actor\ActorDirectory.cs" />
     <Compile Include="Actor\ActorMaster.cs" />
-    <Compile Include="Actor\ActorNotFoundException.cs" />
-    <Compile Include="Actor\ActorSettingItems.cs" />
+    <Compile Include="Actor\Exception\ActorNotFoundException.cs" />
+    <Compile Include="Actor\Configuration\AppConfig\AppConfigActorSettingItems.cs" />
     <Compile Include="Actor\Channel\ActorChannelConfiguration.cs" />
     <Compile Include="Actor\Channel\ActorChannelFactory.cs" />
     <Compile Include="Actor\Channel\ActorChannelManager.cs" />

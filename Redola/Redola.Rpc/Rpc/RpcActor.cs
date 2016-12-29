@@ -11,21 +11,20 @@ namespace Redola.Rpc
         private BlockingRouteActor _localActor = null;
 
         public RpcActor()
-            : this(DefaultActorMessageEncoder, DefaultActorMessageDecoder)
+            : this(AppConfigActorConfiguration.Load(), DefaultActorMessageEncoder, DefaultActorMessageDecoder)
         {
         }
 
-        public RpcActor(IActorMessageEncoder encoder, IActorMessageDecoder decoder)
+        public RpcActor(ActorConfiguration configuration, IActorMessageEncoder encoder, IActorMessageDecoder decoder)
         {
+            if (configuration == null)
+                throw new ArgumentNullException("configuration");
             if (encoder == null)
                 throw new ArgumentNullException("encoder");
             if (decoder == null)
                 throw new ArgumentNullException("decoder");
 
-            var configruation = new RpcActorConfiguration();
-            configruation.Build();
-
-            _localActor = new BlockingRouteActor(configruation, encoder, decoder);
+            _localActor = new BlockingRouteActor(configuration, encoder, decoder);
         }
 
         public BlockingRouteActor Actor { get { return _localActor; } }

@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Redola.ActorModel
 {
-    public class ActorSettingItems
+    public class AppConfigActorSettingItems
     {
         public const string ActorCenterTypeKey = @"ActorCenterType";
         public const string ActorCenterNameKey = @"ActorCenterName";
@@ -17,9 +17,9 @@ namespace Redola.ActorModel
         public const string ActorAddressKey = @"ActorAddress";
         public const string ActorPortKey = @"ActorPort";
 
-        private static ActorSettingItems _instance = new ActorSettingItems();
+        private static AppConfigActorSettingItems _instance = new AppConfigActorSettingItems();
 
-        public static ActorSettingItems Singleton()
+        public static AppConfigActorSettingItems Singleton()
         {
             return _instance;
         }
