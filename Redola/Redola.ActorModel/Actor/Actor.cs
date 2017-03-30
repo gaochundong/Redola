@@ -47,7 +47,7 @@ namespace Redola.ActorModel
         {
             if (this.Active)
                 throw new InvalidOperationException(
-                    string.Format("Local actor [{0}] is already bootup.", this.LocalActor));
+                    string.Format("Local actor [{0}] has already been booted up.", this.LocalActor));
 
             _log.InfoFormat("Claim local actor [{0}].", this.LocalActor);
             _log.InfoFormat("Register center actor [{0}].", this.CenterActor);
@@ -142,6 +142,8 @@ namespace Redola.ActorModel
         public event EventHandler<ActorConnectedEventArgs> Connected;
         public event EventHandler<ActorDisconnectedEventArgs> Disconnected;
         public event EventHandler<ActorDataReceivedEventArgs> DataReceived;
+
+        #region Send
 
         public void Send(ActorIdentity remoteActor, byte[] data)
         {
@@ -243,6 +245,10 @@ namespace Redola.ActorModel
             channel.BeginSend(remoteActorType, data, offset, count);
         }
 
+        #endregion
+
+        #region Broadcast
+
         public void Broadcast(string remoteActorType, byte[] data)
         {
             Broadcast(remoteActorType, data, 0, data.Length);
@@ -271,6 +277,8 @@ namespace Redola.ActorModel
             }
         }
 
+        #endregion
+
         private IPAddress ResolveIPAddress(string host)
         {
             IPAddress remoteIPAddress = null;
@@ -296,7 +304,7 @@ namespace Redola.ActorModel
                     else
                     {
                         throw new InvalidOperationException(
-                            string.Format("Cannot resolve host [{0}] by DNS.", host));
+                            string.Format("Cannot resolve host [{0}] from DNS.", host));
                     }
                 }
             }
