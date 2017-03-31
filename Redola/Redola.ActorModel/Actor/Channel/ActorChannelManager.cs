@@ -45,6 +45,9 @@ namespace Redola.ActorModel
 
         public IActorChannel GetActorChannel(string actorType, string actorName)
         {
+            if (string.IsNullOrEmpty(actorName))
+                return GetActorChannel(actorType);
+
             IActorChannel channel = null;
             var actorKey = ActorIdentity.GetKey(actorType, actorName);
 
@@ -61,45 +64,24 @@ namespace Redola.ActorModel
                 }
 
                 channel = _factory.BuildActorChannel(_localActor, actorType, actorName);
-                channel.Connected += OnActorConnected;
-                channel.Disconnected += OnActorDisconnected;
-                channel.DataReceived += OnActorDataReceived;
-
-                ManualResetEventSlim waitingConnected = new ManualResetEventSlim(false);
-                object connectedSender = null;
-                ActorConnectedEventArgs connectedEvent = null;
-                EventHandler<ActorConnectedEventArgs> onConnected =
-                    (s, e) =>
-                    {
-                        connectedSender = s;
-                        connectedEvent = e;
-                        waitingConnected.Set();
-                    };
-
-                channel.Connected += onConnected;
-                channel.Open();
-
-                bool connected = waitingConnected.Wait(TimeSpan.FromSeconds(5));
-                channel.Connected -= onConnected;
-                waitingConnected.Dispose();
-
-                if (connected)
+                ActivateChannel(channel);
+                if (channel.Active)
                 {
-                    _channels.Add(connectedEvent.RemoteActor.GetKey(), (IActorChannel)connectedSender);
-                    _actorKeys.Add(connectedEvent.RemoteActor.GetKey(), connectedEvent.RemoteActor);
                     return channel;
                 }
                 else
                 {
-                    CloseChannel(channel);
                     throw new ActorNotFoundException(string.Format(
-                        "Cannot connect remote actor, Type[{0}], Name[{1}].", actorType, actorName));
+                        "Activate channel failed, cannot connect remote actor, Type[{0}], Name[{1}].", actorType, actorName));
                 }
             }
         }
 
         public IActorChannel GetActorChannel(string actorType)
         {
+            if (string.IsNullOrEmpty(actorType))
+                throw new ArgumentNullException("actorType");
+
             IActorChannel channel = null;
             var actor = _actorKeys.Values.Where(a => a.Type == actorType).OrderBy(t => Guid.NewGuid()).FirstOrDefault();
 
@@ -118,40 +100,51 @@ namespace Redola.ActorModel
                 }
 
                 channel = _factory.BuildActorChannel(_localActor, actorType);
-                channel.Connected += OnActorConnected;
-                channel.Disconnected += OnActorDisconnected;
-                channel.DataReceived += OnActorDataReceived;
-
-                ManualResetEventSlim waitingConnected = new ManualResetEventSlim(false);
-                object connectedSender = null;
-                ActorConnectedEventArgs connectedEvent = null;
-                EventHandler<ActorConnectedEventArgs> onConnected =
-                    (s, e) =>
-                    {
-                        connectedSender = s;
-                        connectedEvent = e;
-                        waitingConnected.Set();
-                    };
-
-                channel.Connected += onConnected;
-                channel.Open();
-
-                bool connected = waitingConnected.Wait(TimeSpan.FromSeconds(30));
-                channel.Connected -= onConnected;
-                waitingConnected.Dispose();
-
-                if (connected)
+                ActivateChannel(channel);
+                if (channel.Active)
                 {
-                    _channels.Add(connectedEvent.RemoteActor.GetKey(), (IActorChannel)connectedSender);
-                    _actorKeys.Add(connectedEvent.RemoteActor.GetKey(), connectedEvent.RemoteActor);
                     return channel;
                 }
                 else
                 {
-                    CloseChannel(channel);
                     throw new ActorNotFoundException(string.Format(
-                        "Cannot connect remote actor, Type[{0}].", actorType));
+                        "Activate channel failed, cannot connect remote actor, Type[{0}].", actorType));
                 }
+            }
+        }
+
+        private void ActivateChannel(IActorChannel channel)
+        {
+            channel.Connected += OnActorConnected;
+            channel.Disconnected += OnActorDisconnected;
+            channel.DataReceived += OnActorDataReceived;
+
+            ManualResetEventSlim waitingConnected = new ManualResetEventSlim(false);
+            object connectedSender = null;
+            ActorConnectedEventArgs connectedEvent = null;
+            EventHandler<ActorConnectedEventArgs> onConnected =
+                (s, e) =>
+                {
+                    connectedSender = s;
+                    connectedEvent = e;
+                    waitingConnected.Set();
+                };
+
+            channel.Connected += onConnected;
+            channel.Open();
+
+            bool connected = waitingConnected.Wait(TimeSpan.FromSeconds(5));
+            channel.Connected -= onConnected;
+            waitingConnected.Dispose();
+
+            if (connected && channel.Active)
+            {
+                _channels.Add(connectedEvent.RemoteActor.GetKey(), (IActorChannel)connectedSender);
+                _actorKeys.Add(connectedEvent.RemoteActor.GetKey(), connectedEvent.RemoteActor);
+            }
+            else
+            {
+                CloseChannel(channel);
             }
         }
 
