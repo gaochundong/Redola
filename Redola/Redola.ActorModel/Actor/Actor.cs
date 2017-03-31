@@ -42,13 +42,23 @@ namespace Redola.ActorModel
 
         public void Bootup()
         {
+            var defaultDirectory = new CenterActorDirectory(this.CenterActor, this.ChannelConfiguration);
+            Bootup(defaultDirectory);
+        }
+
+        public void Bootup(IActorDirectory directory)
+        {
+            if (directory == null)
+                throw new ArgumentNullException("directory");
+            if (_directory != null)
+                throw new InvalidOperationException("Actor directory has already been assigned.");
             if (this.Active)
                 throw new InvalidOperationException(
                     string.Format("Local actor [{0}] has already been booted up.", this.LocalActor));
 
             _log.DebugFormat("Claim local actor [{0}].", this.LocalActor);
 
-            _directory = new CenterActorDirectory(this.CenterActor, this.ChannelConfiguration);
+            _directory = directory;
             _manager = new ActorChannelManager(new ActorChannelFactory(_directory, this.ChannelConfiguration));
             _manager.Connected += OnActorConnected;
             _manager.Disconnected += OnActorDisconnected;
@@ -68,7 +78,10 @@ namespace Redola.ActorModel
 
             try
             {
-                _directory.Activate(this.LocalActor);
+                if (!_directory.Active)
+                {
+                    _directory.Activate(this.LocalActor);
+                }
             }
             catch (Exception ex)
             {

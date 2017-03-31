@@ -28,8 +28,25 @@ namespace Redola.ActorModel
             _channelConfiguration = channelConfiguration;
         }
 
+        public bool Active
+        {
+            get
+            {
+                if (_centerChannel == null)
+                    return false;
+
+                return _centerChannel.Active;
+            }
+        }
+
         public void Activate(ActorIdentity localActor)
         {
+            if (localActor == null)
+                throw new ArgumentNullException("localActor");
+            if (this.Active)
+                throw new InvalidOperationException(
+                    string.Format("Center actor [{0}] has already been activated.", _centerActor));
+
             _log.DebugFormat("Activating center actor [{0}].", _centerActor);
             var centerChannel = BuildActorCenterChannel(localActor);
 

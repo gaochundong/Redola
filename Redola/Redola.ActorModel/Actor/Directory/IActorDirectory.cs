@@ -4,6 +4,7 @@ namespace Redola.ActorModel
 {
     public interface IActorDirectory
     {
+        bool Active { get; }
         void Activate(ActorIdentity localActor);
         void Close();
 
