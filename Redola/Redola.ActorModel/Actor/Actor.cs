@@ -50,15 +50,16 @@ namespace Redola.ActorModel
         {
             if (directory == null)
                 throw new ArgumentNullException("directory");
-            if (_directory != null)
-                throw new InvalidOperationException("Actor directory has already been assigned.");
             if (this.Active)
                 throw new InvalidOperationException(
                     string.Format("Local actor [{0}] has already been booted up.", this.LocalActor));
 
             _log.DebugFormat("Claim local actor [{0}].", this.LocalActor);
 
+            if (_directory != null)
+                throw new InvalidOperationException("Actor directory has already been assigned.");
             _directory = directory;
+
             _manager = new ActorChannelManager(new ActorChannelFactory(_directory, this.ChannelConfiguration));
             _manager.Connected += OnActorConnected;
             _manager.Disconnected += OnActorDisconnected;
