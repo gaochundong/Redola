@@ -51,13 +51,15 @@
       <Link>SolutionVersion.cs</Link>
     </Compile>
     <Compile Include="Actor\Actor.cs" />
-    <Compile Include="Actor\Configuration\AppConfig\AppConfigActorConfiguration.cs" />
+    <Compile Include="Actor\Configuration\ByAppConfig\AppConfigActorConfiguration.cs" />
     <Compile Include="Actor\Configuration\ActorConfiguration.cs" />
     <Compile Include="Actor\Center\CenterActorDirectory.cs" />
     <Compile Include="Actor\Center\CenterActor.cs" />
+    <Compile Include="Actor\Configuration\ByLocalXmlFile\XmlActorConfiguration.cs" />
+    <Compile Include="Actor\Configuration\ByLocalXmlFile\LocalXmlFileActorConfiguration.cs" />
     <Compile Include="Actor\Directory\IActorDirectory.cs" />
     <Compile Include="Actor\Exception\ActorNotFoundException.cs" />
-    <Compile Include="Actor\Configuration\AppConfig\AppConfigActorSettingItems.cs" />
+    <Compile Include="Actor\Configuration\ByAppConfig\AppConfigActorSettingItems.cs" />
     <Compile Include="Actor\Channel\ActorChannelConfiguration.cs" />
     <Compile Include="Actor\Channel\ActorChannelFactory.cs" />
     <Compile Include="Actor\Channel\ActorChannelManager.cs" />
