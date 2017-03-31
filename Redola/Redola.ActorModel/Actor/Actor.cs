@@ -61,8 +61,8 @@ namespace Redola.ActorModel
             _manager.DataReceived += OnActorDataReceived;
 
             _manager.ActivateLocalActor(this.LocalActor);
-            centerChannel.Open();
 
+            centerChannel.Open();
             int retryTimes = 0;
             while (true)
             {

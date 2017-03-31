@@ -25,15 +25,29 @@ namespace Redola.ActorModel
 
         public void ActivateLocalActor(ActorIdentity localActor)
         {
+            if (localActor == null)
+                throw new ArgumentNullException("localActor");
+            if (_localActor != null)
+                throw new InvalidOperationException("The local actor has already been activated.");
+
             var channel = _factory.BuildLocalActor(localActor);
             channel.Connected += OnActorConnected;
             channel.Disconnected += OnActorDisconnected;
             channel.DataReceived += OnActorDataReceived;
-            channel.Open();
 
-            _localActor = localActor;
-            _channels.Add(_localActor.GetKey(), channel);
-            _actorKeys.Add(_localActor.GetKey(), _localActor);
+            try
+            {
+                channel.Open();
+
+                _localActor = localActor;
+                _channels.Add(_localActor.GetKey(), channel);
+                _actorKeys.Add(_localActor.GetKey(), _localActor);
+            }
+            catch
+            {
+                CloseChannel(channel);
+                throw;
+            }
         }
 
         public IActorChannel GetActorChannel(ActorIdentity remoteActor)
