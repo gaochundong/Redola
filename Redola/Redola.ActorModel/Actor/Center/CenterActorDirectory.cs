@@ -8,14 +8,14 @@ using Redola.ActorModel.Framing;
 
 namespace Redola.ActorModel
 {
-    public class ActorDirectory : IActorDirectory
+    public class CenterActorDirectory : IActorDirectory
     {
-        private ILog _log = Logger.Get<ActorDirectory>();
+        private ILog _log = Logger.Get<CenterActorDirectory>();
         private ActorIdentity _centerActor;
         private ActorChannelConfiguration _channelConfiguration;
         private IActorChannel _centerChannel;
 
-        public ActorDirectory(
+        public CenterActorDirectory(
             ActorIdentity centerActor,
             ActorChannelConfiguration channelConfiguration)
         {

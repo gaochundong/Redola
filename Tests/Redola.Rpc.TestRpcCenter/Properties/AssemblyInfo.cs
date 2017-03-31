@@ -4,11 +4,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Redola.Rpc.TestRpcMaster")]
+[assembly: AssemblyTitle("Redola.Rpc.TestRpcCenter")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Dennis Gao")]
-[assembly: AssemblyProduct("Redola.Rpc.TestRpcMaster")]
+[assembly: AssemblyProduct("Redola.Rpc.TestRpcCenter")]
 [assembly: AssemblyCopyright("Copyright © 2016, Dennis Gao")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

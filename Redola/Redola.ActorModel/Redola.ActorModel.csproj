@@ -53,8 +53,8 @@
     <Compile Include="Actor\Actor.cs" />
     <Compile Include="Actor\Configuration\AppConfig\AppConfigActorConfiguration.cs" />
     <Compile Include="Actor\Configuration\ActorConfiguration.cs" />
-    <Compile Include="Actor\Directory\ActorDirectory.cs" />
-    <Compile Include="Actor\Center\ActorMaster.cs" />
+    <Compile Include="Actor\Center\CenterActorDirectory.cs" />
+    <Compile Include="Actor\Center\CenterActor.cs" />
     <Compile Include="Actor\Directory\IActorDirectory.cs" />
     <Compile Include="Actor\Exception\ActorNotFoundException.cs" />
     <Compile Include="Actor\Configuration\AppConfig\AppConfigActorSettingItems.cs" />

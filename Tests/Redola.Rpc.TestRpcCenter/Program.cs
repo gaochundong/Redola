@@ -3,7 +3,7 @@ using Logrila.Logging;
 using Logrila.Logging.NLogIntegration;
 using Redola.ActorModel;
 
-namespace Redola.Rpc.TestRpcMaster
+namespace Redola.Rpc.TestRpcCenter
 {
     class Program
     {
@@ -13,7 +13,7 @@ namespace Redola.Rpc.TestRpcMaster
 
             ILog log = Logger.Get<Program>();
 
-            var master = new ActorMaster();
+            var master = new CenterActor();
 
             master.Bootup();
 

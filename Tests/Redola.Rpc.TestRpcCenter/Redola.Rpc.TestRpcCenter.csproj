@@ -7,8 +7,8 @@
     <ProjectGuid>{DCB0784A-622E-4EF6-BA1B-79099DA8D648}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Redola.Rpc.TestRpcMaster</RootNamespace>
-    <AssemblyName>Redola.Rpc.TestRpcMaster</AssemblyName>
+    <RootNamespace>Redola.Rpc.TestRpcCenter</RootNamespace>
+    <AssemblyName>Redola.Rpc.TestRpcCenter</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

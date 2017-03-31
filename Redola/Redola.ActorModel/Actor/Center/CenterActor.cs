@@ -5,16 +5,16 @@ using Redola.ActorModel.Framing;
 
 namespace Redola.ActorModel
 {
-    public class ActorMaster : Actor
+    public class CenterActor : Actor
     {
-        private ILog _log = Logger.Get<ActorMaster>();
+        private ILog _log = Logger.Get<CenterActor>();
 
-        public ActorMaster()
+        public CenterActor()
             : this(AppConfigActorConfiguration.Load())
         {
         }
 
-        public ActorMaster(ActorConfiguration configuration)
+        public CenterActor(ActorConfiguration configuration)
             : base(configuration)
         {
         }

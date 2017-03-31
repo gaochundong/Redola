@@ -48,7 +48,7 @@ namespace Redola.ActorModel
 
             _log.DebugFormat("Claim local actor [{0}].", this.LocalActor);
 
-            _directory = new ActorDirectory(this.CenterActor, this.ChannelConfiguration);
+            _directory = new CenterActorDirectory(this.CenterActor, this.ChannelConfiguration);
             _manager = new ActorChannelManager(new ActorChannelFactory(_directory, this.ChannelConfiguration));
             _manager.Connected += OnActorConnected;
             _manager.Disconnected += OnActorDisconnected;
