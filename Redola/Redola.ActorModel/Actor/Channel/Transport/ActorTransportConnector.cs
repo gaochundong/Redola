@@ -47,7 +47,7 @@ namespace Redola.ActorModel
                 _client.ServerDisconnected += OnServerDisconnected;
                 _client.ServerDataReceived += OnServerDataReceived;
 
-                _log.InfoFormat("TCP client is connecting to [{0}].", this.ConnectToEndPoint);
+                _log.DebugFormat("TCP client is connecting to [{0}].", this.ConnectToEndPoint);
                 _client.Connect();
 
                 OnConnect();
@@ -97,7 +97,7 @@ namespace Redola.ActorModel
 
         protected virtual void OnServerConnected(object sender, TcpServerConnectedEventArgs e)
         {
-            _log.InfoFormat("TCP server [{0}] has connected.", e);
+            _log.DebugFormat("TCP server [{0}] has connected.", e);
 
             if (Connected != null)
             {
@@ -107,7 +107,7 @@ namespace Redola.ActorModel
 
         protected virtual void OnServerDisconnected(object sender, TcpServerDisconnectedEventArgs e)
         {
-            _log.InfoFormat("TCP server [{0}] has disconnected.", e);
+            _log.DebugFormat("TCP server [{0}] has disconnected.", e);
 
             if (Disconnected != null)
             {

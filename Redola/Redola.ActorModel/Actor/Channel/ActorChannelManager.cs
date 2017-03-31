@@ -64,8 +64,8 @@ namespace Redola.ActorModel
                 }
 
                 channel = _factory.BuildActorChannel(_localActor, actorType, actorName);
-                ActivateChannel(channel);
-                if (channel.Active)
+                bool activated = ActivateChannel(channel);
+                if (activated)
                 {
                     return channel;
                 }
@@ -100,8 +100,8 @@ namespace Redola.ActorModel
                 }
 
                 channel = _factory.BuildActorChannel(_localActor, actorType);
-                ActivateChannel(channel);
-                if (channel.Active)
+                bool activated = ActivateChannel(channel);
+                if (activated)
                 {
                     return channel;
                 }
@@ -113,7 +113,7 @@ namespace Redola.ActorModel
             }
         }
 
-        private void ActivateChannel(IActorChannel channel)
+        private bool ActivateChannel(IActorChannel channel)
         {
             channel.Connected += OnActorConnected;
             channel.Disconnected += OnActorDisconnected;
@@ -141,15 +141,19 @@ namespace Redola.ActorModel
             {
                 _channels.Add(connectedEvent.RemoteActor.GetKey(), (IActorChannel)connectedSender);
                 _actorKeys.Add(connectedEvent.RemoteActor.GetKey(), connectedEvent.RemoteActor);
+                return true;
             }
             else
             {
                 CloseChannel(channel);
+                return false;
             }
         }
 
         public IEnumerable<IActorChannel> GetActorChannels(string actorType)
         {
+            if (string.IsNullOrEmpty(actorType))
+                throw new ArgumentNullException("actorType");
             return _actorKeys.Values.Where(a => a.Type == actorType).Select(v => _channels.Get(v.GetKey()));
         }
 

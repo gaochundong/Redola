@@ -113,7 +113,7 @@ namespace Redola.ActorModel
                     Disconnected(this, new ActorDisconnectedEventArgs(this.ConnectToEndPoint.ToString(), _remoteActor));
                 }
 
-                _log.InfoFormat("Disconnected with remote [{0}], SessionKey[{1}].", _remoteActor, this.ConnectToEndPoint);
+                _log.DebugFormat("Disconnected with remote [{0}], SessionKey[{1}].", _remoteActor, this.ConnectToEndPoint);
             }
             finally
             {
@@ -152,7 +152,7 @@ namespace Redola.ActorModel
                 };
 
             _connector.DataReceived += onHandshaked;
-            _log.InfoFormat("Handshake request from local actor [{0}].", _localActor);
+            _log.DebugFormat("Handshake request from local actor [{0}].", _localActor);
             _connector.BeginSend(actorHandshakeRequestBuffer);
 
             bool handshaked = waitingHandshaked.Wait(timeout);
@@ -177,7 +177,7 @@ namespace Redola.ActorModel
                         payload, payloadOffset, payloadCount);
 
                     _remoteActor = actorHandshakeResponseData;
-                    _log.InfoFormat("Handshake response from remote actor [{0}].", _remoteActor);
+                    _log.DebugFormat("Handshake response from remote actor [{0}].", _remoteActor);
                 }
 
                 if (_remoteActor == null)
@@ -187,7 +187,7 @@ namespace Redola.ActorModel
                 }
                 else
                 {
-                    _log.InfoFormat("Handshake with remote [{0}] successfully, RemoteActor[{1}].", this.ConnectToEndPoint, _remoteActor);
+                    _log.DebugFormat("Handshake with remote [{0}] successfully, RemoteActor[{1}].", this.ConnectToEndPoint, _remoteActor);
 
                     IsHandshaked = true;
                     if (Connected != null)

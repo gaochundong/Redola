@@ -45,7 +45,7 @@ namespace Redola.ActorModel
                 var actorLookupResponse = new HereFrame(actorLookupResponseData);
                 var actorLookupRequestBuffer = this.ChannelConfiguration.FrameBuilder.EncodeFrame(actorLookupResponse);
 
-                _log.InfoFormat("Lookup actors [{0}], RemoteActor[{1}].", actorCollection.Items.Count, e.RemoteActor);
+                _log.DebugFormat("Lookup actors [{0}], RemoteActor[{1}].", actorCollection.Items.Count, e.RemoteActor);
                 this.BeginSend(e.RemoteActor.Type, e.RemoteActor.Name, actorLookupRequestBuffer);
             }
             else

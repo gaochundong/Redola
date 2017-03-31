@@ -128,7 +128,7 @@ namespace Redola.ActorModel
                     var actors = actorLookupResponseData != null ? actorLookupResponseData.Items : null;
                     if (actors != null)
                     {
-                        _log.InfoFormat("Lookup actors [{0}].", actors.Count);
+                        _log.DebugFormat("Lookup actors [{0}].", actors.Count);
                         var actor = matchActorFunc(actors);
                         if (actor != null)
                         {

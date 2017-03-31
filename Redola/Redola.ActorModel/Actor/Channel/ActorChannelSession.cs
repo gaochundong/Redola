@@ -122,7 +122,7 @@ namespace Redola.ActorModel
                 _innerSession.BeginSend(actorHandshakeResponseBuffer);
                 IsHandshaked = true;
 
-                _log.InfoFormat("Handshake with remote [{0}] successfully, SessionKey[{1}].", _remoteActor, this.SessionKey);
+                _log.DebugFormat("Handshake with remote [{0}] successfully, SessionKey[{1}].", _remoteActor, this.SessionKey);
                 if (Handshaked != null)
                 {
                     Handshaked(this, new ActorChannelSessionHandshakedEventArgs(this, _remoteActor));

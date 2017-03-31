@@ -97,7 +97,7 @@ namespace Redola.ActorModel
             if (_remoteActors.TryRemove(e.SessionKey, out remoteActor))
             {
                 _actorKeys.Remove(remoteActor.GetKey());
-                _log.InfoFormat("Disconnected with remote [{0}], SessionKey[{1}].", remoteActor, e.SessionKey);
+                _log.DebugFormat("Disconnected with remote [{0}], SessionKey[{1}].", remoteActor, e.SessionKey);
 
                 if (Disconnected != null)
                 {

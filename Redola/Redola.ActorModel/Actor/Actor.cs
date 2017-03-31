@@ -49,8 +49,8 @@ namespace Redola.ActorModel
                 throw new InvalidOperationException(
                     string.Format("Local actor [{0}] has already been booted up.", this.LocalActor));
 
-            _log.InfoFormat("Claim local actor [{0}].", this.LocalActor);
-            _log.InfoFormat("Register center actor [{0}].", this.CenterActor);
+            _log.DebugFormat("Claim local actor [{0}].", this.LocalActor);
+            _log.DebugFormat("Register center actor [{0}].", this.CenterActor);
 
             var centerChannel = BuildActorCenterChannel(this.CenterActor, this.LocalActor);
             _directory = new ActorDirectory(this.CenterActor, centerChannel, this.ChannelConfiguration);

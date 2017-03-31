@@ -45,7 +45,7 @@ namespace Redola.ActorModel
                 _server.ClientDisconnected += OnClientDisconnected;
                 _server.ClientDataReceived += OnClientDataReceived;
 
-                _log.InfoFormat("TCP server is listening to [{0}].", this.ListenedEndPoint);
+                _log.DebugFormat("TCP server is listening to [{0}].", this.ListenedEndPoint);
                 _server.Listen();
             }
             catch
@@ -86,7 +86,7 @@ namespace Redola.ActorModel
 
         private void OnClientConnected(object sender, TcpClientConnectedEventArgs e)
         {
-            _log.InfoFormat("TCP client [{0}] has connected.", e.Session.RemoteEndPoint);
+            _log.DebugFormat("TCP client [{0}] has connected.", e.Session.RemoteEndPoint);
             var session = new ActorTransportSession(e.Session);
             _sessions.Add(e.Session.SessionKey, session);
 
@@ -98,7 +98,7 @@ namespace Redola.ActorModel
 
         private void OnClientDisconnected(object sender, TcpClientDisconnectedEventArgs e)
         {
-            _log.InfoFormat("TCP client [{0}] has disconnected.", e.Session.RemoteEndPoint);
+            _log.DebugFormat("TCP client [{0}] has disconnected.", e.Session.RemoteEndPoint);
             ActorTransportSession session = null;
             if (_sessions.TryRemove(e.Session.SessionKey, out session))
             {

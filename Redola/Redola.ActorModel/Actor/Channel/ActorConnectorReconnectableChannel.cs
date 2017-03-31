@@ -43,7 +43,7 @@ namespace Redola.ActorModel
         {
             lock (_retryLock)
             {
-                _log.InfoFormat("SetupRetryTimer, setup retry timer [{0}] when connect to [{1}].",
+                _log.DebugFormat("SetupRetryTimer, setup retry timer [{0}] when connect to [{1}].",
                     this.RetryPeriod, this.ConnectToEndPoint);
 
                 if (_retryTimer == null)
@@ -69,7 +69,7 @@ namespace Redola.ActorModel
         {
             lock (_retryLock)
             {
-                _log.InfoFormat("CloseRetryTimer, close retry timer [{0}] to connect [{1}].",
+                _log.DebugFormat("CloseRetryTimer, close retry timer [{0}] to connect [{1}].",
                     this.RetryPeriod, this.ConnectToEndPoint);
 
                 if (_retryTimer != null)
