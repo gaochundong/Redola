@@ -41,6 +41,11 @@ namespace Redola.Rpc
             _localActor.Bootup();
         }
 
+        public void Bootup(IActorDirectory directory)
+        {
+            _localActor.Bootup(directory);
+        }
+
         public void Shutdown()
         {
             _localActor.Shutdown();
@@ -50,6 +55,8 @@ namespace Redola.Rpc
         {
             _localActor.RegisterMessageHandler(service);
         }
+
+        #region Send
 
         public ActorMessageEnvelope<P> Send<R, P>(string remoteActorType, ActorMessageEnvelope<R> request)
         {
@@ -106,6 +113,15 @@ namespace Redola.Rpc
             _localActor.BeginSend(remoteActorType, message);
         }
 
+        public void EndSend(string remoteActorType, string remoteActorName, IAsyncResult asyncResult)
+        {
+            _localActor.EndSend(remoteActorType, remoteActorName, asyncResult);
+        }
+
+        #endregion
+
+        #region Broadcast
+
         public void Broadcast<T>(string remoteActorType, ActorMessageEnvelope<T> message)
         {
             _localActor.Broadcast(remoteActorType, message);
@@ -116,9 +132,6 @@ namespace Redola.Rpc
             _localActor.BeginBroadcast(remoteActorType, message);
         }
 
-        public void EndSend(string remoteActorType, string remoteActorName, IAsyncResult asyncResult)
-        {
-            _localActor.EndSend(remoteActorType, remoteActorName, asyncResult);
-        }
+        #endregion
     }
 }
