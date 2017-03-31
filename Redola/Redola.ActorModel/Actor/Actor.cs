@@ -54,11 +54,25 @@ namespace Redola.ActorModel
             _manager.Disconnected += OnActorDisconnected;
             _manager.DataReceived += OnActorDataReceived;
 
-            _manager.ActivateLocalActor(this.LocalActor);
-
-            var activated = _directory.Activate(this.LocalActor);
-            if (!activated)
+            try
             {
+                _manager.ActivateLocalActor(this.LocalActor);
+            }
+            catch (Exception ex)
+            {
+                _log.Error(ex.Message, ex);
+                Shutdown();
+                throw new InvalidOperationException(
+                    string.Format("Cannot initiate the local actor [{0}] during bootup.", this.LocalActor));
+            }
+
+            try
+            {
+                _directory.Activate(this.LocalActor);
+            }
+            catch (Exception ex)
+            {
+                _log.Error(ex.Message, ex);
                 Shutdown();
                 throw new InvalidOperationException(
                     string.Format("Cannot connect to center actor [{0}] during bootup.", this.CenterActor));

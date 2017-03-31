@@ -3,12 +3,14 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using Logrila.Logging;
 using Redola.ActorModel.Extensions;
 
 namespace Redola.ActorModel
 {
     public class ActorChannelManager
     {
+        private ILog _log = Logger.Get<ActorChannelManager>();
         private ActorIdentity _localActor;
         private ActorChannelFactory _factory;
         private ConcurrentDictionary<string, IActorChannel> _channels = new ConcurrentDictionary<string, IActorChannel>(); // ActorKey -> IActorChannel
@@ -42,6 +44,8 @@ namespace Redola.ActorModel
                 _localActor = localActor;
                 _channels.Add(_localActor.GetKey(), channel);
                 _actorKeys.Add(_localActor.GetKey(), _localActor);
+
+                _log.DebugFormat("Local actor [{0}] is activated.", _localActor);
             }
             catch
             {

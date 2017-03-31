@@ -28,9 +28,9 @@ namespace Redola.ActorModel
             _channelConfiguration = channelConfiguration;
         }
 
-        public bool Activate(ActorIdentity localActor)
+        public void Activate(ActorIdentity localActor)
         {
-            _log.DebugFormat("Register center actor [{0}].", _centerActor);
+            _log.DebugFormat("Activating center actor [{0}].", _centerActor);
             var centerChannel = BuildActorCenterChannel(localActor);
 
             centerChannel.Open();
@@ -50,15 +50,13 @@ namespace Redola.ActorModel
                 if (retryTimes > 300)
                 {
                     centerChannel.Close();
-                    _log.ErrorFormat("Cannot connect to center actor [{0}] after wait [{1}] milliseconds.",
-                        _centerActor, retryTimes * (int)retryPeriod.TotalMilliseconds);
-                    return false;
+                    throw new InvalidOperationException(
+                        string.Format("Cannot connect to center actor [{0}] after wait [{1}] milliseconds.",
+                            _centerActor, retryTimes * (int)retryPeriod.TotalMilliseconds));
                 }
             }
             _log.DebugFormat("Connected to center actor [{0}].", _centerActor);
             _centerChannel = centerChannel;
-
-            return true;
         }
 
         public void Close()
