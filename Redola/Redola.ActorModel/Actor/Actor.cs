@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Threading;
 using Logrila.Logging;
 
 namespace Redola.ActorModel
@@ -12,7 +10,6 @@ namespace Redola.ActorModel
         private ILog _log = Logger.Get<Actor>();
         private ActorConfiguration _configuration;
         private ActorDirectory _directory;
-        private ActorChannelFactory _factory;
         private ActorChannelManager _manager;
 
         public Actor(ActorConfiguration configuration)
@@ -50,33 +47,21 @@ namespace Redola.ActorModel
                     string.Format("Local actor [{0}] has already been booted up.", this.LocalActor));
 
             _log.DebugFormat("Claim local actor [{0}].", this.LocalActor);
-            _log.DebugFormat("Register center actor [{0}].", this.CenterActor);
 
-            var centerChannel = BuildActorCenterChannel(this.CenterActor, this.LocalActor);
-            _directory = new ActorDirectory(this.CenterActor, centerChannel, this.ChannelConfiguration);
-            _factory = new ActorChannelFactory(_directory, this.ChannelConfiguration);
-            _manager = new ActorChannelManager(_factory);
+            _directory = new ActorDirectory(this.CenterActor, this.ChannelConfiguration);
+            _manager = new ActorChannelManager(new ActorChannelFactory(_directory, this.ChannelConfiguration));
             _manager.Connected += OnActorConnected;
             _manager.Disconnected += OnActorDisconnected;
             _manager.DataReceived += OnActorDataReceived;
 
             _manager.ActivateLocalActor(this.LocalActor);
 
-            centerChannel.Open();
-            int retryTimes = 0;
-            while (true)
+            var activated = _directory.Activate(this.LocalActor);
+            if (!activated)
             {
-                if (centerChannel.Active)
-                    break;
-
-                Thread.Sleep(TimeSpan.FromMilliseconds(100));
-                retryTimes++;
-                if (retryTimes > 300)
-                {
-                    Shutdown();
-                    throw new InvalidOperationException(
-                        string.Format("Cannot connect to center actor [{0}].", this.CenterActor));
-                }
+                Shutdown();
+                throw new InvalidOperationException(
+                    string.Format("Cannot connect to center actor [{0}] during bootup.", this.CenterActor));
             }
         }
 
@@ -92,22 +77,9 @@ namespace Redola.ActorModel
             }
             if (_directory != null)
             {
-                _directory.GetCenterActorChannel().Close();
+                _directory.Close();
                 _directory = null;
             }
-        }
-
-        private IActorChannel BuildActorCenterChannel(ActorIdentity centerActor, ActorIdentity localActor)
-        {
-            IPAddress actorCenterAddress = ResolveIPAddress(centerActor.Address);
-            int actorCenterPort = int.Parse(centerActor.Port);
-            var actorCenterEndPoint = new IPEndPoint(actorCenterAddress, actorCenterPort);
-
-            var centerConnector = new ActorTransportConnector(actorCenterEndPoint);
-            var centerChannel = new ActorConnectorReconnectableChannel(
-                localActor, centerConnector, this.ChannelConfiguration);
-
-            return centerChannel;
         }
 
         protected List<ActorIdentity> GetAllActors()
@@ -142,6 +114,11 @@ namespace Redola.ActorModel
         public event EventHandler<ActorConnectedEventArgs> Connected;
         public event EventHandler<ActorDisconnectedEventArgs> Disconnected;
         public event EventHandler<ActorDataReceivedEventArgs> DataReceived;
+
+        public override string ToString()
+        {
+            return string.Format("{0}", this.LocalActor);
+        }
 
         #region Send
 
@@ -278,43 +255,5 @@ namespace Redola.ActorModel
         }
 
         #endregion
-
-        private IPAddress ResolveIPAddress(string host)
-        {
-            IPAddress remoteIPAddress = null;
-
-            IPAddress ipAddress;
-            if (IPAddress.TryParse(host, out ipAddress))
-            {
-                remoteIPAddress = ipAddress;
-            }
-            else
-            {
-                if (host.ToLowerInvariant() == "localhost")
-                {
-                    remoteIPAddress = IPAddress.Parse(@"127.0.0.1");
-                }
-                else
-                {
-                    IPAddress[] addresses = Dns.GetHostAddresses(host);
-                    if (addresses.Any())
-                    {
-                        remoteIPAddress = addresses.First();
-                    }
-                    else
-                    {
-                        throw new InvalidOperationException(
-                            string.Format("Cannot resolve host [{0}] from DNS.", host));
-                    }
-                }
-            }
-
-            return remoteIPAddress;
-        }
-
-        public override string ToString()
-        {
-            return string.Format("{0}", this.LocalActor);
-        }
     }
 }

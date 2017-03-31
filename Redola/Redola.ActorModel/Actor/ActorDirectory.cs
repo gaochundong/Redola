@@ -12,34 +12,85 @@ namespace Redola.ActorModel
     {
         private ILog _log = Logger.Get<ActorDirectory>();
         private ActorIdentity _centerActor;
-        private IActorChannel _centerChannel;
         private ActorChannelConfiguration _channelConfiguration;
+        private IActorChannel _centerChannel;
 
         public ActorDirectory(
             ActorIdentity centerActor,
-            IActorChannel centerChannel,
             ActorChannelConfiguration channelConfiguration)
         {
             if (centerActor == null)
                 throw new ArgumentNullException("centerActor");
-            if (centerChannel == null)
-                throw new ArgumentNullException("centerChannel");
             if (channelConfiguration == null)
                 throw new ArgumentNullException("channelConfiguration");
 
             _centerActor = centerActor;
-            _centerChannel = centerChannel;
             _channelConfiguration = channelConfiguration;
+        }
+
+        public bool Activate(ActorIdentity localActor)
+        {
+            _log.DebugFormat("Register center actor [{0}].", _centerActor);
+            var centerChannel = BuildActorCenterChannel(localActor);
+
+            centerChannel.Open();
+            int retryTimes = 1;
+            TimeSpan retryPeriod = TimeSpan.FromMilliseconds(100);
+            while (true)
+            {
+                if (centerChannel.Active)
+                    break;
+
+                Thread.Sleep(retryPeriod);
+
+                if (centerChannel.Active)
+                    break;
+
+                retryTimes++;
+                if (retryTimes > 300)
+                {
+                    centerChannel.Close();
+                    _log.ErrorFormat("Cannot connect to center actor [{0}] after wait [{1}] milliseconds.",
+                        _centerActor, retryTimes * (int)retryPeriod.TotalMilliseconds);
+                    return false;
+                }
+            }
+            _log.DebugFormat("Connected to center actor [{0}].", _centerActor);
+            _centerChannel = centerChannel;
+
+            return true;
+        }
+
+        public void Close()
+        {
+            if (_centerChannel != null)
+            {
+                _centerChannel.Close();
+                _centerChannel = null;
+            }
+        }
+
+        private IActorChannel BuildActorCenterChannel(ActorIdentity localActor)
+        {
+            IPAddress actorCenterAddress = ResolveIPAddress(_centerActor.Address);
+
+            int actorCenterPort = -1;
+            if (!int.TryParse(_centerActor.Port, out actorCenterPort) || actorCenterPort < 0)
+                throw new InvalidOperationException(string.Format(
+                    "Invalid center actor port, [{0}].", _centerActor));
+
+            var actorCenterEndPoint = new IPEndPoint(actorCenterAddress, actorCenterPort);
+
+            var centerConnector = new ActorTransportConnector(actorCenterEndPoint);
+            var centerChannel = new ActorConnectorReconnectableChannel(
+                localActor, centerConnector, _channelConfiguration);
+
+            return centerChannel;
         }
 
         public ActorIdentity GetCenterActor()
         {
             return _centerActor;
-        }
-
-        public IActorChannel GetCenterActorChannel()
-        {
-            return _centerChannel;
         }
 
         public IPEndPoint LookupRemoteActorEndPoint(string actorType, string actorName)
@@ -169,7 +220,7 @@ namespace Redola.ActorModel
                     else
                     {
                         throw new InvalidOperationException(
-                            string.Format("Cannot resolve host [{0}] by DNS.", host));
+                            string.Format("Cannot resolve host [{0}] from DNS.", host));
                     }
                 }
             }
