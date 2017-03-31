@@ -7,11 +7,11 @@ namespace Redola.ActorModel
     public class ActorChannelFactory
     {
         private ILog _log = Logger.Get<ActorChannelFactory>();
-        private ActorDirectory _directory;
+        private IActorDirectory _directory;
         private ActorChannelConfiguration _channelConfiguration;
 
         public ActorChannelFactory(
-            ActorDirectory directory,
+            IActorDirectory directory,
             ActorChannelConfiguration channelConfiguration)
         {
             if (directory == null)
@@ -36,7 +36,7 @@ namespace Redola.ActorModel
 
             var localActorEndPoint = new IPEndPoint(IPAddress.Any, localPort);
             var channel = new ActorListenerChannel(
-                localActor, 
+                localActor,
                 new ActorTransportListener(localActorEndPoint),
                 _channelConfiguration);
 
@@ -51,7 +51,7 @@ namespace Redola.ActorModel
                     "Cannot find remote actor endpoint, Type[{0}], Name[{1}].", remoteActorType, remoteActorName));
 
             var channel = new ActorConnectorChannel(
-                localActor, 
+                localActor,
                 new ActorTransportConnector(remoteActorEndPoint),
                 _channelConfiguration);
 
@@ -66,7 +66,7 @@ namespace Redola.ActorModel
                     "Cannot find remote actor endpoint, Type[{0}].", remoteActorType));
 
             var channel = new ActorConnectorChannel(
-                localActor, 
+                localActor,
                 new ActorTransportConnector(remoteActorEndPoint),
                 _channelConfiguration);
 

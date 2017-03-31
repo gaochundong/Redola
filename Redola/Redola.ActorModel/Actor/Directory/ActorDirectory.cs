@@ -8,7 +8,7 @@ using Redola.ActorModel.Framing;
 
 namespace Redola.ActorModel
 {
-    public class ActorDirectory
+    public class ActorDirectory : IActorDirectory
     {
         private ILog _log = Logger.Get<ActorDirectory>();
         private ActorIdentity _centerActor;
@@ -84,11 +84,6 @@ namespace Redola.ActorModel
                 localActor, centerConnector, _channelConfiguration);
 
             return centerChannel;
-        }
-
-        public ActorIdentity GetCenterActor()
-        {
-            return _centerActor;
         }
 
         public IPEndPoint LookupRemoteActorEndPoint(string actorType, string actorName)

@@ -9,7 +9,7 @@ namespace Redola.ActorModel
     {
         private ILog _log = Logger.Get<Actor>();
         private ActorConfiguration _configuration;
-        private ActorDirectory _directory;
+        private IActorDirectory _directory;
         private ActorChannelManager _manager;
 
         public Actor(ActorConfiguration configuration)
