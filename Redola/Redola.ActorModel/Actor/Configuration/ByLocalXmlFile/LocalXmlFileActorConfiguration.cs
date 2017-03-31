@@ -95,5 +95,12 @@ namespace Redola.ActorModel
             configuration.Build();
             return configuration;
         }
+
+        public static LocalXmlFileActorConfiguration Load(string localXmlFilePath)
+        {
+            var configuration = new LocalXmlFileActorConfiguration(localXmlFilePath);
+            configuration.Build();
+            return configuration;
+        }
     }
 }

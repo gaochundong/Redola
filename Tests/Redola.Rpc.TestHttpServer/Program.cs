@@ -3,6 +3,7 @@ using Happer;
 using Happer.Hosting.Self;
 using Logrila.Logging;
 using Logrila.Logging.NLogIntegration;
+using Redola.ActorModel;
 
 namespace Redola.Rpc.TestHttpServer
 {
@@ -14,7 +15,11 @@ namespace Redola.Rpc.TestHttpServer
 
             ILog log = Logger.Get<Program>();
 
-            var actor = new RpcActor();
+            var localXmlFilePath = Environment.CurrentDirectory + @"\\XmlConfiguration\\ActorConfiguration.xml";
+            var localXmlFileActorConfiguration = LocalXmlFileActorConfiguration.Load(localXmlFilePath);
+            var localXmlFileActorDirectory = new LocalXmlFileActorDirectory(localXmlFileActorConfiguration);
+
+            var actor = new RpcActor(localXmlFileActorConfiguration);
 
             var helloClient = new HelloClient(actor);
             var calcClient = new CalcClient(actor);
@@ -22,7 +27,7 @@ namespace Redola.Rpc.TestHttpServer
             actor.RegisterRpcService(helloClient);
             actor.RegisterRpcService(calcClient);
 
-            actor.Bootup();
+            actor.Bootup(localXmlFileActorDirectory);
 
             var container = new TestContainer();
             container.AddModule(new TestModule(helloClient, calcClient));
