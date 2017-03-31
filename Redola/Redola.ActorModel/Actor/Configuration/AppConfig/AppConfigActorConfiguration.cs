@@ -12,22 +12,22 @@ namespace Redola.ActorModel
 
         protected override ActorIdentity BuildCenterActor()
         {
-            var actorType = _appConfig.GetItem<string>(AppConfigActorSettingItems.ActorCenterTypeKey);
-            var actorName = _appConfig.GetItem<string>(AppConfigActorSettingItems.ActorCenterNameKey);
-            var actorAddress = _appConfig.GetItem<string>(AppConfigActorSettingItems.ActorCenterAddressKey);
-            var actorPort = _appConfig.GetItem<string>(AppConfigActorSettingItems.ActorCenterPortKey);
+            var actorType = _appConfig.GetItem<string>(AppConfigActorSettingItems.CenterActorTypeKey);
+            var actorName = _appConfig.GetItem<string>(AppConfigActorSettingItems.CenterActorNameKey);
+            var actorAddress = _appConfig.GetItem<string>(AppConfigActorSettingItems.CenterActorAddressKey);
+            var actorPort = _appConfig.GetItem<string>(AppConfigActorSettingItems.CenterActorPortKey);
             if (string.IsNullOrWhiteSpace(actorType))
                 throw new InvalidProgramException(
-                    string.Format("Item [{0}] setting cannot be empty.", AppConfigActorSettingItems.ActorCenterTypeKey));
+                    string.Format("Item [{0}] setting cannot be empty.", AppConfigActorSettingItems.CenterActorTypeKey));
             if (string.IsNullOrWhiteSpace(actorName))
                 throw new InvalidProgramException(
-                    string.Format("Item [{0}] setting cannot be empty.", AppConfigActorSettingItems.ActorCenterNameKey));
+                    string.Format("Item [{0}] setting cannot be empty.", AppConfigActorSettingItems.CenterActorNameKey));
             if (string.IsNullOrWhiteSpace(actorAddress))
                 throw new InvalidProgramException(
-                    string.Format("Item [{0}] setting cannot be empty.", AppConfigActorSettingItems.ActorCenterAddressKey));
+                    string.Format("Item [{0}] setting cannot be empty.", AppConfigActorSettingItems.CenterActorAddressKey));
             if (string.IsNullOrWhiteSpace(actorPort))
                 throw new InvalidProgramException(
-                    string.Format("Item [{0}] setting cannot be empty.", AppConfigActorSettingItems.ActorCenterPortKey));
+                    string.Format("Item [{0}] setting cannot be empty.", AppConfigActorSettingItems.CenterActorPortKey));
 
             var actor = new ActorIdentity(actorType, actorName);
             actor.Address = actorAddress;

@@ -7,10 +7,10 @@ namespace Redola.ActorModel
 {
     public class AppConfigActorSettingItems
     {
-        public const string ActorCenterTypeKey = @"ActorCenterType";
-        public const string ActorCenterNameKey = @"ActorCenterName";
-        public const string ActorCenterAddressKey = @"ActorCenterAddress";
-        public const string ActorCenterPortKey = @"ActorCenterPort";
+        public const string CenterActorTypeKey = @"CenterActorType";
+        public const string CenterActorNameKey = @"CenterActorName";
+        public const string CenterActorAddressKey = @"CenterActorAddress";
+        public const string CenterActorPortKey = @"CenterActorPort";
 
         public const string ActorTypeKey = @"ActorType";
         public const string ActorNameKey = @"ActorName";
