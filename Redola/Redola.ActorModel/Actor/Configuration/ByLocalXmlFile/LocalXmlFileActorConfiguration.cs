@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using Redola.ActorModel.Serialization;
 
@@ -7,6 +8,7 @@ namespace Redola.ActorModel
     public class LocalXmlFileActorConfiguration : ActorConfiguration
     {
         private string _localXmlFilePath = string.Empty;
+        private XmlActorConfiguration _configuration;
 
         public LocalXmlFileActorConfiguration()
             : this(Environment.CurrentDirectory + @"\\ActorConfiguration.xml")
@@ -20,6 +22,9 @@ namespace Redola.ActorModel
             if (!File.Exists(localXmlFilePath))
                 throw new FileNotFoundException("Cannot find the xml actor configuration file.", localXmlFilePath);
             _localXmlFilePath = localXmlFilePath;
+
+            var fileContent = File.ReadAllText(_localXmlFilePath);
+            _configuration = XmlConvert.DeserializeObject<XmlActorConfiguration>(fileContent);
         }
 
         public string LocalXmlFilePath
@@ -27,18 +32,17 @@ namespace Redola.ActorModel
             get { return _localXmlFilePath; }
         }
 
+        public IEnumerable<ActorIdentity> ActorDirectory
+        {
+            get { return _configuration.Directory; }
+        }
+
         protected override ActorIdentity BuildCenterActor()
         {
-            if (!File.Exists(LocalXmlFilePath))
-                throw new FileNotFoundException("Cannot find the xml actor configuration file.", LocalXmlFilePath);
-
-            var fileContent = File.ReadAllText(LocalXmlFilePath);
-            var xmlActorConfiguration = XmlConvert.DeserializeObject<XmlActorConfiguration>(fileContent);
-
-            var actorType = xmlActorConfiguration.CenterActor.Type;
-            var actorName = xmlActorConfiguration.CenterActor.Name;
-            var actorAddress = xmlActorConfiguration.CenterActor.Address;
-            var actorPort = xmlActorConfiguration.CenterActor.Port;
+            var actorType = _configuration.CenterActor.Type;
+            var actorName = _configuration.CenterActor.Name;
+            var actorAddress = _configuration.CenterActor.Address;
+            var actorPort = _configuration.CenterActor.Port;
             if (string.IsNullOrWhiteSpace(actorType))
                 throw new InvalidProgramException(
                     string.Format("Center actor type cannot be empty."));
@@ -61,16 +65,10 @@ namespace Redola.ActorModel
 
         protected override ActorIdentity BuildLocalActor()
         {
-            if (!File.Exists(LocalXmlFilePath))
-                throw new FileNotFoundException("Cannot find the xml actor configuration file.", LocalXmlFilePath);
-
-            var fileContent = File.ReadAllText(LocalXmlFilePath);
-            var xmlActorConfiguration = XmlConvert.DeserializeObject<XmlActorConfiguration>(fileContent);
-
-            var actorType = xmlActorConfiguration.LocalActor.Type;
-            var actorName = xmlActorConfiguration.LocalActor.Name;
-            var actorAddress = xmlActorConfiguration.LocalActor.Address;
-            var actorPort = xmlActorConfiguration.LocalActor.Port;
+            var actorType = _configuration.LocalActor.Type;
+            var actorName = _configuration.LocalActor.Name;
+            var actorAddress = _configuration.LocalActor.Address;
+            var actorPort = _configuration.LocalActor.Port;
             if (string.IsNullOrWhiteSpace(actorType))
                 throw new InvalidProgramException(
                     string.Format("Local actor type cannot be empty."));

@@ -143,7 +143,7 @@ namespace Redola.ActorModel
             return endpoint;
         }
 
-        private IPEndPoint LookupRemoteActorEndPoint(string actorType, Func<List<ActorIdentity>, ActorIdentity> matchActorFunc)
+        private IPEndPoint LookupRemoteActorEndPoint(string actorType, Func<IEnumerable<ActorIdentity>, ActorIdentity> matchActorFunc)
         {
             var actorLookupCondition = new ActorIdentityLookup()
             {

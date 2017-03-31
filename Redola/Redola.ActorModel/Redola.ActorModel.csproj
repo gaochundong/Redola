@@ -51,6 +51,7 @@
       <Link>SolutionVersion.cs</Link>
     </Compile>
     <Compile Include="Actor\Actor.cs" />
+    <Compile Include="Actor\Center\LocalXmlFileActorDirectory.cs" />
     <Compile Include="Actor\Configuration\ByAppConfig\AppConfigActorConfiguration.cs" />
     <Compile Include="Actor\Configuration\ActorConfiguration.cs" />
     <Compile Include="Actor\Center\CenterActorDirectory.cs" />
