@@ -2,7 +2,7 @@
 <package >
     <metadata>
         <id>Redola.Rpc</id>
-        <version>0.1.4.0</version>
+        <version>0.1.5.0</version>
         <title>Redola.Rpc</title>
         <authors>Dennis Gao</authors>
         <owners>Dennis Gao</owners>
@@ -10,7 +10,7 @@
         <projectUrl>https://github.com/gaochundong/Redola</projectUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>Redola is a lightweight C# based RPC framework.</description>
-        <copyright>Copyright © 2015-2016 Dennis Gao.</copyright>
+        <copyright>Copyright © 2015-2017, Dennis Gao.</copyright>
         <dependencies>
             <dependency id="protobuf-net" version="2.1.0" />
             <dependency id="Cowboy.Sockets" version="1.3.8" />
