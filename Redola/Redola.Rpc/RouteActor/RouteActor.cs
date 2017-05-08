@@ -115,7 +115,7 @@ namespace Redola.Rpc
 
         public void Send<T>(string remoteActorType, ActorMessageEnvelope<T> message)
         {
-            BeginSend(remoteActorType, message.ToBytes(this.Encoder));
+            Send(remoteActorType, message.ToBytes(this.Encoder));
         }
 
         public void BeginSend<T>(string remoteActorType, ActorMessageEnvelope<T> message)

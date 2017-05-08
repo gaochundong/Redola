@@ -105,7 +105,7 @@ namespace Redola.Rpc
 
         public void Send<T>(string remoteActorType, ActorMessageEnvelope<T> message)
         {
-            _localActor.BeginSend(remoteActorType, message);
+            _localActor.Send(remoteActorType, message);
         }
 
         public void BeginSend<T>(string remoteActorType, ActorMessageEnvelope<T> message)

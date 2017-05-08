@@ -230,7 +230,7 @@ namespace Redola.ActorModel
 
         public void Send(string remoteActorType, byte[] data)
         {
-            BeginSend(remoteActorType, data, 0, data.Length);
+            Send(remoteActorType, data, 0, data.Length);
         }
 
         public void Send(string remoteActorType, byte[] data, int offset, int count)
