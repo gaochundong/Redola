@@ -108,9 +108,12 @@ namespace Redola.ActorModel
                     _connector.Disconnect();
                 }
 
-                if (Disconnected != null)
+                if (_remoteActor != null)
                 {
-                    Disconnected(this, new ActorDisconnectedEventArgs(this.ConnectToEndPoint.ToString(), _remoteActor));
+                    if (Disconnected != null)
+                    {
+                        Disconnected(this, new ActorDisconnectedEventArgs(this.ConnectToEndPoint.ToString(), _remoteActor));
+                    }
                 }
 
                 _log.DebugFormat("Disconnected with remote [{0}], SessionKey[{1}].", _remoteActor, this.ConnectToEndPoint);
