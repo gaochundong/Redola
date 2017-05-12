@@ -4,15 +4,18 @@ namespace Redola.Rpc
 {
     public abstract class RpcMessageContract
     {
-        public RpcMessageContract()
+        protected RpcMessageContract()
         {
             this.IsAsyncPattern = true;
             this.IsOneWay = false;
         }
 
-        public RpcMessageContract(Type messageType)
+        protected RpcMessageContract(Type messageType)
             : this()
         {
+            if (messageType == null)
+                throw new ArgumentNullException("messageType");
+
             this.MessageType = messageType;
         }
 

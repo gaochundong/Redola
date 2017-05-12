@@ -4,19 +4,21 @@ namespace Redola.Rpc
 {
     public class RequestResponseMessageContract : RpcMessageContract
     {
-        public RequestResponseMessageContract()
-            : base()
+        public RequestResponseMessageContract(Type request, Type response)
+            : base(response)
         {
+            if (request == null)
+                throw new ArgumentNullException("request");
+            if (response == null)
+                throw new ArgumentNullException("response");
+
+            this.RequestMessageType = request;
+            this.ResponseMessageType = response;
+
             this.IsOneWay = false;
         }
 
-        public RequestResponseMessageContract(Type requestMessageType, Type responseMessageType)
-            : base(responseMessageType)
-        {
-            this.IsOneWay = false;
-        }
-
-        public Type RequestMessageType { get; set; }
-        public Type ResponseMessageType { get; set; }
+        public Type RequestMessageType { get; protected set; }
+        public Type ResponseMessageType { get; protected set; }
     }
 }
