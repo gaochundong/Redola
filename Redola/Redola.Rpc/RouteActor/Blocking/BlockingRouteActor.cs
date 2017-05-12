@@ -38,15 +38,22 @@ namespace Redola.Rpc
 
                 this.BeginSend(remoteActorType, request.ToBytes(this.Encoder));
 
+                bool responseTimeout = false;
                 if (!waiter.WaitOne(timeout))
                 {
-                    _log.ErrorFormat("Timeout when waiting message [{0}] after {1} seconds.",
-                        request.MessageType, timeout.TotalSeconds);
+                    responseTimeout = true;
                 }
                 waiter.Reset();
                 waiter.Dispose();
                 BlockingCallbackHolder throwAway = null;
                 _callbacks.TryRemove(request.MessageID, out throwAway);
+
+                if (responseTimeout)
+                {
+                    throw new TimeoutException(string.Format(
+                        "Timeout when waiting message [{0}] after [{1}] seconds.",
+                        request.MessageType, timeout.TotalSeconds));
+                }
             }
             catch (Exception ex)
             {
