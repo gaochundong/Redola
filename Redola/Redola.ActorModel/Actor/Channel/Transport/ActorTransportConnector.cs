@@ -16,10 +16,16 @@ namespace Redola.ActorModel
                 throw new ArgumentNullException("connectToEndPoint");
 
             this.ConnectToEndPoint = connectToEndPoint;
+
+            this.SendTimeout = TimeSpan.FromSeconds(15);
+            this.ReceiveTimeout = TimeSpan.Zero;
         }
 
         public IPEndPoint ConnectToEndPoint { get; private set; }
         public bool IsConnected { get { return _client == null ? false : _client.State == TcpSocketConnectionState.Connected; } }
+
+        public TimeSpan SendTimeout { get; set; }
+        public TimeSpan ReceiveTimeout { get; set; }
 
         public void Connect()
         {
@@ -39,8 +45,9 @@ namespace Redola.ActorModel
                 var configuration = new TcpSocketClientConfiguration()
                 {
                     ConnectTimeout = timeout,
-                    SendTimeout = TimeSpan.FromSeconds(15),
-                    ReceiveTimeout = TimeSpan.Zero,
+
+                    SendTimeout = this.SendTimeout,
+                    ReceiveTimeout = this.ReceiveTimeout,
                 };
                 _client = new TcpSocketClient(this.ConnectToEndPoint, configuration);
                 _client.ServerConnected += OnServerConnected;
