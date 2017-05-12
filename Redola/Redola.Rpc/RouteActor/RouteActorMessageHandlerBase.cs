@@ -44,11 +44,7 @@ namespace Redola.Rpc
 
         public void HandleMessage(ActorIdentity remoteActor, ActorMessageEnvelope envelope)
         {
-            if (!GetAdmissibleMessageHandleStrategy(envelope.MessageType).IsHandledInSeparateThread)
-            {
-                DoHandleMessage(remoteActor, envelope);
-            }
-            else
+            if (GetAdmissibleMessageHandleStrategy(envelope.MessageType).IsAsyncPattern)
             {
                 Task.Factory.StartNew(() =>
                 {
@@ -62,6 +58,10 @@ namespace Redola.Rpc
                     }
                 },
                 TaskCreationOptions.PreferFairness);
+            }
+            else
+            {
+                DoHandleMessage(remoteActor, envelope);
             }
         }
 

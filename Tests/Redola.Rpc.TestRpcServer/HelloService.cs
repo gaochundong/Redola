@@ -20,12 +20,12 @@ namespace Redola.Rpc.TestRpcServer
         {
         }
 
-        protected override IEnumerable<RpcMessageRegistration> RegisterRpcMessages()
+        protected override IEnumerable<RpcMessageContract> RegisterRpcMessageContracts()
         {
-            var messages = new List<RpcMessageRegistration>();
+            var messages = new List<RpcMessageContract>();
 
-            messages.Add(new RpcMessageRegistration(typeof(HelloRequest)));
-            messages.Add(new RpcMessageRegistration(typeof(Hello10000Request)));
+            messages.Add(new ReceiveMessageContract(typeof(HelloRequest)));
+            messages.Add(new ReceiveMessageContract(typeof(Hello10000Request)));
 
             return messages;
         }

@@ -74,7 +74,9 @@
     <Compile Include="Message\Strategy\MessageHandleStrategy.cs" />
     <Compile Include="RouteActor\RouteActor.cs" />
     <Compile Include="RouteActor\RouteActorMessageHandlerBase.cs" />
-    <Compile Include="Rpc\RpcMessageRegistration.cs" />
+    <Compile Include="Rpc\RpcMessage\RequestResponseMessageContract.cs" />
+    <Compile Include="Rpc\RpcMessage\ReceiveMessageContract.cs" />
+    <Compile Include="Rpc\RpcMessage\RpcMessageContract.cs" />
     <Compile Include="Rpc\RpcActor.cs" />
     <Compile Include="Rpc\RpcService.cs" />
   </ItemGroup>

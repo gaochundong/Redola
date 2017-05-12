@@ -33,7 +33,7 @@ namespace Redola.Rpc
         {
             base.RegisterAdmissibleMessages(admissibleMessages);
 
-            var registrations = RegisterRpcMessages();
+            var registrations = RegisterRpcMessageContracts();
             if (registrations != null)
             {
                 foreach (var registration in registrations)
@@ -43,7 +43,7 @@ namespace Redola.Rpc
             }
         }
 
-        protected abstract IEnumerable<RpcMessageRegistration> RegisterRpcMessages();
+        protected abstract IEnumerable<RpcMessageContract> RegisterRpcMessageContracts();
 
         protected override void DoHandleMessage(ActorIdentity remoteActor, ActorMessageEnvelope envelope)
         {

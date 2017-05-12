@@ -19,7 +19,11 @@ namespace Redola.Rpc
 
         protected override void DoHandleMessage(ActorIdentity remoteActor, ActorMessageEnvelope envelope)
         {
-            if (GetAdmissibleMessageHandleStrategy(envelope.MessageType).IsRequestResponseModel)
+            if (GetAdmissibleMessageHandleStrategy(envelope.MessageType).IsOneWay)
+            {
+                base.DoHandleMessage(remoteActor, envelope);
+            }
+            else
             {
                 envelope.HandledBy(this.Actor, GetAdmissibleMessageType(envelope.MessageType), this.Actor.Decoder, remoteActor,
                     (object o) =>
@@ -29,10 +33,6 @@ namespace Redola.Rpc
                             .GetMethod("OnSyncMessage")
                             .MakeGenericMethod(GetAdmissibleMessageType(envelope.MessageType));
                     });
-            }
-            else
-            {
-                base.DoHandleMessage(remoteActor, envelope);
             }
         }
     }
