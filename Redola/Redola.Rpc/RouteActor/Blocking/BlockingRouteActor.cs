@@ -51,6 +51,7 @@ namespace Redola.Rpc
             catch (Exception ex)
             {
                 _log.Error(ex.Message, ex);
+                throw;
             }
 
             return response;
