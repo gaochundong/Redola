@@ -122,6 +122,7 @@ namespace Redola.ActorModel
             {
                 _remoteActor = null;
                 IsHandshaked = false;
+                _connector = null;
                 OnClose();
             }
         }
@@ -156,7 +157,7 @@ namespace Redola.ActorModel
 
             _connector.DataReceived += onHandshaked;
             _log.DebugFormat("Handshake request from local actor [{0}].", _localActor);
-            _connector.BeginSend(actorHandshakeRequestBuffer);
+            _connector.Send(actorHandshakeRequestBuffer);
 
             bool handshaked = waitingHandshaked.Wait(timeout);
             _connector.DataReceived -= onHandshaked;
@@ -222,6 +223,7 @@ namespace Redola.ActorModel
         protected virtual void OnDataReceived(object sender, ActorTransportDataReceivedEventArgs e)
         {
             _keepAliveTracker.OnDataReceived();
+            StopKeepAliveTimeoutTimer(); // intend to disable keep-alive timeout when receive anything
 
             ActorFrameHeader actorKeepAliveRequestFrameHeader = null;
             bool isHeaderDecoded = _channelConfiguration.FrameBuilder.TryDecodeFrameHeader(
@@ -235,7 +237,7 @@ namespace Redola.ActorModel
                 var actorKeepAliveResponseBuffer = _channelConfiguration.FrameBuilder.EncodeFrame(actorKeepAliveResponse);
 
                 _log.DebugFormat("KeepAlive send response from local actor [{0}] to remote actor [{1}].", _localActor, _remoteActor);
-                _connector.BeginSend(actorKeepAliveResponseBuffer);
+                _connector.Send(actorKeepAliveResponseBuffer);
             }
             else if (isHeaderDecoded && actorKeepAliveRequestFrameHeader.OpCode == OpCode.Pong)
             {
@@ -400,7 +402,7 @@ namespace Redola.ActorModel
 
                         _log.DebugFormat("KeepAlive send request from local actor [{0}] to remote actor [{1}].", _localActor, _remoteActor);
 
-                        _connector.BeginSend(actorKeepAliveRequestBuffer);
+                        _connector.Send(actorKeepAliveRequestBuffer);
                         StartKeepAliveTimeoutTimer();
 
                         _keepAliveTracker.ResetTimer();

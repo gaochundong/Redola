@@ -33,13 +33,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Happer.Hosting, Version=1.0.14.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\Redola\packages\Happer.1.0.14.0\lib\net46\Happer.Hosting.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Happer.Hosting, Version=1.0.16.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\Redola\packages\Happer.1.0.16.0\lib\net46\Happer.Hosting.dll</HintPath>
     </Reference>
-    <Reference Include="Happer.Http, Version=1.0.14.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\Redola\packages\Happer.1.0.14.0\lib\net46\Happer.Http.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Happer.Http, Version=1.0.16.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\Redola\packages\Happer.1.0.16.0\lib\net46\Happer.Http.dll</HintPath>
     </Reference>
     <Reference Include="Logrila.Logging, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\Redola\packages\Logrila.Logging.1.0.3.0\lib\net46\Logrila.Logging.dll</HintPath>

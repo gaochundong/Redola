@@ -54,6 +54,7 @@ namespace Redola.ActorModel
             else
             {
                 _keepAliveTracker.OnDataReceived();
+                StopKeepAliveTimeoutTimer(); // intend to disable keep-alive timeout when receive anything
 
                 ActorFrameHeader actorKeepAliveRequestFrameHeader = null;
                 bool isHeaderDecoded = _channelConfiguration.FrameBuilder.TryDecodeFrameHeader(
@@ -67,7 +68,7 @@ namespace Redola.ActorModel
                     var actorKeepAliveResponseBuffer = _channelConfiguration.FrameBuilder.EncodeFrame(actorKeepAliveResponse);
 
                     _log.DebugFormat("KeepAlive send response from local actor [{0}] to remote actor [{1}].", _localActor, _remoteActor);
-                    _innerSession.BeginSend(actorKeepAliveResponseBuffer);
+                    _innerSession.Send(actorKeepAliveResponseBuffer);
                 }
                 else if (isHeaderDecoded && actorKeepAliveRequestFrameHeader.OpCode == OpCode.Pong)
                 {
@@ -111,7 +112,7 @@ namespace Redola.ActorModel
             if (_remoteActor == null)
             {
                 _log.ErrorFormat("Handshake with remote [{0}] failed, invalid actor description.", this.SessionKey);
-                _innerSession.Close();
+                Close();
             }
             else
             {
@@ -119,7 +120,7 @@ namespace Redola.ActorModel
                 var actorHandshakeResponse = new WelcomeFrame(actorHandshakeResponseData);
                 var actorHandshakeResponseBuffer = _channelConfiguration.FrameBuilder.EncodeFrame(actorHandshakeResponse);
 
-                _innerSession.BeginSend(actorHandshakeResponseBuffer);
+                _innerSession.Send(actorHandshakeResponseBuffer);
                 IsHandshaked = true;
 
                 _log.DebugFormat("Handshake with remote [{0}] successfully, SessionKey[{1}].", _remoteActor, this.SessionKey);
@@ -147,11 +148,17 @@ namespace Redola.ActorModel
                 {
                     _keepAliveTimeoutTimer.Dispose();
                 }
+
+                if (_innerSession != null)
+                {
+                    _innerSession.Close();
+                }
             }
             finally
             {
                 _remoteActor = null;
                 IsHandshaked = false;
+                _innerSession = null;
             }
         }
 
@@ -300,7 +307,7 @@ namespace Redola.ActorModel
 
                         _log.DebugFormat("KeepAlive send request from local actor [{0}] to remote actor [{1}].", _localActor, _remoteActor);
 
-                        _innerSession.BeginSend(actorKeepAliveRequestBuffer);
+                        _innerSession.Send(actorKeepAliveRequestBuffer);
                         StartKeepAliveTimeoutTimer();
 
                         _keepAliveTracker.ResetTimer();
