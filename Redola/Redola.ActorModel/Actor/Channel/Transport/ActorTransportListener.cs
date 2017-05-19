@@ -14,15 +14,19 @@ namespace Redola.ActorModel
         private ConcurrentDictionary<string, ActorTransportSession> _sessions
             = new ConcurrentDictionary<string, ActorTransportSession>(); // sessionKey -> session
 
-        public ActorTransportListener(IPEndPoint listenedEndPoint)
+        public ActorTransportListener(IPEndPoint listenedEndPoint, ActorTransportConfiguration transportConfiguration)
         {
             if (listenedEndPoint == null)
                 throw new ArgumentNullException("listenedEndPoint");
+            if (transportConfiguration == null)
+                throw new ArgumentNullException("transportConfiguration");
 
             this.ListenedEndPoint = listenedEndPoint;
+            this.TransportConfiguration = transportConfiguration;
         }
 
         public IPEndPoint ListenedEndPoint { get; private set; }
+        public ActorTransportConfiguration TransportConfiguration { get; private set; }
         public bool IsListening { get { return _server == null ? false : _server.IsListening; } }
 
         public void Start()
@@ -37,8 +41,16 @@ namespace Redola.ActorModel
             {
                 var configuration = new TcpSocketServerConfiguration()
                 {
-                    SendTimeout = TimeSpan.FromSeconds(15),
-                    ReceiveTimeout = TimeSpan.Zero,
+                    ConnectTimeout = this.TransportConfiguration.ConnectTimeout,
+                    ReceiveBufferSize = this.TransportConfiguration.ReceiveBufferSize,
+                    SendBufferSize = this.TransportConfiguration.SendBufferSize,
+                    ReceiveTimeout = this.TransportConfiguration.ReceiveTimeout,
+                    SendTimeout = this.TransportConfiguration.SendTimeout,
+                    NoDelay = this.TransportConfiguration.NoDelay,
+                    LingerState = this.TransportConfiguration.LingerState,
+                    KeepAlive = this.TransportConfiguration.KeepAlive,
+                    KeepAliveInterval = this.TransportConfiguration.KeepAliveInterval,
+                    ReuseAddress = this.TransportConfiguration.ReuseAddress,
                 };
                 _server = new TcpSocketServer(this.ListenedEndPoint, configuration);
                 _server.ClientConnected += OnClientConnected;

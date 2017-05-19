@@ -12,8 +12,8 @@ namespace Redola.ActorModel
         private System.Threading.Timer _retryTimer = null;
         private readonly object _retryLock = new object();
 
-        public ActorTransportReconnectableConnector(IPEndPoint connectToEndPoint)
-            : base(connectToEndPoint)
+        public ActorTransportReconnectableConnector(IPEndPoint connectToEndPoint, ActorTransportConfiguration transportConfiguration)
+            : base(connectToEndPoint, transportConfiguration)
         {
             this.RetryPeriod = TimeSpan.FromSeconds(15);
         }

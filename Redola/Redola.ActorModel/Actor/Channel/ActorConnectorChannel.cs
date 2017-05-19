@@ -62,11 +62,6 @@ namespace Redola.ActorModel
 
         public void Open()
         {
-            Open(TimeSpan.FromSeconds(5));
-        }
-
-        public void Open(TimeSpan timeout)
-        {
             try
             {
                 if (_connector.IsConnected)
@@ -75,13 +70,14 @@ namespace Redola.ActorModel
                 _connector.Connected += OnConnected;
                 _connector.Disconnected += OnDisconnected;
 
-                _connector.Connect(timeout);
+                _connector.Connect();
 
                 OnOpen();
             }
             catch (TimeoutException)
             {
-                _log.ErrorFormat("Connect remote [{0}] timeout with [{1}].", this.ConnectToEndPoint, timeout);
+                _log.ErrorFormat("Connect remote [{0}] timeout with [{1}].",
+                    this.ConnectToEndPoint, _connector.TransportConfiguration.ConnectTimeout);
                 Close();
             }
         }

@@ -96,7 +96,7 @@ namespace Redola.ActorModel
 
             var actorCenterEndPoint = new IPEndPoint(actorCenterAddress, actorCenterPort);
 
-            var centerConnector = new ActorTransportConnector(actorCenterEndPoint);
+            var centerConnector = new ActorTransportConnector(actorCenterEndPoint, _channelConfiguration.TransportConfiguration);
             var centerChannel = new ActorConnectorReconnectableChannel(
                 localActor, centerConnector, _channelConfiguration);
 

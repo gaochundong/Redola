@@ -18,10 +18,14 @@ namespace Redola.ActorModel
 
             this.KeepAliveInterval = TimeSpan.FromSeconds(30);
             this.KeepAliveTimeout = TimeSpan.FromSeconds(10);
+
+            this.TransportConfiguration = new ActorTransportConfiguration();
         }
 
         public IActorFrameBuilder FrameBuilder { get { return _frameBuilder; } }
         public TimeSpan KeepAliveInterval { get; set; }
         public TimeSpan KeepAliveTimeout { get; set; }
+
+        public ActorTransportConfiguration TransportConfiguration { get; set; }
     }
 }

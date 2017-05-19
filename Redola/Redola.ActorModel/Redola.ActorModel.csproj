@@ -51,6 +51,7 @@
     </Compile>
     <Compile Include="Actor\Actor.cs" />
     <Compile Include="Actor\Center\LocalXmlFileActorDirectory.cs" />
+    <Compile Include="Actor\Channel\Transport\Configuration\ActorTransportConfiguration.cs" />
     <Compile Include="Actor\Configuration\ByAppConfig\AppConfigActorConfiguration.cs" />
     <Compile Include="Actor\Configuration\ActorConfiguration.cs" />
     <Compile Include="Actor\Center\CenterActorDirectory.cs" />
@@ -60,7 +61,7 @@
     <Compile Include="Actor\Directory\IActorDirectory.cs" />
     <Compile Include="Actor\Exception\ActorNotFoundException.cs" />
     <Compile Include="Actor\Configuration\ByAppConfig\AppConfigActorSettingItems.cs" />
-    <Compile Include="Actor\Channel\ActorChannelConfiguration.cs" />
+    <Compile Include="Actor\Channel\Configuration\ActorChannelConfiguration.cs" />
     <Compile Include="Actor\Channel\ActorChannelFactory.cs" />
     <Compile Include="Actor\Channel\ActorChannelManager.cs" />
     <Compile Include="Actor\Channel\ActorConnectorChannel.cs" />

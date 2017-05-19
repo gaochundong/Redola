@@ -10,29 +10,22 @@ namespace Redola.ActorModel
         private ILog _log = Logger.Get<ActorTransportConnector>();
         private TcpSocketClient _client;
 
-        public ActorTransportConnector(IPEndPoint connectToEndPoint)
+        public ActorTransportConnector(IPEndPoint connectToEndPoint, ActorTransportConfiguration transportConfiguration)
         {
             if (connectToEndPoint == null)
                 throw new ArgumentNullException("connectToEndPoint");
+            if (transportConfiguration == null)
+                throw new ArgumentNullException("transportConfiguration");
 
             this.ConnectToEndPoint = connectToEndPoint;
-
-            this.SendTimeout = TimeSpan.FromSeconds(15);
-            this.ReceiveTimeout = TimeSpan.Zero;
+            this.TransportConfiguration = transportConfiguration;
         }
 
         public IPEndPoint ConnectToEndPoint { get; private set; }
+        public ActorTransportConfiguration TransportConfiguration { get; private set; }
         public bool IsConnected { get { return _client == null ? false : _client.State == TcpSocketConnectionState.Connected; } }
 
-        public TimeSpan SendTimeout { get; set; }
-        public TimeSpan ReceiveTimeout { get; set; }
-
         public void Connect()
-        {
-            Connect(TimeSpan.FromSeconds(5));
-        }
-
-        public void Connect(TimeSpan timeout)
         {
             if (IsConnected)
                 return;
@@ -44,10 +37,16 @@ namespace Redola.ActorModel
             {
                 var configuration = new TcpSocketClientConfiguration()
                 {
-                    ConnectTimeout = timeout,
-
-                    SendTimeout = this.SendTimeout,
-                    ReceiveTimeout = this.ReceiveTimeout,
+                    ConnectTimeout = this.TransportConfiguration.ConnectTimeout,
+                    ReceiveBufferSize = this.TransportConfiguration.ReceiveBufferSize,
+                    SendBufferSize = this.TransportConfiguration.SendBufferSize,
+                    ReceiveTimeout = this.TransportConfiguration.ReceiveTimeout,
+                    SendTimeout = this.TransportConfiguration.SendTimeout,
+                    NoDelay = this.TransportConfiguration.NoDelay,
+                    LingerState = this.TransportConfiguration.LingerState,
+                    KeepAlive = this.TransportConfiguration.KeepAlive,
+                    KeepAliveInterval = this.TransportConfiguration.KeepAliveInterval,
+                    ReuseAddress = this.TransportConfiguration.ReuseAddress,
                 };
                 _client = new TcpSocketClient(this.ConnectToEndPoint, configuration);
                 _client.ServerConnected += OnServerConnected;

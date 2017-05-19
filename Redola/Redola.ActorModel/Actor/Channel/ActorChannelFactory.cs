@@ -37,7 +37,7 @@ namespace Redola.ActorModel
             var localActorEndPoint = new IPEndPoint(IPAddress.Any, localPort);
             var channel = new ActorListenerChannel(
                 localActor,
-                new ActorTransportListener(localActorEndPoint),
+                new ActorTransportListener(localActorEndPoint, _channelConfiguration.TransportConfiguration),
                 _channelConfiguration);
 
             return channel;
@@ -52,7 +52,7 @@ namespace Redola.ActorModel
 
             var channel = new ActorConnectorChannel(
                 localActor,
-                new ActorTransportConnector(remoteActorEndPoint),
+                new ActorTransportConnector(remoteActorEndPoint, _channelConfiguration.TransportConfiguration),
                 _channelConfiguration);
 
             return channel;
@@ -67,7 +67,7 @@ namespace Redola.ActorModel
 
             var channel = new ActorConnectorChannel(
                 localActor,
-                new ActorTransportConnector(remoteActorEndPoint),
+                new ActorTransportConnector(remoteActorEndPoint, _channelConfiguration.TransportConfiguration),
                 _channelConfiguration);
 
             return channel;
