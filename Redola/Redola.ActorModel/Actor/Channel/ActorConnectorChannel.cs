@@ -7,7 +7,7 @@ using Redola.ActorModel.Framing;
 
 namespace Redola.ActorModel
 {
-    public class ActorConnectorChannel : IActorChannel
+    public class ActorConnectorChannel : IActorChannel, IDisposable
     {
         private ILog _log = Logger.Get<ActorConnectorChannel>();
         private ActorIdentity _localActor;
@@ -18,6 +18,7 @@ namespace Redola.ActorModel
         private readonly SemaphoreSlim _keepAliveLocker = new SemaphoreSlim(1, 1);
         private KeepAliveTracker _keepAliveTracker;
         private Timer _keepAliveTimeoutTimer;
+        private bool _disposed = false;
 
         public ActorConnectorChannel(
             ActorIdentity localActor,
@@ -88,11 +89,11 @@ namespace Redola.ActorModel
             {
                 if (_keepAliveTracker != null)
                 {
-                    _keepAliveTracker.Dispose();
+                    _keepAliveTracker.StopTimer();
                 }
                 if (_keepAliveTimeoutTimer != null)
                 {
-                    _keepAliveTimeoutTimer.Dispose();
+                    _keepAliveTimeoutTimer.Change(Timeout.Infinite, Timeout.Infinite);
                 }
 
                 _connector.Connected -= OnConnected;
@@ -118,7 +119,7 @@ namespace Redola.ActorModel
             {
                 _remoteActor = null;
                 IsHandshaked = false;
-                _connector = null;
+
                 OnClose();
             }
         }
@@ -413,6 +414,40 @@ namespace Redola.ActorModel
                 {
                     _keepAliveLocker.Release();
                 }
+            }
+        }
+
+        #endregion
+
+        #region IDisposable Members
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    try
+                    {
+                        if (_keepAliveTracker != null)
+                        {
+                            _keepAliveTracker.Dispose();
+                        }
+                        if (_keepAliveTimeoutTimer != null)
+                        {
+                            _keepAliveTimeoutTimer.Dispose();
+                        }
+                    }
+                    catch { }
+                }
+
+                _disposed = true;
             }
         }
 

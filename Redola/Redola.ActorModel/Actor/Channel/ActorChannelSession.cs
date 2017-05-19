@@ -5,7 +5,7 @@ using Redola.ActorModel.Framing;
 
 namespace Redola.ActorModel
 {
-    public class ActorChannelSession
+    public class ActorChannelSession : IDisposable
     {
         private ILog _log = Logger.Get<ActorChannelSession>();
         private ActorIdentity _localActor = null;
@@ -16,6 +16,7 @@ namespace Redola.ActorModel
         private readonly SemaphoreSlim _keepAliveLocker = new SemaphoreSlim(1, 1);
         private KeepAliveTracker _keepAliveTracker;
         private Timer _keepAliveTimeoutTimer;
+        private bool _disposed = false;
 
         public ActorChannelSession(
             ActorIdentity localActor,
@@ -142,23 +143,24 @@ namespace Redola.ActorModel
             {
                 if (_keepAliveTracker != null)
                 {
-                    _keepAliveTracker.Dispose();
+                    _keepAliveTracker.StopTimer();
                 }
                 if (_keepAliveTimeoutTimer != null)
                 {
-                    _keepAliveTimeoutTimer.Dispose();
+                    _keepAliveTimeoutTimer.Change(Timeout.Infinite, Timeout.Infinite);
                 }
 
-                if (_innerSession != null)
+                var copySession = _innerSession;
+                _innerSession = null;
+                if (copySession != null)
                 {
-                    _innerSession.Close();
+                    copySession.Close();
                 }
             }
             finally
             {
                 _remoteActor = null;
                 IsHandshaked = false;
-                _innerSession = null;
             }
         }
 
@@ -322,6 +324,40 @@ namespace Redola.ActorModel
                 {
                     _keepAliveLocker.Release();
                 }
+            }
+        }
+
+        #endregion
+
+        #region IDisposable Members
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    try
+                    {
+                        if (_keepAliveTracker != null)
+                        {
+                            _keepAliveTracker.Dispose();
+                        }
+                        if (_keepAliveTimeoutTimer != null)
+                        {
+                            _keepAliveTimeoutTimer.Dispose();
+                        }
+                    }
+                    catch { }
+                }
+
+                _disposed = true;
             }
         }
 
