@@ -103,7 +103,10 @@ namespace Redola.ActorModel
 
             public override void StopTimer()
             {
-                _keepAliveTimer.Change(Timeout.Infinite, Timeout.Infinite);
+                if (_keepAliveTimer != null)
+                {
+                    _keepAliveTimer.Change(Timeout.Infinite, Timeout.Infinite);
+                }
             }
 
             public override void ResetTimer()
@@ -133,7 +136,10 @@ namespace Redola.ActorModel
 
             private void ResetTimer(int dueInMilliseconds)
             {
-                _keepAliveTimer.Change(dueInMilliseconds, Timeout.Infinite);
+                if (_keepAliveTimer != null)
+                {
+                    _keepAliveTimer.Change(dueInMilliseconds, Timeout.Infinite);
+                }
             }
 
             private TimeSpan GetIdleTime()
