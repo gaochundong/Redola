@@ -4,14 +4,15 @@ namespace Redola.ActorModel
 {
     public interface IActorChannel
     {
+        string Identifier { get; }
         bool Active { get; }
 
         void Open();
         void Close();
 
-        event EventHandler<ActorConnectedEventArgs> Connected;
-        event EventHandler<ActorDisconnectedEventArgs> Disconnected;
-        event EventHandler<ActorDataReceivedEventArgs> DataReceived;
+        event EventHandler<ActorChannelConnectedEventArgs> ChannelConnected;
+        event EventHandler<ActorChannelDisconnectedEventArgs> ChannelDisconnected;
+        event EventHandler<ActorChannelDataReceivedEventArgs> ChannelDataReceived;
 
         void Send(string actorType, string actorName, byte[] data);
         void Send(string actorType, string actorName, byte[] data, int offset, int count);

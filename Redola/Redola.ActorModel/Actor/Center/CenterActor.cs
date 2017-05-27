@@ -19,7 +19,7 @@ namespace Redola.ActorModel
         {
         }
 
-        protected override void OnActorDataReceived(object sender, ActorDataReceivedEventArgs e)
+        protected override void OnActorChannelDataReceived(object sender, ActorChannelDataReceivedEventArgs e)
         {
             ActorFrameHeader actorLookupRequestFrameHeader = null;
             bool isHeaderDecoded = this.ChannelConfiguration.FrameBuilder.TryDecodeFrameHeader(
@@ -50,7 +50,7 @@ namespace Redola.ActorModel
             }
             else
             {
-                base.OnActorDataReceived(sender, e);
+                base.OnActorChannelDataReceived(sender, e);
             }
         }
 

@@ -61,9 +61,9 @@ namespace Redola.ActorModel
             _directory = directory;
 
             _manager = new ActorChannelManager(new ActorChannelFactory(_directory, this.ChannelConfiguration));
-            _manager.Connected += OnActorConnected;
-            _manager.Disconnected += OnActorDisconnected;
-            _manager.DataReceived += OnActorDataReceived;
+            _manager.ChannelConnected += OnActorChannelConnected;
+            _manager.ChannelDisconnected += OnActorChannelDisconnected;
+            _manager.ChannelDataReceived += OnActorChannelDataReceived;
 
             try
             {
@@ -97,9 +97,9 @@ namespace Redola.ActorModel
         {
             if (_manager != null)
             {
-                _manager.Connected -= OnActorConnected;
-                _manager.Disconnected -= OnActorDisconnected;
-                _manager.DataReceived -= OnActorDataReceived;
+                _manager.ChannelConnected -= OnActorChannelConnected;
+                _manager.ChannelDisconnected -= OnActorChannelDisconnected;
+                _manager.ChannelDataReceived -= OnActorChannelDataReceived;
                 _manager.CloseAllChannels();
                 _manager = null;
             }
@@ -115,27 +115,27 @@ namespace Redola.ActorModel
             return _manager.GetAllActors();
         }
 
-        protected virtual void OnActorConnected(object sender, ActorConnectedEventArgs e)
+        protected virtual void OnActorChannelConnected(object sender, ActorChannelConnectedEventArgs e)
         {
             if (Connected != null)
             {
-                Connected(sender, e);
+                Connected(sender, new ActorConnectedEventArgs(e.ActorChannelIdentifier, e.RemoteActor));
             }
         }
 
-        protected virtual void OnActorDisconnected(object sender, ActorDisconnectedEventArgs e)
+        protected virtual void OnActorChannelDisconnected(object sender, ActorChannelDisconnectedEventArgs e)
         {
             if (Disconnected != null)
             {
-                Disconnected(sender, e);
+                Disconnected(sender, new ActorDisconnectedEventArgs(e.ActorChannelIdentifier, e.RemoteActor));
             }
         }
 
-        protected virtual void OnActorDataReceived(object sender, ActorDataReceivedEventArgs e)
+        protected virtual void OnActorChannelDataReceived(object sender, ActorChannelDataReceivedEventArgs e)
         {
             if (DataReceived != null)
             {
-                DataReceived(sender, e);
+                DataReceived(sender, new ActorDataReceivedEventArgs(e.ActorChannelIdentifier, e.RemoteActor, e.Data, e.DataOffset, e.DataLength));
             }
         }
 

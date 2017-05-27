@@ -35,7 +35,7 @@ namespace Redola.Rpc
             return _messageHandlers;
         }
 
-        protected override void OnActorDataReceived(object sender, ActorDataReceivedEventArgs e)
+        protected override void OnActorChannelDataReceived(object sender, ActorChannelDataReceivedEventArgs e)
         {
             var envelope = this.Decoder.DecodeEnvelope(e.Data, e.DataOffset, e.DataLength);
 
@@ -80,7 +80,7 @@ namespace Redola.Rpc
                 _log.WarnFormat("OnActorDataReceived, cannot handle message [{0}] from remote actor [{1}].",
                     envelope.MessageType, e.RemoteActor);
 
-            base.OnActorDataReceived(sender, e);
+            base.OnActorChannelDataReceived(sender, e);
         }
 
         public void Send<T>(ActorIdentity remoteActor, ActorMessageEnvelope<T> message)

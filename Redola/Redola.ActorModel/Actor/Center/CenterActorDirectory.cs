@@ -154,19 +154,19 @@ namespace Redola.ActorModel
             var actorLookupRequestBuffer = _channelConfiguration.FrameBuilder.EncodeFrame(actorLookupRequest);
 
             ManualResetEventSlim waitingResponse = new ManualResetEventSlim(false);
-            ActorDataReceivedEventArgs lookupResponseEvent = null;
-            EventHandler<ActorDataReceivedEventArgs> onDataReceived =
+            ActorChannelDataReceivedEventArgs lookupResponseEvent = null;
+            EventHandler<ActorChannelDataReceivedEventArgs> onDataReceived =
                 (s, e) =>
                 {
                     lookupResponseEvent = e;
                     waitingResponse.Set();
                 };
 
-            _centerChannel.DataReceived += onDataReceived;
+            _centerChannel.ChannelDataReceived += onDataReceived;
             _centerChannel.BeginSend(_centerActor.Type, _centerActor.Name, actorLookupRequestBuffer);
 
             bool lookedup = waitingResponse.Wait(TimeSpan.FromSeconds(15));
-            _centerChannel.DataReceived -= onDataReceived;
+            _centerChannel.ChannelDataReceived -= onDataReceived;
             waitingResponse.Dispose();
 
             if (lookedup && lookupResponseEvent != null)

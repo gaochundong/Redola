@@ -40,14 +40,19 @@ namespace Redola.ActorModel
             _keepAliveTimeoutTimer = new Timer(new TimerCallback((s) => OnKeepAliveTimeout()), null, Timeout.Infinite, Timeout.Infinite);
         }
 
+        public string Identifier
+        {
+            get
+            {
+                return _connector.ConnectToEndPoint.ToString();
+            }
+        }
+
         public bool Active
         {
             get
             {
-                if (_connector == null)
-                    return false;
-                else
-                    return _connector.IsConnected && IsHandshaked;
+                return _connector.IsConnected && IsHandshaked;
             }
         }
 
@@ -107,9 +112,9 @@ namespace Redola.ActorModel
 
                 if (_remoteActor != null)
                 {
-                    if (Disconnected != null)
+                    if (ChannelDisconnected != null)
                     {
-                        Disconnected(this, new ActorDisconnectedEventArgs(this.ConnectToEndPoint.ToString(), _remoteActor));
+                        ChannelDisconnected(this, new ActorChannelDisconnectedEventArgs(this.Identifier, _remoteActor));
                     }
                 }
 
@@ -191,9 +196,9 @@ namespace Redola.ActorModel
                     _log.DebugFormat("Handshake with remote [{0}] successfully, RemoteActor[{1}].", this.ConnectToEndPoint, _remoteActor);
 
                     IsHandshaked = true;
-                    if (Connected != null)
+                    if (ChannelConnected != null)
                     {
-                        Connected(this, new ActorConnectedEventArgs(this.ConnectToEndPoint.ToString(), _remoteActor));
+                        ChannelConnected(this, new ActorChannelConnectedEventArgs(this.Identifier, _remoteActor));
                     }
 
                     _connector.DataReceived += OnDataReceived;
@@ -243,16 +248,16 @@ namespace Redola.ActorModel
             }
             else
             {
-                if (DataReceived != null)
+                if (ChannelDataReceived != null)
                 {
-                    DataReceived(this, new ActorDataReceivedEventArgs(this.ConnectToEndPoint.ToString(), _remoteActor, e.Data, e.DataOffset, e.DataLength));
+                    ChannelDataReceived(this, new ActorChannelDataReceivedEventArgs(this.Identifier, _remoteActor, e.Data, e.DataOffset, e.DataLength));
                 }
             }
         }
 
-        public event EventHandler<ActorConnectedEventArgs> Connected;
-        public event EventHandler<ActorDisconnectedEventArgs> Disconnected;
-        public event EventHandler<ActorDataReceivedEventArgs> DataReceived;
+        public event EventHandler<ActorChannelConnectedEventArgs> ChannelConnected;
+        public event EventHandler<ActorChannelDisconnectedEventArgs> ChannelDisconnected;
+        public event EventHandler<ActorChannelDataReceivedEventArgs> ChannelDataReceived;
 
         public void Send(string actorType, string actorName, byte[] data)
         {

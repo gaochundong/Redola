@@ -33,9 +33,9 @@ namespace Redola.ActorModel
                 throw new InvalidOperationException("The local actor has already been activated.");
 
             var channel = _factory.BuildLocalActor(localActor);
-            channel.Connected += OnActorConnected;
-            channel.Disconnected += OnActorDisconnected;
-            channel.DataReceived += OnActorDataReceived;
+            channel.ChannelConnected += OnActorChannelConnected;
+            channel.ChannelDisconnected += OnActorChannelDisconnected;
+            channel.ChannelDataReceived += OnActorChannelDataReceived;
 
             try
             {
@@ -133,14 +133,14 @@ namespace Redola.ActorModel
 
         private bool ActivateChannel(IActorChannel channel)
         {
-            channel.Connected += OnActorConnected;
-            channel.Disconnected += OnActorDisconnected;
-            channel.DataReceived += OnActorDataReceived;
+            channel.ChannelConnected += OnActorChannelConnected;
+            channel.ChannelDisconnected += OnActorChannelDisconnected;
+            channel.ChannelDataReceived += OnActorChannelDataReceived;
 
             ManualResetEventSlim waitingConnected = new ManualResetEventSlim(false);
             object connectedSender = null;
-            ActorConnectedEventArgs connectedEvent = null;
-            EventHandler<ActorConnectedEventArgs> onConnected =
+            ActorChannelConnectedEventArgs connectedEvent = null;
+            EventHandler<ActorChannelConnectedEventArgs> onConnected =
                 (s, e) =>
                 {
                     connectedSender = s;
@@ -148,11 +148,11 @@ namespace Redola.ActorModel
                     waitingConnected.Set();
                 };
 
-            channel.Connected += onConnected;
+            channel.ChannelConnected += onConnected;
             channel.Open();
 
             bool connected = waitingConnected.Wait(TimeSpan.FromSeconds(5));
-            channel.Connected -= onConnected;
+            channel.ChannelConnected -= onConnected;
             waitingConnected.Dispose();
 
             if (connected && channel.Active)
@@ -187,45 +187,77 @@ namespace Redola.ActorModel
 
         private void CloseChannel(IActorChannel channel)
         {
-            channel.Connected -= OnActorConnected;
-            channel.Disconnected -= OnActorDisconnected;
-            channel.DataReceived -= OnActorDataReceived;
+            channel.ChannelConnected -= OnActorChannelConnected;
+            channel.ChannelDisconnected -= OnActorChannelDisconnected;
+            channel.ChannelDataReceived -= OnActorChannelDataReceived;
             channel.Close();
         }
 
-        private void OnActorConnected(object sender, ActorConnectedEventArgs e)
+        private void OnActorChannelConnected(object sender, ActorChannelConnectedEventArgs e)
         {
-            _channels.TryAdd(e.RemoteActor.GetKey(), (IActorChannel)sender);
-            _actorKeys.TryAdd(e.RemoteActor.GetKey(), e.RemoteActor);
-
-            if (Connected != null)
+            lock (_syncLock)
             {
-                Connected(sender, e);
+                var remoteActorKey = e.RemoteActor.GetKey();
+                var channel = _channels.Get(remoteActorKey);
+                if (channel != null)
+                {
+                    if (channel.Identifier != e.ActorChannelIdentifier)
+                    {
+                        var removedChannel = _channels.Remove(remoteActorKey);
+                        var removedActorIdentity = _actorKeys.Remove(remoteActorKey);
+
+                        CloseChannel(channel);
+
+                        if (ChannelDisconnected != null)
+                        {
+                            ChannelDisconnected(sender, new ActorChannelDisconnectedEventArgs(removedChannel.Identifier, removedActorIdentity));
+                        }
+                    }
+                }
+
+                _channels.Add(remoteActorKey, (IActorChannel)sender);
+                _actorKeys.Add(remoteActorKey, e.RemoteActor);
+
+                if (ChannelConnected != null)
+                {
+                    ChannelConnected(sender, e);
+                }
             }
         }
 
-        private void OnActorDisconnected(object sender, ActorDisconnectedEventArgs e)
+        private void OnActorChannelDisconnected(object sender, ActorChannelDisconnectedEventArgs e)
         {
-            _channels.Remove(e.RemoteActor.GetKey());
-            _actorKeys.Remove(e.RemoteActor.GetKey());
-
-            if (Disconnected != null)
+            lock (_syncLock)
             {
-                Disconnected(sender, e);
+                var remoteActorKey = e.RemoteActor.GetKey();
+                var channel = _channels.Get(remoteActorKey);
+                if (channel != null)
+                {
+                    if (channel.Identifier == e.ActorChannelIdentifier)
+                    {
+                        var removedChannel = _channels.Remove(remoteActorKey);
+                        var removedActorIdentity = _actorKeys.Remove(remoteActorKey);
+
+                        if (ChannelDisconnected != null)
+                        {
+                            ChannelDisconnected(sender, new ActorChannelDisconnectedEventArgs(removedChannel.Identifier, removedActorIdentity));
+                        }
+                    }
+                }
             }
         }
 
-        private void OnActorDataReceived(object sender, ActorDataReceivedEventArgs e)
+        private void OnActorChannelDataReceived(object sender, ActorChannelDataReceivedEventArgs e)
         {
-            if (DataReceived != null)
+            if (ChannelDataReceived != null)
             {
-                DataReceived(sender, e);
+                ChannelDataReceived(sender, e);
             }
         }
 
-        public event EventHandler<ActorConnectedEventArgs> Connected;
-        public event EventHandler<ActorDisconnectedEventArgs> Disconnected;
-        public event EventHandler<ActorDataReceivedEventArgs> DataReceived;
+        public event EventHandler<ActorChannelConnectedEventArgs> ChannelConnected;
+        public event EventHandler<ActorChannelDisconnectedEventArgs> ChannelDisconnected;
+        public event EventHandler<ActorChannelDataReceivedEventArgs> ChannelDataReceived;
 
         public List<ActorIdentity> GetAllActors()
         {

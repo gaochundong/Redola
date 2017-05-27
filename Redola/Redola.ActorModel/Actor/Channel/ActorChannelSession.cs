@@ -26,12 +26,13 @@ namespace Redola.ActorModel
             _localActor = localActor;
             _channelConfiguration = channelConfiguration;
             _innerSession = session;
+            this.SessionKey = _innerSession.SessionKey;
 
             _keepAliveTracker = KeepAliveTracker.Create(KeepAliveInterval, new TimerCallback((s) => OnKeepAlive()));
             _keepAliveTimeoutTimer = new Timer(new TimerCallback((s) => OnKeepAliveTimeout()), null, Timeout.Infinite, Timeout.Infinite);
         }
 
-        public string SessionKey { get { return _innerSession.SessionKey; } }
+        public string SessionKey { get; private set; }
 
         public bool Active
         {

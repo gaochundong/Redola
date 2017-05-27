@@ -33,14 +33,19 @@ namespace Redola.ActorModel
             _channelConfiguration = channelConfiguration;
         }
 
+        public string Identifier
+        {
+            get
+            {
+                return _listener.ListenedEndPoint.ToString();
+            }
+        }
+
         public bool Active
         {
             get
             {
-                if (_listener == null)
-                    return false;
-                else
-                    return _listener.IsListening;
+                return _listener.IsListening;
             }
         }
 
@@ -99,9 +104,9 @@ namespace Redola.ActorModel
                 _actorKeys.Remove(remoteActor.GetKey());
                 _log.DebugFormat("Disconnected with remote [{0}], SessionKey[{1}].", remoteActor, e.SessionKey);
 
-                if (Disconnected != null)
+                if (ChannelDisconnected != null)
                 {
-                    Disconnected(this, new ActorDisconnectedEventArgs(e.SessionKey, remoteActor));
+                    ChannelDisconnected(this, new ActorChannelDisconnectedEventArgs(e.SessionKey, remoteActor));
                 }
             }
         }
@@ -120,24 +125,24 @@ namespace Redola.ActorModel
             _remoteActors.Add(e.SessionKey, e.RemoteActor);
             _actorKeys.Add(e.RemoteActor.GetKey(), e.SessionKey);
 
-            if (Connected != null)
+            if (ChannelConnected != null)
             {
-                Connected(this, new ActorConnectedEventArgs(e.SessionKey, e.RemoteActor));
+                ChannelConnected(this, new ActorChannelConnectedEventArgs(e.SessionKey, e.RemoteActor));
             }
         }
 
         private void OnSessionDataReceived(object sender, ActorChannelSessionDataReceivedEventArgs e)
         {
-            if (DataReceived != null)
+            if (ChannelDataReceived != null)
             {
-                DataReceived(this, new ActorDataReceivedEventArgs(
+                ChannelDataReceived(this, new ActorChannelDataReceivedEventArgs(
                     e.SessionKey, e.RemoteActor, e.Data, e.DataOffset, e.DataLength));
             }
         }
 
-        public event EventHandler<ActorConnectedEventArgs> Connected;
-        public event EventHandler<ActorDisconnectedEventArgs> Disconnected;
-        public event EventHandler<ActorDataReceivedEventArgs> DataReceived;
+        public event EventHandler<ActorChannelConnectedEventArgs> ChannelConnected;
+        public event EventHandler<ActorChannelDisconnectedEventArgs> ChannelDisconnected;
+        public event EventHandler<ActorChannelDataReceivedEventArgs> ChannelDataReceived;
 
         public void Send(string actorType, string actorName, byte[] data)
         {

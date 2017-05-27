@@ -15,9 +15,10 @@ namespace Redola.ActorModel
             if (session == null)
                 throw new ArgumentNullException("session");
             _session = session;
+            this.SessionKey = _session.SessionKey;
         }
 
-        public string SessionKey { get { return _session.SessionKey; } }
+        public string SessionKey { get; private set; }
         public DateTime StartTime { get { return _session.StartTime; } }
         public bool Active { get { return _session.State == TcpSocketConnectionState.Connected; } }
         public IPEndPoint RemoteEndPoint { get { return _session.RemoteEndPoint; } }

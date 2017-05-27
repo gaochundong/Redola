@@ -59,6 +59,9 @@
     <Compile Include="Actor\Configuration\ByLocalXmlFile\XmlActorConfiguration.cs" />
     <Compile Include="Actor\Configuration\ByLocalXmlFile\LocalXmlFileActorConfiguration.cs" />
     <Compile Include="Actor\Directory\IActorDirectory.cs" />
+    <Compile Include="Actor\EventArgs\ActorConnectedEventArgs.cs" />
+    <Compile Include="Actor\EventArgs\ActorDataReceivedEventArgs.cs" />
+    <Compile Include="Actor\EventArgs\ActorDisconnectedEventArgs.cs" />
     <Compile Include="Actor\Exception\ActorNotFoundException.cs" />
     <Compile Include="Actor\Configuration\ByAppConfig\AppConfigActorSettingItems.cs" />
     <Compile Include="Actor\Channel\Configuration\ActorChannelConfiguration.cs" />
@@ -68,9 +71,9 @@
     <Compile Include="Actor\Channel\ActorConnectorReconnectableChannel.cs" />
     <Compile Include="Actor\Channel\ActorListenerChannel.cs" />
     <Compile Include="Actor\Channel\ActorChannelSession.cs" />
-    <Compile Include="Actor\Channel\EventArgs\ActorConnectedEventArgs.cs" />
-    <Compile Include="Actor\Channel\EventArgs\ActorDataReceivedEventArgs.cs" />
-    <Compile Include="Actor\Channel\EventArgs\ActorDisconnectedEventArgs.cs" />
+    <Compile Include="Actor\Channel\EventArgs\ActorChannelConnectedEventArgs.cs" />
+    <Compile Include="Actor\Channel\EventArgs\ActorChannelDataReceivedEventArgs.cs" />
+    <Compile Include="Actor\Channel\EventArgs\ActorChannelDisconnectedEventArgs.cs" />
     <Compile Include="Actor\Channel\EventArgs\ActorChannelSessionHandshakedEventArgs.cs" />
     <Compile Include="Actor\Channel\EventArgs\ActorChannelSessionDataReceivedEventArgs.cs" />
     <Compile Include="Actor\Channel\IActorChannel.cs" />
