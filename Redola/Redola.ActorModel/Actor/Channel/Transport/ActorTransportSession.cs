@@ -30,7 +30,10 @@ namespace Redola.ActorModel
 
         public void Close()
         {
-            _session.Close();
+            if (_session.State != TcpSocketConnectionState.Closed)
+            {
+                _session.Close();
+            }
         }
 
         public void Send(byte[] data)

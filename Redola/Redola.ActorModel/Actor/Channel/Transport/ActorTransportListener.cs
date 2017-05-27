@@ -12,7 +12,7 @@ namespace Redola.ActorModel
         private ILog _log = Logger.Get<ActorTransportListener>();
         private TcpSocketServer _server;
         private ConcurrentDictionary<string, ActorTransportSession> _sessions
-            = new ConcurrentDictionary<string, ActorTransportSession>(); // sessionKey -> session
+            = new ConcurrentDictionary<string, ActorTransportSession>(); // SessionKey -> Session
 
         public ActorTransportListener(IPEndPoint listenedEndPoint, ActorTransportConfiguration transportConfiguration)
         {

@@ -13,8 +13,29 @@ namespace Redola.ActorModel
         private ILog _log = Logger.Get<ActorChannelManager>();
         private ActorIdentity _localActor;
         private ActorChannelFactory _factory;
-        private ConcurrentDictionary<string, IActorChannel> _channels = new ConcurrentDictionary<string, IActorChannel>(); // ActorKey -> IActorChannel
-        private ConcurrentDictionary<string, ActorIdentity> _actorKeys = new ConcurrentDictionary<string, ActorIdentity>(); // ActorKey -> ActorIdentity
+
+        private class ChannelItem
+        {
+            public ChannelItem() { }
+            public ChannelItem(string channelIdentifier, IActorChannel channel)
+            {
+                this.ChannelIdentifier = channelIdentifier;
+                this.Channel = channel;
+            }
+
+            public string ChannelIdentifier { get; set; }
+            public IActorChannel Channel { get; set; }
+
+            public string RemoteActorKey { get; set; }
+            public ActorIdentity RemoteActor { get; set; }
+
+            public override string ToString()
+            {
+                return string.Format("{0}#{1}", ChannelIdentifier, RemoteActor);
+            }
+        }
+        private ConcurrentDictionary<string, ChannelItem> _channels
+            = new ConcurrentDictionary<string, ChannelItem>(); // ChannelIdentifier -> ChannelItem
         private readonly object _syncLock = new object();
 
         public ActorChannelManager(ActorChannelFactory factory)
@@ -42,8 +63,11 @@ namespace Redola.ActorModel
                 channel.Open();
 
                 _localActor = localActor;
-                _channels.Add(_localActor.GetKey(), channel);
-                _actorKeys.Add(_localActor.GetKey(), _localActor);
+
+                var item = new ChannelItem(channel.Identifier, channel);
+                item.RemoteActorKey = _localActor.GetKey();
+                item.RemoteActor = _localActor;
+                _channels.Add(channel.Identifier, item);
 
                 _log.DebugFormat("Local actor [{0}] is activated.", _localActor);
             }
@@ -64,24 +88,28 @@ namespace Redola.ActorModel
         public IActorChannel GetActorChannel(string actorType, string actorName)
         {
             if (string.IsNullOrEmpty(actorName))
-                return GetActorChannel(actorType);
-
-            IActorChannel channel = null;
-            var actorKey = ActorIdentity.GetKey(actorType, actorName);
-
-            if (_channels.TryGetValue(actorKey, out channel))
             {
-                return channel;
+                return GetActorChannel(actorType);
+            }
+
+            var actorKey = ActorIdentity.GetKey(actorType, actorName);
+            ChannelItem item = null;
+
+            item = _channels.Values.FirstOrDefault(i => i.RemoteActorKey == actorKey);
+            if (item != null)
+            {
+                return item.Channel;
             }
 
             lock (_syncLock)
             {
-                if (_channels.TryGetValue(actorKey, out channel))
+                item = _channels.Values.FirstOrDefault(i => i.RemoteActorKey == actorKey);
+                if (item != null)
                 {
-                    return channel;
+                    return item.Channel;
                 }
 
-                channel = _factory.BuildActorChannel(_localActor, actorType, actorName);
+                var channel = _factory.BuildActorChannel(_localActor, actorType, actorName);
                 bool activated = ActivateChannel(channel);
                 if (activated)
                 {
@@ -100,24 +128,23 @@ namespace Redola.ActorModel
             if (string.IsNullOrEmpty(actorType))
                 throw new ArgumentNullException("actorType");
 
-            IActorChannel channel = null;
-            var actor = _actorKeys.Values.Where(a => a.Type == actorType).OrderBy(t => Guid.NewGuid()).FirstOrDefault();
+            ChannelItem item = null;
 
-            if (actor != null && _channels.TryGetValue(actor.GetKey(), out channel))
+            item = _channels.Values.Where(i => i.RemoteActor.Type == actorType).OrderBy(t => Guid.NewGuid()).FirstOrDefault();
+            if (item != null)
             {
-                return channel;
+                return item.Channel;
             }
 
             lock (_syncLock)
             {
-                actor = _actorKeys.Values.Where(a => a.Type == actorType).OrderBy(t => Guid.NewGuid()).FirstOrDefault();
-
-                if (actor != null && _channels.TryGetValue(actor.GetKey(), out channel))
+                item = _channels.Values.Where(i => i.RemoteActor.Type == actorType).OrderBy(t => Guid.NewGuid()).FirstOrDefault();
+                if (item != null)
                 {
-                    return channel;
+                    return item.Channel;
                 }
 
-                channel = _factory.BuildActorChannel(_localActor, actorType);
+                var channel = _factory.BuildActorChannel(_localActor, actorType);
                 bool activated = ActivateChannel(channel);
                 if (activated)
                 {
@@ -157,8 +184,10 @@ namespace Redola.ActorModel
 
             if (connected && channel.Active)
             {
-                _channels.Add(connectedEvent.RemoteActor.GetKey(), (IActorChannel)connectedSender);
-                _actorKeys.Add(connectedEvent.RemoteActor.GetKey(), connectedEvent.RemoteActor);
+                var item = new ChannelItem(((IActorChannel)connectedSender).Identifier, (IActorChannel)connectedSender);
+                item.RemoteActorKey = connectedEvent.RemoteActor.GetKey();
+                item.RemoteActor = connectedEvent.RemoteActor;
+                _channels.TryAdd(channel.Identifier, item);
                 return true;
             }
             else
@@ -172,16 +201,15 @@ namespace Redola.ActorModel
         {
             if (string.IsNullOrEmpty(actorType))
                 throw new ArgumentNullException("actorType");
-            return _actorKeys.Values.Where(a => a.Type == actorType).Select(v => _channels.Get(v.GetKey()));
+            return _channels.Values.Where(i => i.RemoteActor.Type == actorType).Select(v => v.Channel);
         }
 
         public void CloseAllChannels()
         {
-            foreach (var channel in _channels)
+            foreach (var item in _channels.Values)
             {
-                CloseChannel(channel.Value);
-                _channels.Remove(channel.Key);
-                _actorKeys.Remove(channel.Key);
+                CloseChannel(item.Channel);
+                _channels.Remove(item.ChannelIdentifier);
             }
         }
 
@@ -195,52 +223,54 @@ namespace Redola.ActorModel
 
         private void OnActorChannelConnected(object sender, ActorChannelConnectedEventArgs e)
         {
-            lock (_syncLock)
+            var item = _channels.Get(e.ChannelIdentifier);
+            if (item != null)
             {
-                var remoteActorKey = e.RemoteActor.GetKey();
-                var channel = _channels.Get(remoteActorKey);
-                if (channel != null)
+                if (item.RemoteActorKey != e.RemoteActor.GetKey())
                 {
-                    if (channel.Identifier != e.ActorChannelIdentifier)
+                    _channels.Remove(e.ChannelIdentifier);
+                    CloseChannel(item.Channel);
+
+                    if (item.RemoteActor != null)
                     {
-                        var removedChannel = _channels.Remove(remoteActorKey);
-                        var removedActorIdentity = _actorKeys.Remove(remoteActorKey);
-
-                        CloseChannel(channel);
-
                         if (ChannelDisconnected != null)
                         {
-                            ChannelDisconnected(sender, new ActorChannelDisconnectedEventArgs(removedChannel.Identifier, removedActorIdentity));
+                            ChannelDisconnected(sender, new ActorChannelDisconnectedEventArgs(item.ChannelIdentifier, item.RemoteActor));
                         }
                     }
                 }
-
-                _channels.Add(remoteActorKey, (IActorChannel)sender);
-                _actorKeys.Add(remoteActorKey, e.RemoteActor);
-
-                if (ChannelConnected != null)
+                else
                 {
-                    ChannelConnected(sender, e);
+                    return;
                 }
+            }
+
+            item = new ChannelItem(((IActorChannel)sender).Identifier, (IActorChannel)sender);
+            item.RemoteActorKey = e.RemoteActor.GetKey();
+            item.RemoteActor = e.RemoteActor;
+            _channels.TryAdd(item.ChannelIdentifier, item);
+
+            if (ChannelConnected != null)
+            {
+                ChannelConnected(sender, e);
             }
         }
 
         private void OnActorChannelDisconnected(object sender, ActorChannelDisconnectedEventArgs e)
         {
-            lock (_syncLock)
+            var item = _channels.Get(e.ChannelIdentifier);
+            if (item != null)
             {
-                var remoteActorKey = e.RemoteActor.GetKey();
-                var channel = _channels.Get(remoteActorKey);
-                if (channel != null)
+                if (item.RemoteActorKey == e.RemoteActor.GetKey())
                 {
-                    if (channel.Identifier == e.ActorChannelIdentifier)
-                    {
-                        var removedChannel = _channels.Remove(remoteActorKey);
-                        var removedActorIdentity = _actorKeys.Remove(remoteActorKey);
+                    _channels.Remove(e.ChannelIdentifier);
+                    CloseChannel(item.Channel);
 
+                    if (item.RemoteActor != null)
+                    {
                         if (ChannelDisconnected != null)
                         {
-                            ChannelDisconnected(sender, new ActorChannelDisconnectedEventArgs(removedChannel.Identifier, removedActorIdentity));
+                            ChannelDisconnected(sender, new ActorChannelDisconnectedEventArgs(item.ChannelIdentifier, item.RemoteActor));
                         }
                     }
                 }
@@ -261,7 +291,7 @@ namespace Redola.ActorModel
 
         public List<ActorIdentity> GetAllActors()
         {
-            return _actorKeys.Values.ToList();
+            return _channels.Values.Select(c => c.RemoteActor).Where(f => f != null).ToList();
         }
     }
 }

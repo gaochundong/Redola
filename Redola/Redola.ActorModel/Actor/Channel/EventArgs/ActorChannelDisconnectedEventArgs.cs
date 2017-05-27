@@ -4,23 +4,23 @@ namespace Redola.ActorModel
 {
     public class ActorChannelDisconnectedEventArgs : EventArgs
     {
-        public ActorChannelDisconnectedEventArgs(string actorChannelIdentifier, ActorIdentity remoteActor)
+        public ActorChannelDisconnectedEventArgs(string channelIdentifier, ActorIdentity remoteActor)
         {
-            if (string.IsNullOrEmpty(actorChannelIdentifier))
-                throw new ArgumentNullException("actorChannelIdentifier");
+            if (string.IsNullOrEmpty(channelIdentifier))
+                throw new ArgumentNullException("channelIdentifier");
             if (remoteActor == null)
                 throw new ArgumentNullException("remoteActor");
 
-            this.ActorChannelIdentifier = actorChannelIdentifier;
+            this.ChannelIdentifier = channelIdentifier;
             this.RemoteActor = remoteActor;
         }
 
-        public string ActorChannelIdentifier { get; private set; }
+        public string ChannelIdentifier { get; private set; }
         public ActorIdentity RemoteActor { get; private set; }
 
         public override string ToString()
         {
-            return string.Format("ActorChannelIdentifier[{0}], RemoteActor[{1}]", ActorChannelIdentifier, RemoteActor);
+            return string.Format("ChannelIdentifier[{0}], RemoteActor[{1}]", ChannelIdentifier, RemoteActor);
         }
     }
 }

@@ -153,7 +153,7 @@ namespace Redola.ActorModel
 
                 var copySession = _innerSession;
                 _innerSession = null;
-                if (copySession != null)
+                if (copySession != null && copySession.Active)
                 {
                     copySession.Close();
                 }

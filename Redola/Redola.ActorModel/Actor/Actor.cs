@@ -119,7 +119,7 @@ namespace Redola.ActorModel
         {
             if (Connected != null)
             {
-                Connected(sender, new ActorConnectedEventArgs(e.ActorChannelIdentifier, e.RemoteActor));
+                Connected(sender, new ActorConnectedEventArgs(e.ChannelIdentifier, e.RemoteActor));
             }
         }
 
@@ -127,7 +127,7 @@ namespace Redola.ActorModel
         {
             if (Disconnected != null)
             {
-                Disconnected(sender, new ActorDisconnectedEventArgs(e.ActorChannelIdentifier, e.RemoteActor));
+                Disconnected(sender, new ActorDisconnectedEventArgs(e.ChannelIdentifier, e.RemoteActor));
             }
         }
 
@@ -135,7 +135,7 @@ namespace Redola.ActorModel
         {
             if (DataReceived != null)
             {
-                DataReceived(sender, new ActorDataReceivedEventArgs(e.ActorChannelIdentifier, e.RemoteActor, e.Data, e.DataOffset, e.DataLength));
+                DataReceived(sender, new ActorDataReceivedEventArgs(e.ChannelIdentifier, e.RemoteActor, e.Data, e.DataOffset, e.DataLength));
             }
         }
 
@@ -157,8 +157,7 @@ namespace Redola.ActorModel
 
         public void Send(ActorIdentity remoteActor, byte[] data, int offset, int count)
         {
-            var channel = _manager.GetActorChannel(remoteActor);
-            channel.Send(remoteActor.Type, remoteActor.Name, data, offset, count);
+            Send(remoteActor.Type, remoteActor.Name, data, offset, count);
         }
 
         public void BeginSend(ActorIdentity remoteActor, byte[] data)
@@ -168,8 +167,7 @@ namespace Redola.ActorModel
 
         public void BeginSend(ActorIdentity remoteActor, byte[] data, int offset, int count)
         {
-            var channel = _manager.GetActorChannel(remoteActor);
-            channel.BeginSend(remoteActor.Type, remoteActor.Name, data, offset, count);
+            BeginSend(remoteActor.Type, remoteActor.Name, data, offset, count);
         }
 
         public IAsyncResult BeginSend(ActorIdentity remoteActor, byte[] data, AsyncCallback callback, object state)
@@ -179,14 +177,12 @@ namespace Redola.ActorModel
 
         public IAsyncResult BeginSend(ActorIdentity remoteActor, byte[] data, int offset, int count, AsyncCallback callback, object state)
         {
-            var channel = _manager.GetActorChannel(remoteActor);
-            return channel.BeginSend(remoteActor.Type, remoteActor.Name, data, offset, count, callback, state);
+            return BeginSend(remoteActor.Type, remoteActor.Name, data, offset, count, callback, state);
         }
 
         public void EndSend(ActorIdentity remoteActor, IAsyncResult asyncResult)
         {
-            var channel = _manager.GetActorChannel(remoteActor);
-            channel.EndSend(remoteActor.Type, remoteActor.Name, asyncResult);
+            EndSend(remoteActor.Type, remoteActor.Name, asyncResult);
         }
 
         public void Send(string remoteActorType, string remoteActorName, byte[] data)
