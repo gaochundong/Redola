@@ -102,9 +102,9 @@ namespace Redola.ActorModel
             var session = new ActorTransportSession(e.Session);
             _sessions.Add(e.Session.SessionKey, session);
 
-            if (Connected != null)
+            if (TransportConnected != null)
             {
-                Connected(this, new ActorTransportSessionConnectedEventArgs(session));
+                TransportConnected(this, new ActorTransportSessionConnectedEventArgs(session));
             }
         }
 
@@ -114,9 +114,9 @@ namespace Redola.ActorModel
             ActorTransportSession session = null;
             if (_sessions.TryRemove(e.Session.SessionKey, out session))
             {
-                if (Disconnected != null)
+                if (TransportDisconnected != null)
                 {
-                    Disconnected(this, new ActorTransportSessionDisconnectedEventArgs(session));
+                    TransportDisconnected(this, new ActorTransportSessionDisconnectedEventArgs(session));
                 }
             }
         }
@@ -126,9 +126,9 @@ namespace Redola.ActorModel
             ActorTransportSession session = null;
             if (_sessions.TryGetValue(e.Session.SessionKey, out session))
             {
-                if (DataReceived != null)
+                if (TransportDataReceived != null)
                 {
-                    DataReceived(this, new ActorTransportSessionDataReceivedEventArgs(session, e.Data, e.DataOffset, e.DataLength));
+                    TransportDataReceived(this, new ActorTransportSessionDataReceivedEventArgs(session, e.Data, e.DataOffset, e.DataLength));
                 }
             }
         }
@@ -227,8 +227,8 @@ namespace Redola.ActorModel
             _server.BeginBroadcast(data);
         }
 
-        public event EventHandler<ActorTransportSessionConnectedEventArgs> Connected;
-        public event EventHandler<ActorTransportSessionDisconnectedEventArgs> Disconnected;
-        public event EventHandler<ActorTransportSessionDataReceivedEventArgs> DataReceived;
+        public event EventHandler<ActorTransportSessionConnectedEventArgs> TransportConnected;
+        public event EventHandler<ActorTransportSessionDisconnectedEventArgs> TransportDisconnected;
+        public event EventHandler<ActorTransportSessionDataReceivedEventArgs> TransportDataReceived;
     }
 }

@@ -73,8 +73,8 @@ namespace Redola.ActorModel
                 if (_connector.IsConnected)
                     return;
 
-                _connector.Connected += OnConnected;
-                _connector.Disconnected += OnDisconnected;
+                _connector.TransportConnected += OnTransportConnected;
+                _connector.TransportDisconnected += OnTransportDisconnected;
 
                 _connector.Connect();
 
@@ -101,9 +101,9 @@ namespace Redola.ActorModel
                     _keepAliveTimeoutTimer.Change(Timeout.Infinite, Timeout.Infinite);
                 }
 
-                _connector.Connected -= OnConnected;
-                _connector.Disconnected -= OnDisconnected;
-                _connector.DataReceived -= OnDataReceived;
+                _connector.TransportConnected -= OnTransportConnected;
+                _connector.TransportDisconnected -= OnTransportDisconnected;
+                _connector.TransportDataReceived -= OnTransportDataReceived;
 
                 if (_connector.IsConnected)
                 {
@@ -157,12 +157,12 @@ namespace Redola.ActorModel
                     waitingHandshaked.Set();
                 };
 
-            _connector.DataReceived += onHandshaked;
+            _connector.TransportDataReceived += onHandshaked;
             _log.DebugFormat("Handshake request from local actor [{0}].", _localActor);
             _connector.Send(actorHandshakeRequestBuffer);
 
             bool handshaked = waitingHandshaked.Wait(timeout);
-            _connector.DataReceived -= onHandshaked;
+            _connector.TransportDataReceived -= onHandshaked;
             waitingHandshaked.Dispose();
 
             if (handshaked && handshakeResponseEvent != null)
@@ -201,7 +201,7 @@ namespace Redola.ActorModel
                         ChannelConnected(this, new ActorChannelConnectedEventArgs(this.Identifier, _remoteActor));
                     }
 
-                    _connector.DataReceived += OnDataReceived;
+                    _connector.TransportDataReceived += OnTransportDataReceived;
                     _keepAliveTracker.StartTimer();
                 }
             }
@@ -212,17 +212,17 @@ namespace Redola.ActorModel
             }
         }
 
-        protected virtual void OnConnected(object sender, ActorTransportConnectedEventArgs e)
+        protected virtual void OnTransportConnected(object sender, ActorTransportConnectedEventArgs e)
         {
             Task.Factory.StartNew(() => { Handshake(); }, TaskCreationOptions.PreferFairness);
         }
 
-        protected virtual void OnDisconnected(object sender, ActorTransportDisconnectedEventArgs e)
+        protected virtual void OnTransportDisconnected(object sender, ActorTransportDisconnectedEventArgs e)
         {
             Close();
         }
 
-        protected virtual void OnDataReceived(object sender, ActorTransportDataReceivedEventArgs e)
+        protected virtual void OnTransportDataReceived(object sender, ActorTransportDataReceivedEventArgs e)
         {
             _keepAliveTracker.OnDataReceived();
             StopKeepAliveTimeoutTimer(); // intend to disable keep-alive timeout when receive anything

@@ -105,9 +105,9 @@ namespace Redola.ActorModel
         {
             _log.DebugFormat("TCP server [{0}] has connected.", e);
 
-            if (Connected != null)
+            if (TransportConnected != null)
             {
-                Connected(this, new ActorTransportConnectedEventArgs(this.ConnectToEndPoint.ToString()));
+                TransportConnected(this, new ActorTransportConnectedEventArgs(this.ConnectToEndPoint.ToString()));
             }
         }
 
@@ -115,17 +115,17 @@ namespace Redola.ActorModel
         {
             _log.DebugFormat("TCP server [{0}] has disconnected.", e);
 
-            if (Disconnected != null)
+            if (TransportDisconnected != null)
             {
-                Disconnected(this, new ActorTransportDisconnectedEventArgs(this.ConnectToEndPoint.ToString()));
+                TransportDisconnected(this, new ActorTransportDisconnectedEventArgs(this.ConnectToEndPoint.ToString()));
             }
         }
 
         protected virtual void OnServerDataReceived(object sender, TcpServerDataReceivedEventArgs e)
         {
-            if (DataReceived != null)
+            if (TransportDataReceived != null)
             {
-                DataReceived(this, new ActorTransportDataReceivedEventArgs(this.ConnectToEndPoint.ToString(), e.Data, e.DataOffset, e.DataLength));
+                TransportDataReceived(this, new ActorTransportDataReceivedEventArgs(this.ConnectToEndPoint.ToString(), e.Data, e.DataOffset, e.DataLength));
             }
         }
 
@@ -173,8 +173,8 @@ namespace Redola.ActorModel
             _client.EndSend(asyncResult);
         }
 
-        public event EventHandler<ActorTransportConnectedEventArgs> Connected;
-        public event EventHandler<ActorTransportDisconnectedEventArgs> Disconnected;
-        public event EventHandler<ActorTransportDataReceivedEventArgs> DataReceived;
+        public event EventHandler<ActorTransportConnectedEventArgs> TransportConnected;
+        public event EventHandler<ActorTransportDisconnectedEventArgs> TransportDisconnected;
+        public event EventHandler<ActorTransportDataReceivedEventArgs> TransportDataReceived;
     }
 }

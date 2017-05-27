@@ -27,15 +27,15 @@ namespace Redola.ActorModel
             CloseRetryTimer();
         }
 
-        protected override void OnConnected(object sender, ActorTransportConnectedEventArgs e)
+        protected override void OnTransportConnected(object sender, ActorTransportConnectedEventArgs e)
         {
-            base.OnConnected(sender, e);
+            base.OnTransportConnected(sender, e);
             CloseRetryTimer();
         }
 
-        protected override void OnDisconnected(object sender, ActorTransportDisconnectedEventArgs e)
+        protected override void OnTransportDisconnected(object sender, ActorTransportDisconnectedEventArgs e)
         {
-            base.OnDisconnected(sender, e);
+            base.OnTransportDisconnected(sender, e);
             SetupRetryTimer();
         }
 
