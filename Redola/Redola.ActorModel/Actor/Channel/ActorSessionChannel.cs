@@ -5,9 +5,9 @@ using Redola.ActorModel.Framing;
 
 namespace Redola.ActorModel
 {
-    public class ActorChannelSession : IDisposable
+    public class ActorSessionChannel : IActorChannel, IDisposable
     {
-        private ILog _log = Logger.Get<ActorChannelSession>();
+        private ILog _log = Logger.Get<ActorSessionChannel>();
         private ActorIdentity _localActor = null;
         private ActorChannelConfiguration _channelConfiguration = null;
         private ActorTransportSession _innerSession = null;
@@ -18,7 +18,7 @@ namespace Redola.ActorModel
         private Timer _keepAliveTimeoutTimer;
         private bool _disposed = false;
 
-        public ActorChannelSession(
+        public ActorSessionChannel(
             ActorIdentity localActor,
             ActorChannelConfiguration channelConfiguration,
             ActorTransportSession session)
@@ -34,6 +34,11 @@ namespace Redola.ActorModel
 
         public string SessionKey { get; private set; }
 
+        public string Identifier
+        {
+            get { return string.Format("Session#{0}", this.SessionKey); }
+        }
+
         public bool Active
         {
             get
@@ -47,7 +52,7 @@ namespace Redola.ActorModel
 
         public bool IsHandshaked { get; private set; }
 
-        public void OnDataReceived(byte[] data, int dataOffset, int dataLength)
+        public void OnDataReceived(object sender, byte[] data, int dataOffset, int dataLength)
         {
             if (!IsHandshaked)
             {
@@ -79,9 +84,9 @@ namespace Redola.ActorModel
                 }
                 else
                 {
-                    if (DataReceived != null)
+                    if (SessionDataReceived != null)
                     {
-                        DataReceived(this, new ActorChannelSessionDataReceivedEventArgs(
+                        SessionDataReceived(this, new ActorChannelSessionDataReceivedEventArgs(
                             this, _remoteActor, data, dataOffset, dataLength));
                     }
                 }
@@ -126,22 +131,52 @@ namespace Redola.ActorModel
                 IsHandshaked = true;
 
                 _log.DebugFormat("Handshake with remote [{0}] successfully, SessionKey[{1}].", _remoteActor, this.SessionKey);
-                if (Handshaked != null)
+                if (SessionHandshaked != null)
                 {
-                    Handshaked(this, new ActorChannelSessionHandshakedEventArgs(this, _remoteActor));
+                    SessionHandshaked(this, new ActorChannelSessionHandshakedEventArgs(this, _remoteActor));
                 }
 
                 _keepAliveTracker.StartTimer();
             }
         }
 
-        public event EventHandler<ActorChannelSessionHandshakedEventArgs> Handshaked;
-        public event EventHandler<ActorChannelSessionDataReceivedEventArgs> DataReceived;
+        protected event EventHandler<ActorChannelSessionHandshakedEventArgs> SessionHandshaked;
+        protected event EventHandler<ActorChannelSessionDataReceivedEventArgs> SessionDataReceived;
+
+        private void OnSessionHandshaked(object sender, ActorChannelSessionHandshakedEventArgs e)
+        {
+            if (ChannelConnected != null)
+            {
+                ChannelConnected(this, new ActorChannelConnectedEventArgs(this.Identifier, e.RemoteActor));
+            }
+        }
+
+        private void OnSessionDataReceived(object sender, ActorChannelSessionDataReceivedEventArgs e)
+        {
+            if (ChannelDataReceived != null)
+            {
+                ChannelDataReceived(this, new ActorChannelDataReceivedEventArgs(
+                    this.Identifier, e.RemoteActor, e.Data, e.DataOffset, e.DataLength));
+            }
+        }
+
+        public event EventHandler<ActorChannelConnectedEventArgs> ChannelConnected;
+        public event EventHandler<ActorChannelDisconnectedEventArgs> ChannelDisconnected;
+        public event EventHandler<ActorChannelDataReceivedEventArgs> ChannelDataReceived;
+
+        public void Open()
+        {
+            this.SessionHandshaked += OnSessionHandshaked;
+            this.SessionDataReceived += OnSessionDataReceived;
+        }
 
         public void Close()
         {
             try
             {
+                this.SessionHandshaked -= OnSessionHandshaked;
+                this.SessionDataReceived -= OnSessionDataReceived;
+
                 if (_keepAliveTracker != null)
                 {
                     _keepAliveTracker.StopTimer();
@@ -156,6 +191,11 @@ namespace Redola.ActorModel
                 if (copySession != null && copySession.Active)
                 {
                     copySession.Close();
+
+                    if (ChannelDisconnected != null)
+                    {
+                        ChannelDisconnected(this, new ActorChannelDisconnectedEventArgs(this.Identifier, _remoteActor));
+                    }
                 }
             }
             finally
@@ -363,5 +403,10 @@ namespace Redola.ActorModel
         }
 
         #endregion
+
+        public override string ToString()
+        {
+            return this.Identifier;
+        }
     }
 }

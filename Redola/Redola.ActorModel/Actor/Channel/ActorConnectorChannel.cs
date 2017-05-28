@@ -44,7 +44,7 @@ namespace Redola.ActorModel
         {
             get
             {
-                return _connector.ConnectToEndPoint.ToString();
+                return string.Format("Connect#{0}", _connector.ConnectToEndPoint.ToString());
             }
         }
 
@@ -457,5 +457,10 @@ namespace Redola.ActorModel
         }
 
         #endregion
+
+        public override string ToString()
+        {
+            return this.Identifier;
+        }
     }
 }

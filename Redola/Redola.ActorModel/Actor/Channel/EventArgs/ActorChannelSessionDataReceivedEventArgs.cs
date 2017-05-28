@@ -5,7 +5,7 @@ namespace Redola.ActorModel
     public class ActorChannelSessionDataReceivedEventArgs : EventArgs
     {
         public ActorChannelSessionDataReceivedEventArgs(
-            ActorChannelSession session,
+            ActorSessionChannel session,
             ActorIdentity remoteActor,
             byte[] data)
             : this(session, remoteActor, data, 0, data.Length)
@@ -13,7 +13,7 @@ namespace Redola.ActorModel
         }
 
         public ActorChannelSessionDataReceivedEventArgs(
-            ActorChannelSession session,
+            ActorSessionChannel session,
             ActorIdentity remoteActor,
             byte[] data, int dataOffset, int dataLength)
         {
@@ -30,7 +30,7 @@ namespace Redola.ActorModel
         }
 
         public string SessionKey { get { return this.Session.SessionKey; } }
-        public ActorChannelSession Session { get; private set; }
+        public ActorSessionChannel Session { get; private set; }
         public ActorIdentity RemoteActor { get; private set; }
 
         public byte[] Data { get; private set; }
