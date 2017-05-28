@@ -17,6 +17,10 @@ namespace Redola.ActorModel
         public const string ActorAddressKey = @"ActorAddress";
         public const string ActorPortKey = @"ActorPort";
 
+        public const string KeepAliveIntervalKey = @"KeepAliveIntervalByMilliseconds";
+        public const string KeepAliveTimeoutKey = @"KeepAliveTimeoutByMilliseconds";
+        public const string KeepAliveEnabledKey = @"KeepAliveEnabled";
+
         private static AppConfigActorSettingItems _instance = new AppConfigActorSettingItems();
 
         public static AppConfigActorSettingItems Singleton()
@@ -34,6 +38,11 @@ namespace Redola.ActorModel
             }
 
             return default(T);
+        }
+
+        public bool ContainsItem(string itemName)
+        {
+            return ConfigurationManager.AppSettings.AllKeys.Contains(itemName);
         }
     }
 }

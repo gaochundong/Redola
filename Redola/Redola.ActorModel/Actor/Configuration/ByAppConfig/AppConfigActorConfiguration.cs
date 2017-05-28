@@ -62,6 +62,37 @@ namespace Redola.ActorModel
             return actor;
         }
 
+        protected override ActorChannelConfiguration BuildChannelConfiguration()
+        {
+            var configuration = new ActorChannelConfiguration();
+
+            if (_appConfig.ContainsItem(AppConfigActorSettingItems.KeepAliveIntervalKey))
+            {
+                var keepAliveInterval = _appConfig.GetItem<int>(AppConfigActorSettingItems.KeepAliveIntervalKey);
+                if (keepAliveInterval < 1)
+                    throw new InvalidProgramException(
+                        string.Format("Item [{0}] setting is invalid.", AppConfigActorSettingItems.KeepAliveIntervalKey));
+                configuration.KeepAliveInterval = TimeSpan.FromMilliseconds(keepAliveInterval);
+            }
+
+            if (_appConfig.ContainsItem(AppConfigActorSettingItems.KeepAliveTimeoutKey))
+            {
+                var keepAliveTimeout = _appConfig.GetItem<int>(AppConfigActorSettingItems.KeepAliveTimeoutKey);
+                if (keepAliveTimeout < 1)
+                    throw new InvalidProgramException(
+                        string.Format("Item [{0}] setting is invalid.", AppConfigActorSettingItems.KeepAliveTimeoutKey));
+                configuration.KeepAliveTimeout = TimeSpan.FromMilliseconds(keepAliveTimeout);
+            }
+
+            if (_appConfig.ContainsItem(AppConfigActorSettingItems.KeepAliveEnabledKey))
+            {
+                var keepAliveEnabled = _appConfig.GetItem<bool>(AppConfigActorSettingItems.KeepAliveEnabledKey);
+                configuration.KeepAliveEnabled = keepAliveEnabled;
+            }
+
+            return configuration;
+        }
+
         public static AppConfigActorConfiguration Load()
         {
             var configuration = new AppConfigActorConfiguration();
