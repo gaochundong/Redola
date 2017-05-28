@@ -314,6 +314,8 @@ namespace Redola.ActorModel
 
         public TimeSpan KeepAliveTimeout { get { return _channelConfiguration.KeepAliveTimeout; } }
 
+        public bool KeepAliveEnabled { get { return _channelConfiguration.KeepAliveEnabled; } }
+
         private void StartKeepAliveTimeoutTimer()
         {
             _keepAliveTimeoutTimer.Change((int)KeepAliveTimeout.TotalMilliseconds, Timeout.Infinite);
@@ -337,6 +339,9 @@ namespace Redola.ActorModel
                 try
                 {
                     if (!Active)
+                        return;
+
+                    if (!KeepAliveEnabled)
                         return;
 
                     if (_localActor.Type == _remoteActor.Type
