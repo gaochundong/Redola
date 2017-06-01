@@ -30,8 +30,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Cowboy.Sockets, Version=1.3.13.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Cowboy.Sockets.1.3.13.0\lib\net46\Cowboy.Sockets.dll</HintPath>
+    <Reference Include="Cowboy.Sockets, Version=1.3.14.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Cowboy.Sockets.1.3.14.0\lib\net46\Cowboy.Sockets.dll</HintPath>
     </Reference>
     <Reference Include="Logrila.Logging, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Logrila.Logging.1.0.3.0\lib\net46\Logrila.Logging.dll</HintPath>
