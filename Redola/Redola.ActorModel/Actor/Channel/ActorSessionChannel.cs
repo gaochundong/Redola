@@ -205,6 +205,8 @@ namespace Redola.ActorModel
             }
         }
 
+        #region Send
+
         public void Send(string actorType, string actorName, byte[] data)
         {
             Send(actorType, actorName, data, 0, data.Length);
@@ -307,6 +309,8 @@ namespace Redola.ActorModel
         {
             _innerSession.EndSend(asyncResult);
         }
+
+        #endregion
 
         #region Keep Alive
 

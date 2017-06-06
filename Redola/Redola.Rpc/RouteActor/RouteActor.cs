@@ -57,7 +57,7 @@ namespace Redola.Rpc
                     {
                         string remoteActorType, remoteActorName;
                         ActorIdentity.Decode(target, out remoteActorType, out remoteActorName);
-                        this.BeginSend(remoteActorType, remoteActorName, envelope.ToBytes(this.Encoder));
+                        this.Send(remoteActorType, remoteActorName, envelope.ToBytes(this.Encoder));
                         handled = true;
                     }
                 }

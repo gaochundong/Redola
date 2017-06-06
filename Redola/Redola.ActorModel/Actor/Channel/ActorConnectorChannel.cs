@@ -259,6 +259,8 @@ namespace Redola.ActorModel
         public event EventHandler<ActorChannelDisconnectedEventArgs> ChannelDisconnected;
         public event EventHandler<ActorChannelDataReceivedEventArgs> ChannelDataReceived;
 
+        #region Send
+
         public void Send(string actorType, string actorName, byte[] data)
         {
             Send(actorType, actorName, data, 0, data.Length);
@@ -361,6 +363,8 @@ namespace Redola.ActorModel
         {
             _connector.EndSend(asyncResult);
         }
+
+        #endregion
 
         #region Keep Alive
 

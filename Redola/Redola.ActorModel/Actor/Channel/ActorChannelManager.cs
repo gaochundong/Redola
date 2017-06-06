@@ -69,7 +69,7 @@ namespace Redola.ActorModel
                 item.RemoteActor = _localActor;
                 _channels.Add(channel.Identifier, item);
 
-                _log.DebugFormat("Local actor [{0}] is activated.", _localActor);
+                _log.DebugFormat("Local actor [{0}] is activated on channel [{1}].", _localActor, channel);
             }
             catch
             {
