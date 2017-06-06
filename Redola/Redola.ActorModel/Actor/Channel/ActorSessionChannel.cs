@@ -174,9 +174,6 @@ namespace Redola.ActorModel
         {
             try
             {
-                this.SessionHandshaked -= OnSessionHandshaked;
-                this.SessionDataReceived -= OnSessionDataReceived;
-
                 if (_keepAliveTracker != null)
                 {
                     _keepAliveTracker.StopTimer();
@@ -191,11 +188,14 @@ namespace Redola.ActorModel
                 if (copySession != null && copySession.Active)
                 {
                     copySession.Close();
+                }
 
-                    if (ChannelDisconnected != null)
-                    {
-                        ChannelDisconnected(this, new ActorChannelDisconnectedEventArgs(this.Identifier, _remoteActor));
-                    }
+                this.SessionHandshaked -= OnSessionHandshaked;
+                this.SessionDataReceived -= OnSessionDataReceived;
+
+                if (ChannelDisconnected != null)
+                {
+                    ChannelDisconnected(this, new ActorChannelDisconnectedEventArgs(this.Identifier, _remoteActor));
                 }
             }
             finally

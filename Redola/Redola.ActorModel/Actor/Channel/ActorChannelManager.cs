@@ -215,10 +215,10 @@ namespace Redola.ActorModel
 
         private void CloseChannel(IActorChannel channel)
         {
+            channel.Close();
             channel.ChannelConnected -= OnActorChannelConnected;
             channel.ChannelDisconnected -= OnActorChannelDisconnected;
             channel.ChannelDataReceived -= OnActorChannelDataReceived;
-            channel.Close();
         }
 
         private void OnActorChannelConnected(object sender, ActorChannelConnectedEventArgs e)

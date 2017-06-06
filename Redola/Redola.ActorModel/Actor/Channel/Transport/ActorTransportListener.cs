@@ -62,10 +62,10 @@ namespace Redola.ActorModel
             }
             catch
             {
+                _server.Shutdown();
                 _server.ClientConnected -= OnClientConnected;
                 _server.ClientDisconnected -= OnClientDisconnected;
                 _server.ClientDataReceived -= OnClientDataReceived;
-                _server.Shutdown();
                 _server = null;
 
                 throw;
@@ -82,10 +82,10 @@ namespace Redola.ActorModel
 
             try
             {
+                _server.Shutdown();
                 _server.ClientConnected -= OnClientConnected;
                 _server.ClientDisconnected -= OnClientDisconnected;
                 _server.ClientDataReceived -= OnClientDataReceived;
-                _server.Shutdown();
                 _server = null;
             }
             catch { }

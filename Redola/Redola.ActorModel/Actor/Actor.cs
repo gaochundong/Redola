@@ -97,10 +97,10 @@ namespace Redola.ActorModel
         {
             if (_manager != null)
             {
+                _manager.CloseAllChannels();
                 _manager.ChannelConnected -= OnActorChannelConnected;
                 _manager.ChannelDisconnected -= OnActorChannelDisconnected;
                 _manager.ChannelDataReceived -= OnActorChannelDataReceived;
-                _manager.CloseAllChannels();
                 _manager = null;
             }
             if (_directory != null)

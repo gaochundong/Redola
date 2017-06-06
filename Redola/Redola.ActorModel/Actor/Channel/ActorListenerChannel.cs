@@ -83,10 +83,6 @@ namespace Redola.ActorModel
 
         public void Close()
         {
-            _listener.TransportConnected -= OnTransportConnected;
-            _listener.TransportDisconnected -= OnTransportDisconnected;
-            _listener.TransportDataReceived -= OnTransportDataReceived;
-
             _listener.Stop();
 
             foreach (var item in _sessions.Values)
@@ -94,6 +90,10 @@ namespace Redola.ActorModel
                 CloseSession(item.Session);
             }
             _sessions.Clear();
+
+            _listener.TransportConnected -= OnTransportConnected;
+            _listener.TransportDisconnected -= OnTransportDisconnected;
+            _listener.TransportDataReceived -= OnTransportDataReceived;
         }
 
         private void OpenSession(ActorSessionChannel session)
@@ -106,10 +106,10 @@ namespace Redola.ActorModel
 
         private void CloseSession(ActorSessionChannel session)
         {
+            session.Close();
             session.ChannelConnected -= OnSessionChannelConnected;
             session.ChannelDisconnected -= OnSessionChannelDisconnected;
             session.ChannelDataReceived -= OnSessionChannelDataReceived;
-            session.Close();
         }
 
         private void OnTransportConnected(object sender, ActorTransportSessionConnectedEventArgs e)

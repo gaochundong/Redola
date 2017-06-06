@@ -60,10 +60,10 @@ namespace Redola.ActorModel
             }
             catch
             {
+                _client.Close();
                 _client.ServerConnected -= OnServerConnected;
                 _client.ServerDisconnected -= OnServerDisconnected;
                 _client.ServerDataReceived -= OnServerDataReceived;
-                _client.Close();
                 _client = null;
 
                 throw;
@@ -80,10 +80,10 @@ namespace Redola.ActorModel
 
             try
             {
+                _client.Close();
                 _client.ServerConnected -= OnServerConnected;
                 _client.ServerDisconnected -= OnServerDisconnected;
                 _client.ServerDataReceived -= OnServerDataReceived;
-                _client.Close();
                 _client = null;
             }
             catch { }
