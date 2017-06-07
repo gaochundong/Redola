@@ -78,16 +78,6 @@ namespace Redola.Rpc
             _localActor.BeginSend(remoteActor, message);
         }
 
-        public IAsyncResult BeginSend<T>(ActorIdentity remoteActor, ActorMessageEnvelope<T> message, AsyncCallback callback, object state)
-        {
-            return _localActor.BeginSend(remoteActor, message, callback, state);
-        }
-
-        public void EndSend(ActorIdentity remoteActor, IAsyncResult asyncResult)
-        {
-            _localActor.EndSend(remoteActor, asyncResult);
-        }
-
         public void Send<T>(string remoteActorType, string remoteActorName, ActorMessageEnvelope<T> message)
         {
             _localActor.Send(remoteActorType, remoteActorName, message);
@@ -98,11 +88,6 @@ namespace Redola.Rpc
             _localActor.BeginSend(remoteActorType, remoteActorName, message);
         }
 
-        public IAsyncResult BeginSend<T>(string remoteActorType, string remoteActorName, ActorMessageEnvelope<T> message, AsyncCallback callback, object state)
-        {
-            return _localActor.BeginSend(remoteActorType, remoteActorName, message, callback, state);
-        }
-
         public void Send<T>(string remoteActorType, ActorMessageEnvelope<T> message)
         {
             _localActor.Send(remoteActorType, message);
@@ -111,11 +96,6 @@ namespace Redola.Rpc
         public void BeginSend<T>(string remoteActorType, ActorMessageEnvelope<T> message)
         {
             _localActor.BeginSend(remoteActorType, message);
-        }
-
-        public void EndSend(string remoteActorType, string remoteActorName, IAsyncResult asyncResult)
-        {
-            _localActor.EndSend(remoteActorType, remoteActorName, asyncResult);
         }
 
         #endregion

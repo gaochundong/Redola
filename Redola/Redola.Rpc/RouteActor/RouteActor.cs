@@ -93,11 +93,6 @@ namespace Redola.Rpc
             BeginSend(remoteActor, message.ToBytes(this.Encoder));
         }
 
-        public IAsyncResult BeginSend<T>(ActorIdentity remoteActor, ActorMessageEnvelope<T> message, AsyncCallback callback, object state)
-        {
-            return BeginSend(remoteActor, message.ToBytes(this.Encoder), callback, state);
-        }
-
         public void Send<T>(string remoteActorType, string remoteActorName, ActorMessageEnvelope<T> message)
         {
             Send(remoteActorType, remoteActorName, message.ToBytes(this.Encoder));
@@ -106,11 +101,6 @@ namespace Redola.Rpc
         public void BeginSend<T>(string remoteActorType, string remoteActorName, ActorMessageEnvelope<T> message)
         {
             BeginSend(remoteActorType, remoteActorName, message.ToBytes(this.Encoder));
-        }
-
-        public IAsyncResult BeginSend<T>(string remoteActorType, string remoteActorName, ActorMessageEnvelope<T> message, AsyncCallback callback, object state)
-        {
-            return BeginSend(remoteActorType, remoteActorName, message.ToBytes(this.Encoder), callback, state);
         }
 
         public void Send<T>(string remoteActorType, ActorMessageEnvelope<T> message)

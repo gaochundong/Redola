@@ -14,18 +14,13 @@ namespace Redola.ActorModel
         event EventHandler<ActorChannelDisconnectedEventArgs> ChannelDisconnected;
         event EventHandler<ActorChannelDataReceivedEventArgs> ChannelDataReceived;
 
-        void Send(string actorType, string actorName, byte[] data);
-        void Send(string actorType, string actorName, byte[] data, int offset, int count);
-        void BeginSend(string actorType, string actorName, byte[] data);
-        void BeginSend(string actorType, string actorName, byte[] data, int offset, int count);
+        void Send(string identifier, byte[] data);
+        void Send(string identifier, byte[] data, int offset, int count);
+        void BeginSend(string identifier, byte[] data);
+        void BeginSend(string identifier, byte[] data, int offset, int count);
 
-        void Send(string actorType, byte[] data);
-        void Send(string actorType, byte[] data, int offset, int count);
-        void BeginSend(string actorType, byte[] data);
-        void BeginSend(string actorType, byte[] data, int offset, int count);
-
-        IAsyncResult BeginSend(string actorType, string actorName, byte[] data, AsyncCallback callback, object state);
-        IAsyncResult BeginSend(string actorType, string actorName, byte[] data, int offset, int count, AsyncCallback callback, object state);
-        void EndSend(string actorType, string actorName, IAsyncResult asyncResult);
+        IAsyncResult BeginSend(string identifier, byte[] data, AsyncCallback callback, object state);
+        IAsyncResult BeginSend(string identifier, byte[] data, int offset, int count, AsyncCallback callback, object state);
+        void EndSend(string identifier, IAsyncResult asyncResult);
     }
 }

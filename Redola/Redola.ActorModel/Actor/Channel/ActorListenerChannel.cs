@@ -174,88 +174,56 @@ namespace Redola.ActorModel
         public event EventHandler<ActorChannelDisconnectedEventArgs> ChannelDisconnected;
         public event EventHandler<ActorChannelDataReceivedEventArgs> ChannelDataReceived;
 
-        public void Send(string actorType, string actorName, byte[] data)
+        public void Send(string identifier, byte[] data)
         {
-            Send(actorType, actorName, data, 0, data.Length);
+            Send(identifier, data, 0, data.Length);
         }
 
-        public void Send(string actorType, string actorName, byte[] data, int offset, int count)
+        public void Send(string identifier, byte[] data, int offset, int count)
         {
-            var actorKey = ActorIdentity.GetKey(actorType, actorName);
-            var item = _sessions.Values.FirstOrDefault(s => s.RemoteActorKey == actorKey);
+            var item = _sessions.Values.FirstOrDefault(s => s.Session.Identifier == identifier);
             if (item != null)
             {
-                item.Session.Send(actorType, actorName, data, offset, count);
+                item.Session.Send(identifier, data, offset, count);
             }
         }
 
-        public void BeginSend(string actorType, string actorName, byte[] data)
+        public void BeginSend(string identifier, byte[] data)
         {
-            BeginSend(actorType, actorName, data, 0, data.Length);
+            BeginSend(identifier, data, 0, data.Length);
         }
 
-        public void BeginSend(string actorType, string actorName, byte[] data, int offset, int count)
+        public void BeginSend(string identifier, byte[] data, int offset, int count)
         {
-            var actorKey = ActorIdentity.GetKey(actorType, actorName);
-            var item = _sessions.Values.FirstOrDefault(s => s.RemoteActorKey == actorKey);
+            var item = _sessions.Values.FirstOrDefault(s => s.Session.Identifier == identifier);
             if (item != null)
             {
-                item.Session.BeginSend(actorType, actorName, data, offset, count);
+                item.Session.BeginSend(identifier, data, offset, count);
             }
         }
 
-        public void Send(string actorType, byte[] data)
+        public IAsyncResult BeginSend(string identifier, byte[] data, AsyncCallback callback, object state)
         {
-            Send(actorType, data, 0, data.Length);
+            return BeginSend(identifier, data, 0, data.Length, callback, state);
         }
 
-        public void Send(string actorType, byte[] data, int offset, int count)
+        public IAsyncResult BeginSend(string identifier, byte[] data, int offset, int count, AsyncCallback callback, object state)
         {
-            var item = _sessions.Values.Where(a => a.RemoteActor.Type == actorType).OrderBy(t => Guid.NewGuid()).FirstOrDefault();
+            var item = _sessions.Values.FirstOrDefault(s => s.Session.Identifier == identifier);
             if (item != null)
             {
-                item.Session.Send(actorType, data, offset, count);
-            }
-        }
-
-        public void BeginSend(string actorType, byte[] data)
-        {
-            BeginSend(actorType, data, 0, data.Length);
-        }
-
-        public void BeginSend(string actorType, byte[] data, int offset, int count)
-        {
-            var item = _sessions.Values.Where(a => a.RemoteActor.Type == actorType).OrderBy(t => Guid.NewGuid()).FirstOrDefault();
-            if (item != null)
-            {
-                item.Session.BeginSend(actorType, data, offset, count);
-            }
-        }
-
-        public IAsyncResult BeginSend(string actorType, string actorName, byte[] data, AsyncCallback callback, object state)
-        {
-            return BeginSend(actorType, actorName, data, 0, data.Length, callback, state);
-        }
-
-        public IAsyncResult BeginSend(string actorType, string actorName, byte[] data, int offset, int count, AsyncCallback callback, object state)
-        {
-            var actorKey = ActorIdentity.GetKey(actorType, actorName);
-            var item = _sessions.Values.FirstOrDefault(s => s.RemoteActorKey == actorKey);
-            if (item != null)
-            {
-                return item.Session.BeginSend(actorType, actorName, data, offset, count, callback, state);
+                return item.Session.BeginSend(identifier, data, offset, count, callback, state);
             }
 
             return null;
         }
 
-        public void EndSend(string actorType, string actorName, IAsyncResult asyncResult)
+        public void EndSend(string identifier, IAsyncResult asyncResult)
         {
-            var actorKey = ActorIdentity.GetKey(actorType, actorName);
-            var item = _sessions.Values.FirstOrDefault(s => s.RemoteActorKey == actorKey);
+            var item = _sessions.Values.FirstOrDefault(s => s.Session.Identifier == identifier);
             if (item != null)
             {
-                _listener.EndSendTo(item.SessionKey, asyncResult);
+                item.Session.EndSend(identifier, asyncResult);
             }
         }
 

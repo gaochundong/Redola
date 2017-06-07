@@ -163,7 +163,7 @@ namespace Redola.ActorModel
                 };
 
             _centerChannel.ChannelDataReceived += onDataReceived;
-            _centerChannel.BeginSend(_centerActor.Type, _centerActor.Name, actorLookupRequestBuffer);
+            _centerChannel.BeginSend(_centerChannel.Identifier, actorLookupRequestBuffer);
 
             bool lookedup = waitingResponse.Wait(TimeSpan.FromSeconds(15));
             _centerChannel.ChannelDataReceived -= onDataReceived;

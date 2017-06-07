@@ -207,97 +207,46 @@ namespace Redola.ActorModel
 
         #region Send
 
-        public void Send(string actorType, string actorName, byte[] data)
+        public void Send(string identifier, byte[] data)
         {
-            Send(actorType, actorName, data, 0, data.Length);
+            Send(identifier, data, 0, data.Length);
         }
 
-        public void Send(string actorType, string actorName, byte[] data, int offset, int count)
+        public void Send(string identifier, byte[] data, int offset, int count)
         {
-            var actorKey = ActorIdentity.GetKey(actorType, actorName);
-
-            if (_remoteActor == null)
+            if (this.Identifier != identifier)
                 throw new InvalidOperationException(
-                    string.Format("The remote actor has not been connected, Type[{0}], Name[{1}].", actorType, actorName));
-            if (_remoteActor.GetKey() != actorKey)
-                throw new InvalidOperationException(
-                    string.Format("Remote actor key not matched, [{0}]:[{1}].", _remoteActor.GetKey(), actorKey));
+                    string.Format("Channel identifier is not matched, Identifier[{0}].", identifier));
 
             _innerSession.Send(data, offset, count);
             _keepAliveTracker.OnDataSent();
         }
 
-        public void BeginSend(string actorType, string actorName, byte[] data)
+        public void BeginSend(string identifier, byte[] data)
         {
-            BeginSend(actorType, actorName, data, 0, data.Length);
+            BeginSend(identifier, data, 0, data.Length);
         }
 
-        public void BeginSend(string actorType, string actorName, byte[] data, int offset, int count)
+        public void BeginSend(string identifier, byte[] data, int offset, int count)
         {
-            var actorKey = ActorIdentity.GetKey(actorType, actorName);
-
-            if (_remoteActor == null)
+            if (this.Identifier != identifier)
                 throw new InvalidOperationException(
-                    string.Format("The remote actor has not been connected, Type[{0}], Name[{1}].", actorType, actorName));
-            if (_remoteActor.GetKey() != actorKey)
-                throw new InvalidOperationException(
-                    string.Format("Remote actor key not matched, [{0}]:[{1}].", _remoteActor.GetKey(), actorKey));
+                    string.Format("Channel identifier is not matched, Identifier[{0}].", identifier));
 
             _innerSession.BeginSend(data, offset, count);
             _keepAliveTracker.OnDataSent();
         }
 
-        public void Send(string actorType, byte[] data)
+        public IAsyncResult BeginSend(string identifier, byte[] data, AsyncCallback callback, object state)
         {
-            Send(actorType, data, 0, data.Length);
+            return BeginSend(identifier, data, 0, data.Length, callback, state);
         }
 
-        public void Send(string actorType, byte[] data, int offset, int count)
+        public IAsyncResult BeginSend(string identifier, byte[] data, int offset, int count, AsyncCallback callback, object state)
         {
-            if (_remoteActor == null)
+            if (this.Identifier != identifier)
                 throw new InvalidOperationException(
-                    string.Format("The remote actor has not been connected, Type[{0}].", actorType));
-            if (_remoteActor.Type != actorType)
-                throw new InvalidOperationException(
-                    string.Format("Remote actor type not matched, [{0}]:[{1}].", _remoteActor.Type, actorType));
-
-            _innerSession.Send(data, offset, count);
-            _keepAliveTracker.OnDataSent();
-        }
-
-        public void BeginSend(string actorType, byte[] data)
-        {
-            BeginSend(actorType, data, 0, data.Length);
-        }
-
-        public void BeginSend(string actorType, byte[] data, int offset, int count)
-        {
-            if (_remoteActor == null)
-                throw new InvalidOperationException(
-                    string.Format("The remote actor has not been connected, Type[{0}].", actorType));
-            if (_remoteActor.Type != actorType)
-                throw new InvalidOperationException(
-                    string.Format("Remote actor type not matched, [{0}]:[{1}].", _remoteActor.Type, actorType));
-
-            _innerSession.BeginSend(data, offset, count);
-            _keepAliveTracker.OnDataSent();
-        }
-
-        public IAsyncResult BeginSend(string actorType, string actorName, byte[] data, AsyncCallback callback, object state)
-        {
-            return BeginSend(actorType, actorName, data, 0, data.Length, callback, state);
-        }
-
-        public IAsyncResult BeginSend(string actorType, string actorName, byte[] data, int offset, int count, AsyncCallback callback, object state)
-        {
-            var actorKey = ActorIdentity.GetKey(actorType, actorName);
-
-            if (_remoteActor == null)
-                throw new InvalidOperationException(
-                    string.Format("The remote actor has not been connected, Type[{0}], Name[{1}].", actorType, actorName));
-            if (_remoteActor.GetKey() != actorKey)
-                throw new InvalidOperationException(
-                    string.Format("Remote actor key not matched, [{0}]:[{1}].", _remoteActor.GetKey(), actorKey));
+                    string.Format("Channel identifier is not matched, Identifier[{0}].", identifier));
 
             var ar = _innerSession.BeginSend(data, offset, count, callback, state);
             _keepAliveTracker.OnDataSent();
@@ -305,8 +254,12 @@ namespace Redola.ActorModel
             return ar;
         }
 
-        public void EndSend(string actorType, string actorName, IAsyncResult asyncResult)
+        public void EndSend(string identifier, IAsyncResult asyncResult)
         {
+            if (this.Identifier != identifier)
+                throw new InvalidOperationException(
+                    string.Format("Channel identifier is not matched, Identifier[{0}].", identifier));
+
             _innerSession.EndSend(asyncResult);
         }
 

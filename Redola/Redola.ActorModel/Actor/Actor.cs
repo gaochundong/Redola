@@ -170,21 +170,6 @@ namespace Redola.ActorModel
             BeginSend(remoteActor.Type, remoteActor.Name, data, offset, count);
         }
 
-        public IAsyncResult BeginSend(ActorIdentity remoteActor, byte[] data, AsyncCallback callback, object state)
-        {
-            return BeginSend(remoteActor, data, 0, data.Length, callback, state);
-        }
-
-        public IAsyncResult BeginSend(ActorIdentity remoteActor, byte[] data, int offset, int count, AsyncCallback callback, object state)
-        {
-            return BeginSend(remoteActor.Type, remoteActor.Name, data, offset, count, callback, state);
-        }
-
-        public void EndSend(ActorIdentity remoteActor, IAsyncResult asyncResult)
-        {
-            EndSend(remoteActor.Type, remoteActor.Name, asyncResult);
-        }
-
         public void Send(string remoteActorType, string remoteActorName, byte[] data)
         {
             Send(remoteActorType, remoteActorName, data, 0, data.Length);
@@ -193,7 +178,7 @@ namespace Redola.ActorModel
         public void Send(string remoteActorType, string remoteActorName, byte[] data, int offset, int count)
         {
             var channel = _manager.GetActorChannel(remoteActorType, remoteActorName);
-            channel.Send(remoteActorType, remoteActorName, data, offset, count);
+            channel.Send(channel.Identifier, data, offset, count);
         }
 
         public void BeginSend(string remoteActorType, string remoteActorName, byte[] data)
@@ -204,24 +189,7 @@ namespace Redola.ActorModel
         public void BeginSend(string remoteActorType, string remoteActorName, byte[] data, int offset, int count)
         {
             var channel = _manager.GetActorChannel(remoteActorType, remoteActorName);
-            channel.BeginSend(remoteActorType, remoteActorName, data, offset, count);
-        }
-
-        public IAsyncResult BeginSend(string remoteActorType, string remoteActorName, byte[] data, AsyncCallback callback, object state)
-        {
-            return BeginSend(remoteActorType, remoteActorName, data, 0, data.Length, callback, state);
-        }
-
-        public IAsyncResult BeginSend(string remoteActorType, string remoteActorName, byte[] data, int offset, int count, AsyncCallback callback, object state)
-        {
-            var channel = _manager.GetActorChannel(remoteActorType, remoteActorName);
-            return channel.BeginSend(remoteActorType, remoteActorName, data, offset, count, callback, state);
-        }
-
-        public void EndSend(string remoteActorType, string remoteActorName, IAsyncResult asyncResult)
-        {
-            var channel = _manager.GetActorChannel(remoteActorType, remoteActorName);
-            channel.EndSend(remoteActorType, remoteActorName, asyncResult);
+            channel.BeginSend(channel.Identifier, data, offset, count);
         }
 
         public void Send(string remoteActorType, byte[] data)
@@ -232,7 +200,7 @@ namespace Redola.ActorModel
         public void Send(string remoteActorType, byte[] data, int offset, int count)
         {
             var channel = _manager.GetActorChannel(remoteActorType);
-            channel.Send(remoteActorType, data, offset, count);
+            channel.Send(channel.Identifier, data, offset, count);
         }
 
         public void BeginSend(string remoteActorType, byte[] data)
@@ -243,7 +211,33 @@ namespace Redola.ActorModel
         public void BeginSend(string remoteActorType, byte[] data, int offset, int count)
         {
             var channel = _manager.GetActorChannel(remoteActorType);
-            channel.BeginSend(remoteActorType, data, offset, count);
+            channel.BeginSend(channel.Identifier, data, offset, count);
+        }
+
+        #endregion
+
+        #region Reply
+
+        public void Reply(string channelIdentifier, byte[] data)
+        {
+            Reply(channelIdentifier, data, 0, data.Length);
+        }
+
+        public void Reply(string channelIdentifier, byte[] data, int offset, int count)
+        {
+            var channel = _manager.GetActorChannelByIdentifier(channelIdentifier);
+            channel.Send(channelIdentifier, data, offset, count);
+        }
+
+        public void BeginReply(string channelIdentifier, byte[] data)
+        {
+            BeginSend(channelIdentifier, data, 0, data.Length);
+        }
+
+        public void BeginReply(string channelIdentifier, byte[] data, int offset, int count)
+        {
+            var channel = _manager.GetActorChannelByIdentifier(channelIdentifier);
+            channel.BeginSend(channelIdentifier, data, offset, count);
         }
 
         #endregion

@@ -158,6 +158,23 @@ namespace Redola.ActorModel
             }
         }
 
+        public IActorChannel GetActorChannelByIdentifier(string identifier)
+        {
+            if (string.IsNullOrEmpty(identifier))
+                throw new ArgumentNullException("identifier");
+
+            ChannelItem item = null;
+
+            item = _channels.Values.FirstOrDefault(i => i.ChannelIdentifier == identifier);
+            if (item != null)
+            {
+                return item.Channel;
+            }
+
+            throw new ActorNotFoundException(string.Format(
+                "Cannot find channel by identifier, Identifier[{0}].", identifier));
+        }
+
         private bool ActivateChannel(IActorChannel channel)
         {
             channel.ChannelConnected += OnActorChannelConnected;
