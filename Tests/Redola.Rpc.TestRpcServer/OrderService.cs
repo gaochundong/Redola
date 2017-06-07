@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Logrila.Logging;
-using Redola.ActorModel;
 using Redola.Rpc.TestContracts;
 
 namespace Redola.Rpc.TestRpcServer
@@ -28,7 +27,7 @@ namespace Redola.Rpc.TestRpcServer
             return messages;
         }
 
-        private void OnPlaceOrderRequest(ActorIdentity remoteActor, ActorMessageEnvelope<PlaceOrderRequest> request)
+        private void OnPlaceOrderRequest(ActorSender sender, ActorMessageEnvelope<PlaceOrderRequest> request)
         {
             var response = new ActorMessageEnvelope<PlaceOrderResponse>()
             {
@@ -44,7 +43,7 @@ namespace Redola.Rpc.TestRpcServer
 
             _log.DebugFormat("OnPlaceOrderRequest, place order, MessageID[{0}], CorrelationID[{1}].",
                 response.MessageID, response.CorrelationID);
-            this.Actor.BeginSend(remoteActor, response);
+            this.Actor.BeginReply(sender.ChannelIdentifier, response);
         }
 
         public void NotifyOrderChanged(ActorMessageEnvelope<OrderStatusChangedNotification> notification)

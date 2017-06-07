@@ -21,6 +21,61 @@ namespace Redola.Rpc
         {
         }
 
+        #region Blocking
+
+        public ActorMessageEnvelope<P> SendMessage<R, P>(ActorIdentity remoteActor, ActorMessageEnvelope<R> request)
+        {
+            return SendMessage<R, P>(remoteActor, request, TimeSpan.FromSeconds(30));
+        }
+
+        public ActorMessageEnvelope<P> SendMessage<R, P>(ActorIdentity remoteActor, ActorMessageEnvelope<R> request, TimeSpan timeout)
+        {
+            return SendMessage<R, P>(remoteActor.Type, remoteActor.Name, request, TimeSpan.FromSeconds(30));
+        }
+
+        public ActorMessageEnvelope<P> SendMessage<R, P>(string remoteActorType, string remoteActorName, ActorMessageEnvelope<R> request)
+        {
+            return SendMessage<R, P>(remoteActorType, remoteActorName, request, TimeSpan.FromSeconds(30));
+        }
+
+        public ActorMessageEnvelope<P> SendMessage<R, P>(string remoteActorType, string remoteActorName, ActorMessageEnvelope<R> request, TimeSpan timeout)
+        {
+            ActorMessageEnvelope<P> response = default(ActorMessageEnvelope<P>);
+            Action<ActorMessageEnvelope<P>> callback = (r) => { response = r; };
+
+            try
+            {
+                ManualResetEvent waiter = new ManualResetEvent(false);
+                _callbacks.Add(request.MessageID, new BlockingCallbackHolder(request.MessageID, waiter, callback));
+
+                this.BeginSend(remoteActorType, remoteActorName, request.ToBytes(this.Encoder));
+
+                bool responseTimeout = false;
+                if (!waiter.WaitOne(timeout))
+                {
+                    responseTimeout = true;
+                }
+                waiter.Reset();
+                waiter.Dispose();
+                BlockingCallbackHolder throwAway = null;
+                _callbacks.TryRemove(request.MessageID, out throwAway);
+
+                if (responseTimeout)
+                {
+                    throw new TimeoutException(string.Format(
+                        "Timeout when waiting message [{0}] after [{1}] seconds.",
+                        request.MessageType, timeout.TotalSeconds));
+                }
+            }
+            catch (Exception ex)
+            {
+                _log.Error(ex.Message, ex);
+                throw;
+            }
+
+            return response;
+        }
+
         public ActorMessageEnvelope<P> SendMessage<R, P>(string remoteActorType, ActorMessageEnvelope<R> request)
         {
             return SendMessage<R, P>(remoteActorType, request, TimeSpan.FromSeconds(30));
@@ -64,7 +119,9 @@ namespace Redola.Rpc
             return response;
         }
 
-        public void OnSyncMessage<P>(ActorIdentity remoteActor, ActorMessageEnvelope<P> response)
+        #endregion
+
+        public void OnSyncMessage<P>(ActorSender sender, ActorMessageEnvelope<P> response)
         {
             if (response == null
                 || string.IsNullOrWhiteSpace(response.CorrelationID))

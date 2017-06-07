@@ -69,7 +69,7 @@ namespace Redola.Rpc
                 {
                     if (handler.CanHandleMessage(envelope))
                     {
-                        handler.HandleMessage(e.RemoteActor, envelope);
+                        handler.HandleMessage(new ActorSender(e.RemoteActor, e.ChannelIdentifier), envelope);
                         handled = true;
                         break;
                     }
@@ -77,11 +77,13 @@ namespace Redola.Rpc
             }
 
             if (!handled)
-                _log.WarnFormat("OnActorDataReceived, cannot handle message [{0}] from remote actor [{1}].",
-                    envelope.MessageType, e.RemoteActor);
+                _log.WarnFormat("OnActorDataReceived, cannot handle message [{0}] from sender [{1}].",
+                    envelope.MessageType, new ActorSender(e.RemoteActor, e.ChannelIdentifier));
 
             base.OnActorChannelDataReceived(sender, e);
         }
+
+        #region Send
 
         public void Send<T>(ActorIdentity remoteActor, ActorMessageEnvelope<T> message)
         {
@@ -113,6 +115,24 @@ namespace Redola.Rpc
             BeginSend(remoteActorType, message.ToBytes(this.Encoder));
         }
 
+        #endregion
+
+        #region Reply
+
+        public void Reply<T>(string channelIdentifier, ActorMessageEnvelope<T> message)
+        {
+            Reply(channelIdentifier, message.ToBytes(this.Encoder));
+        }
+
+        public void BeginReply<T>(string channelIdentifier, ActorMessageEnvelope<T> message)
+        {
+            BeginReply(channelIdentifier, message.ToBytes(this.Encoder));
+        }
+
+        #endregion
+
+        #region Broadcast
+
         public void Broadcast<T>(string remoteActorType, ActorMessageEnvelope<T> message)
         {
             Broadcast(remoteActorType, message.ToBytes(this.Encoder));
@@ -122,5 +142,7 @@ namespace Redola.Rpc
         {
             BeginBroadcast(remoteActorType, message.ToBytes(this.Encoder));
         }
+
+        #endregion
     }
 }

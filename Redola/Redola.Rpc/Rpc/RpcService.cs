@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Redola.ActorModel;
 
 namespace Redola.Rpc
 {
@@ -45,14 +44,14 @@ namespace Redola.Rpc
 
         protected abstract IEnumerable<RpcMessageContract> RegisterRpcMessageContracts();
 
-        protected override void DoHandleMessage(ActorIdentity remoteActor, ActorMessageEnvelope envelope)
+        protected override void DoHandleMessage(ActorSender sender, ActorMessageEnvelope envelope)
         {
             if (IsRateLimited)
             {
                 _rateLimiter.Wait();
                 try
                 {
-                    base.DoHandleMessage(remoteActor, envelope);
+                    base.DoHandleMessage(sender, envelope);
                 }
                 finally
                 {
@@ -61,7 +60,7 @@ namespace Redola.Rpc
             }
             else
             {
-                base.DoHandleMessage(remoteActor, envelope);
+                base.DoHandleMessage(sender, envelope);
             }
         }
     }

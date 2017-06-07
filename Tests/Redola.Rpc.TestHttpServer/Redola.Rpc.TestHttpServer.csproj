@@ -66,8 +66,8 @@
     <Compile Include="HelloClient.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestContainer.cs" />
-    <Compile Include="TestModule.cs" />
+    <Compile Include="Modules\TestContainer.cs" />
+    <Compile Include="Modules\TestModule.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

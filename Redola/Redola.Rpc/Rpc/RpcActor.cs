@@ -56,7 +56,27 @@ namespace Redola.Rpc
             _localActor.RegisterMessageHandler(service);
         }
 
-        #region Send
+        #region Blocking
+
+        public ActorMessageEnvelope<P> Send<R, P>(ActorIdentity remoteActor, ActorMessageEnvelope<R> request)
+        {
+            return Send<R, P>(remoteActor, request, TimeSpan.FromSeconds(30));
+        }
+
+        public ActorMessageEnvelope<P> Send<R, P>(ActorIdentity remoteActor, ActorMessageEnvelope<R> request, TimeSpan timeout)
+        {
+            return _localActor.SendMessage<R, P>(remoteActor, request, timeout);
+        }
+
+        public ActorMessageEnvelope<P> Send<R, P>(string remoteActorType, string remoteActorName, ActorMessageEnvelope<R> request)
+        {
+            return Send<R, P>(remoteActorType, remoteActorName, request, TimeSpan.FromSeconds(30));
+        }
+
+        public ActorMessageEnvelope<P> Send<R, P>(string remoteActorType, string remoteActorName, ActorMessageEnvelope<R> request, TimeSpan timeout)
+        {
+            return _localActor.SendMessage<R, P>(remoteActorType, remoteActorName, request, timeout);
+        }
 
         public ActorMessageEnvelope<P> Send<R, P>(string remoteActorType, ActorMessageEnvelope<R> request)
         {
@@ -67,6 +87,10 @@ namespace Redola.Rpc
         {
             return _localActor.SendMessage<R, P>(remoteActorType, request, timeout);
         }
+
+        #endregion
+
+        #region Send
 
         public void Send<T>(ActorIdentity remoteActor, ActorMessageEnvelope<T> message)
         {
@@ -96,6 +120,20 @@ namespace Redola.Rpc
         public void BeginSend<T>(string remoteActorType, ActorMessageEnvelope<T> message)
         {
             _localActor.BeginSend(remoteActorType, message);
+        }
+
+        #endregion
+
+        #region Reply
+
+        public void Reply<T>(string channelIdentifier, ActorMessageEnvelope<T> message)
+        {
+            _localActor.Reply(channelIdentifier, message.ToBytes(this.Encoder));
+        }
+
+        public void BeginReply<T>(string channelIdentifier, ActorMessageEnvelope<T> message)
+        {
+            _localActor.BeginReply(channelIdentifier, message.ToBytes(this.Encoder));
         }
 
         #endregion

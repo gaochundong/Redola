@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Logrila.Logging;
-using Redola.ActorModel;
 using Redola.Rpc.TestContracts;
 
 namespace Redola.Rpc.TestRpcServer
@@ -28,7 +27,7 @@ namespace Redola.Rpc.TestRpcServer
             return messages;
         }
 
-        private void OnAddRequest(ActorIdentity remoteActor, ActorMessageEnvelope<AddRequest> request)
+        private void OnAddRequest(ActorSender sender, ActorMessageEnvelope<AddRequest> request)
         {
             var response = new ActorMessageEnvelope<AddResponse>()
             {
@@ -37,7 +36,7 @@ namespace Redola.Rpc.TestRpcServer
                 Message = new AddResponse() { Result = request.Message.X + request.Message.Y },
             };
 
-            this.Actor.BeginSend(remoteActor, response);
+            this.Actor.BeginReply(sender.ChannelIdentifier, response);
         }
     }
 }

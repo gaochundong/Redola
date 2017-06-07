@@ -231,7 +231,7 @@ namespace Redola.ActorModel
 
         public void BeginReply(string channelIdentifier, byte[] data)
         {
-            BeginSend(channelIdentifier, data, 0, data.Length);
+            BeginReply(channelIdentifier, data, 0, data.Length);
         }
 
         public void BeginReply(string channelIdentifier, byte[] data, int offset, int count)

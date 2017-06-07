@@ -42,7 +42,7 @@ namespace Redola.Rpc
             return _admissibleMessages.ContainsKey(envelope.MessageType);
         }
 
-        public void HandleMessage(ActorIdentity remoteActor, ActorMessageEnvelope envelope)
+        public void HandleMessage(ActorSender sender, ActorMessageEnvelope envelope)
         {
             if (GetAdmissibleMessageHandleStrategy(envelope.MessageType).IsAsyncPattern)
             {
@@ -50,7 +50,7 @@ namespace Redola.Rpc
                 {
                     try
                     {
-                        DoHandleMessage(remoteActor, envelope);
+                        DoHandleMessage(sender, envelope);
                     }
                     catch (Exception ex)
                     {
@@ -61,13 +61,13 @@ namespace Redola.Rpc
             }
             else
             {
-                DoHandleMessage(remoteActor, envelope);
+                DoHandleMessage(sender, envelope);
             }
         }
 
-        protected virtual void DoHandleMessage(ActorIdentity remoteActor, ActorMessageEnvelope envelope)
+        protected virtual void DoHandleMessage(ActorSender sender, ActorMessageEnvelope envelope)
         {
-            envelope.HandledBy(this, GetAdmissibleMessageType(envelope.MessageType), this.Actor.Decoder, remoteActor);
+            envelope.HandledBy(this, GetAdmissibleMessageType(envelope.MessageType), this.Actor.Decoder, sender);
         }
     }
 }
