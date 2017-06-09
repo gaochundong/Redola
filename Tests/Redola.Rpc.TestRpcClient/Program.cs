@@ -45,8 +45,11 @@ namespace Redola.Rpc.TestRpcClient
                     else if (Regex.Match(text, @"^hello(\d*)$").Success)
                     {
                         var match = Regex.Match(text, @"^hello(\d*)$");
-                        int totalCalls = 1;
-                        int.TryParse(match.Groups[1].Value, out totalCalls);
+                        int totalCalls = 0;
+                        if (!int.TryParse(match.Groups[1].Value, out totalCalls))
+                        {
+                            totalCalls = 1;
+                        }
                         for (int i = 0; i < totalCalls; i++)
                         {
                             Hello(log, helloClient);
@@ -55,8 +58,11 @@ namespace Redola.Rpc.TestRpcClient
                     else if (Regex.Match(text, @"^add(\d*)$").Success)
                     {
                         var match = Regex.Match(text, @"^add(\d*)$");
-                        int totalCalls = 1;
-                        int.TryParse(match.Groups[1].Value, out totalCalls);
+                        int totalCalls = 0;
+                        if (!int.TryParse(match.Groups[1].Value, out totalCalls))
+                        {
+                            totalCalls = 1;
+                        }
                         for (int i = 0; i < totalCalls; i++)
                         {
                             Add(log, calcClient);
@@ -65,8 +71,11 @@ namespace Redola.Rpc.TestRpcClient
                     else if (Regex.Match(text, @"^order(\d*)$").Success)
                     {
                         var match = Regex.Match(text, @"order(\d*)$");
-                        int totalCalls = 1;
-                        int.TryParse(match.Groups[1].Value, out totalCalls);
+                        int totalCalls = 0;
+                        if (!int.TryParse(match.Groups[1].Value, out totalCalls))
+                        {
+                            totalCalls = 1;
+                        }
                         for (int i = 0; i < totalCalls; i++)
                         {
                             PlaceOrder(log, orderClient);
