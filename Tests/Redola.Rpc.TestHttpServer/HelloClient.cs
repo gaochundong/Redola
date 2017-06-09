@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Logrila.Logging;
 using Redola.Rpc.TestContracts;
 
 namespace Redola.Rpc.TestHttpServer
 {
-    public class HelloClient : RpcService
+    internal class HelloClient : RpcService, IHelloService
     {
         private ILog _log = Logger.Get<HelloClient>();
 
@@ -24,24 +23,22 @@ namespace Redola.Rpc.TestHttpServer
             return messages;
         }
 
-        public ActorMessageEnvelope<HelloResponse> SayHello()
+        public HelloResponse Hello(HelloRequest request)
         {
-            var request = new ActorMessageEnvelope<HelloRequest>()
+            var envelope = new ActorMessageEnvelope<HelloRequest>()
             {
-                Message = new HelloRequest() { Text = DateTime.Now.ToString(@"yyyy-MM-dd HH:mm:ss.fffffff") },
+                Message = request,
             };
-
-            return this.Actor.Send<HelloRequest, HelloResponse>("server", request);
+            return this.Actor.Send<HelloRequest, HelloResponse>("server", envelope).Message;
         }
 
-        public ActorMessageEnvelope<Hello10000Response> SayHello10000()
+        public Hello10000Response Hello10000(Hello10000Request request)
         {
-            var request = new ActorMessageEnvelope<Hello10000Request>()
+            var envelope = new ActorMessageEnvelope<Hello10000Request>()
             {
-                Message = new Hello10000Request() { Text = DateTime.Now.ToString(@"yyyy-MM-dd HH:mm:ss.fffffff") },
+                Message = request,
             };
-
-            return this.Actor.Send<Hello10000Request, Hello10000Response>("server", request);
+            return this.Actor.Send<Hello10000Request, Hello10000Response>("server", envelope).Message;
         }
     }
 }

@@ -32,7 +32,7 @@ namespace Redola.Rpc.TestRpcClient
             {
                 try
                 {
-                    string text = Console.ReadLine().ToLowerInvariant();
+                    string text = Console.ReadLine().ToLowerInvariant().Trim();
                     if (text == "quit" || text == "exit")
                     {
                         break;
@@ -42,38 +42,53 @@ namespace Redola.Rpc.TestRpcClient
                         localActor.Shutdown();
                         localActor.Bootup();
                     }
-                    else if (text == "hello")
+                    else if (Regex.Match(text, @"^hello(\d*)$").Success)
                     {
-                        Hello(log, helloClient);
+                        var match = Regex.Match(text, @"^hello(\d*)$");
+                        int totalCalls = 1;
+                        int.TryParse(match.Groups[1].Value, out totalCalls);
+                        for (int i = 0; i < totalCalls; i++)
+                        {
+                            Hello(log, helloClient);
+                        }
                     }
-                    else if (text == "hello10000")
+                    else if (Regex.Match(text, @"^add(\d*)$").Success)
                     {
-                        Hello10000(log, helloClient);
+                        var match = Regex.Match(text, @"^add(\d*)$");
+                        int totalCalls = 1;
+                        int.TryParse(match.Groups[1].Value, out totalCalls);
+                        for (int i = 0; i < totalCalls; i++)
+                        {
+                            Add(log, calcClient);
+                        }
                     }
-                    else if (Regex.Match(text, @"hello(\d+)x(\d+)").Success)
+                    else if (Regex.Match(text, @"^order(\d*)$").Success)
                     {
-                        var match = Regex.Match(text, @"hello(\d+)x(\d+)");
+                        var match = Regex.Match(text, @"order(\d*)$");
+                        int totalCalls = 1;
+                        int.TryParse(match.Groups[1].Value, out totalCalls);
+                        for (int i = 0; i < totalCalls; i++)
+                        {
+                            PlaceOrder(log, orderClient);
+                        }
+                    }
+                    else if (Regex.Match(text, @"^hello(\d+)x(\d+)$").Success)
+                    {
+                        var match = Regex.Match(text, @"^hello(\d+)x(\d+)$");
                         int totalCalls = int.Parse(match.Groups[1].Value);
                         int threadCount = int.Parse(match.Groups[2].Value);
                         Hello10000MultiThreading(log, helloClient, totalCalls, threadCount);
                     }
-                    else if (Regex.Match(text, @"add(\d+)x(\d+)").Success)
+                    else if (Regex.Match(text, @"^add(\d+)x(\d+)$").Success)
                     {
-                        var match = Regex.Match(text, @"add(\d+)x(\d+)");
+                        var match = Regex.Match(text, @"^add(\d+)x(\d+)$");
                         int totalCalls = int.Parse(match.Groups[1].Value);
                         int threadCount = int.Parse(match.Groups[2].Value);
                         Add10000MultiThreading(log, calcClient, totalCalls, threadCount);
                     }
                     else
                     {
-                        int times = 0;
-                        if (int.TryParse(text, out times))
-                        {
-                            for (int i = 0; i < times; i++)
-                            {
-                                PlaceOrder(log, orderClient);
-                            }
-                        }
+                        log.WarnFormat("Cannot parse the operation for input [{0}].", text);
                     }
                 }
                 catch (Exception ex)
@@ -85,17 +100,20 @@ namespace Redola.Rpc.TestRpcClient
             localActor.Shutdown();
         }
 
+        private static void Hello(ILog log, HelloClient helloClient)
+        {
+            var response = helloClient.Hello(new HelloRequest() { Text = DateTime.Now.ToString(@"yyyy-MM-dd HH:mm:ss.fffffff") });
+
+            log.DebugFormat("Hello, receive hello response from server with [{0}].", response.Text);
+        }
+
         private static void Hello10000(ILog log, HelloClient helloClient)
         {
             log.DebugFormat("Hello10000, start ...");
             var watch = Stopwatch.StartNew();
             for (var i = 0; i < 10000; i++)
             {
-                var request = new ActorMessageEnvelope<Hello10000Request>()
-                {
-                    Message = new Hello10000Request() { Text = DateTime.Now.ToString(@"yyyy-MM-dd HH:mm:ss.fffffff") },
-                };
-                helloClient.SayHello10000(request);
+                helloClient.Hello10000(new Hello10000Request() { Text = DateTime.Now.ToString(@"yyyy-MM-dd HH:mm:ss.fffffff") });
             }
             watch.Stop();
             log.DebugFormat("Hello10000, end with cost {0} ms.", watch.ElapsedMilliseconds);
@@ -113,11 +131,7 @@ namespace Redola.Rpc.TestRpcClient
                 {
                     for (var j = 0; j < totalCalls / threadCount; j++)
                     {
-                        var request = new ActorMessageEnvelope<Hello10000Request>()
-                        {
-                            Message = new Hello10000Request() { Text = DateTime.Now.ToString(@"yyyy-MM-dd HH:mm:ss.fffffff") },
-                        };
-                        helloClient.SayHello10000(request);
+                        helloClient.Hello10000(new Hello10000Request() { Text = DateTime.Now.ToString(@"yyyy-MM-dd HH:mm:ss.fffffff") });
                     }
                 },
                 TaskCreationOptions.PreferFairness);
@@ -137,20 +151,11 @@ namespace Redola.Rpc.TestRpcClient
                 );
         }
 
-        private static void Hello(ILog log, HelloClient helloClient)
+        private static void Add(ILog log, CalcClient calcClient)
         {
-            var request = new ActorMessageEnvelope<HelloRequest>()
-            {
-                Message = new HelloRequest() { Text = DateTime.Now.ToString(@"yyyy-MM-dd HH:mm:ss.fffffff") },
-            };
+            var response = calcClient.Add(new AddRequest() { X = 3, Y = 4 });
 
-            log.DebugFormat("Hello, say hello to server with MessageID[{0}].",
-                request.MessageID);
-
-            var response = helloClient.SayHello(request);
-
-            log.DebugFormat("Hello, receive hello response from server with MessageID[{0}] and CorrelationID[{1}].",
-                response.MessageID, response.CorrelationID);
+            log.DebugFormat("Add, receive add response from server with [{0}].", response.Result);
         }
 
         private static void Add10000MultiThreading(ILog log, CalcClient calcClient, int totalCalls, int threadCount)
@@ -187,26 +192,19 @@ namespace Redola.Rpc.TestRpcClient
 
         private static void PlaceOrder(ILog log, OrderClient orderClient)
         {
-            var request = new ActorMessageEnvelope<PlaceOrderRequest>()
+            var request = new PlaceOrderRequest()
             {
-                Message = new PlaceOrderRequest()
+                Contract = new Order()
                 {
-                    Contract = new Order()
-                    {
-                        OrderID = Guid.NewGuid().ToString(),
-                        ItemID = "Apple",
-                        BuyCount = 100,
-                    },
+                    OrderID = Guid.NewGuid().ToString(),
+                    ItemID = "Apple",
+                    BuyCount = 100,
                 },
             };
 
-            log.DebugFormat("PlaceOrder, send place order request to server with MessageID[{0}].",
-                request.MessageID);
-
             var response = orderClient.PlaceOrder(request);
 
-            log.DebugFormat("PlaceOrder, receive place order response from server with MessageID[{0}] and CorrelationID[{1}].",
-                response.MessageID, response.CorrelationID);
+            log.DebugFormat("PlaceOrder, receive place order response from server with [{0}].", response.ErrorCode);
         }
     }
 }

@@ -4,7 +4,7 @@ using Redola.Rpc.TestContracts;
 
 namespace Redola.Rpc.TestRpcClient
 {
-    public class HelloClient : RpcService
+    internal class HelloClient : RpcService, IHelloService
     {
         private ILog _log = Logger.Get<HelloClient>();
 
@@ -23,14 +23,22 @@ namespace Redola.Rpc.TestRpcClient
             return messages;
         }
 
-        public ActorMessageEnvelope<HelloResponse> SayHello(ActorMessageEnvelope<HelloRequest> request)
+        public HelloResponse Hello(HelloRequest request)
         {
-            return this.Actor.Send<HelloRequest, HelloResponse>("server", request);
+            var envelope = new ActorMessageEnvelope<HelloRequest>()
+            {
+                Message = request,
+            };
+            return this.Actor.Send<HelloRequest, HelloResponse>("server", envelope).Message;
         }
 
-        public ActorMessageEnvelope<Hello10000Response> SayHello10000(ActorMessageEnvelope<Hello10000Request> request)
+        public Hello10000Response Hello10000(Hello10000Request request)
         {
-            return this.Actor.Send<Hello10000Request, Hello10000Response>("server", request);
+            var envelope = new ActorMessageEnvelope<Hello10000Request>()
+            {
+                Message = request,
+            };
+            return this.Actor.Send<Hello10000Request, Hello10000Response>("server", envelope).Message;
         }
     }
 }

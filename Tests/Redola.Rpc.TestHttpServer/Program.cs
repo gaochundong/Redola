@@ -19,15 +19,15 @@ namespace Redola.Rpc.TestHttpServer
             var localXmlFileActorConfiguration = LocalXmlFileActorConfiguration.Load(localXmlFilePath);
             var localXmlFileActorDirectory = new LocalXmlFileActorDirectory(localXmlFileActorConfiguration);
 
-            var actor = new RpcActor(localXmlFileActorConfiguration);
+            var localActor = new RpcActor(localXmlFileActorConfiguration);
 
-            var helloClient = new HelloClient(actor);
-            var calcClient = new CalcClient(actor);
+            var helloClient = new HelloClient(localActor);
+            var calcClient = new CalcClient(localActor);
 
-            actor.RegisterRpcService(helloClient);
-            actor.RegisterRpcService(calcClient);
+            localActor.RegisterRpcService(helloClient);
+            localActor.RegisterRpcService(calcClient);
 
-            actor.Bootup(localXmlFileActorDirectory);
+            localActor.Bootup(localXmlFileActorDirectory);
 
             var container = new TestContainer();
             container.AddModule(new TestModule(helloClient, calcClient));

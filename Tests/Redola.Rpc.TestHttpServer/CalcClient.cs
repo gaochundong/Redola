@@ -4,7 +4,7 @@ using Redola.Rpc.TestContracts;
 
 namespace Redola.Rpc.TestHttpServer
 {
-    public class CalcClient : RpcService
+    internal class CalcClient : RpcService, ICalcService
     {
         private ILog _log = Logger.Get<CalcClient>();
 
@@ -24,11 +24,16 @@ namespace Redola.Rpc.TestHttpServer
 
         public int Add(int x, int y)
         {
-            var request = new ActorMessageEnvelope<AddRequest>()
+            return Add(new AddRequest() { X = x, Y = y }).Result;
+        }
+
+        public AddResponse Add(AddRequest request)
+        {
+            var envelope = new ActorMessageEnvelope<AddRequest>()
             {
-                Message = new AddRequest() { X = x, Y = y },
+                Message = request,
             };
-            return this.Actor.Send<AddRequest, AddResponse>("server", request).Message.Result;
+            return this.Actor.Send<AddRequest, AddResponse>("server", envelope).Message;
         }
     }
 }

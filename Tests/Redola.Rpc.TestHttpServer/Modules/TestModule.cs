@@ -1,9 +1,10 @@
 ﻿using System;
 using Happer.Http;
+using Redola.Rpc.TestContracts;
 
 namespace Redola.Rpc.TestHttpServer
 {
-    public class TestModule : Module
+    internal class TestModule : Module
     {
         private HelloClient _helloService;
         private CalcClient _calcService;
@@ -23,13 +24,13 @@ namespace Redola.Rpc.TestHttpServer
             });
             Get("/hello", x =>
             {
-                var response = _helloService.SayHello();
-                return response == null ? string.Empty : response.Message.Text;
+                var response = _helloService.Hello(new HelloRequest() { Text = DateTime.Now.ToString(@"yyyy-MM-dd HH:mm:ss.fffffff") });
+                return response == null ? string.Empty : response.Text;
             });
             Get("/hello10000", x =>
             {
-                var response = _helloService.SayHello10000();
-                return response == null ? string.Empty : response.Message.Text;
+                var response = _helloService.Hello10000(new Hello10000Request() { Text = DateTime.Now.ToString(@"yyyy-MM-dd HH:mm:ss.fffffff") });
+                return response == null ? string.Empty : response.Text;
             });
             Get("/add", x =>
             {
