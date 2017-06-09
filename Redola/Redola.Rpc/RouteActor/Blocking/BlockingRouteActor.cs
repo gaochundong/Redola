@@ -21,7 +21,7 @@ namespace Redola.Rpc
         {
         }
 
-        #region Blocking
+        #region Blocking Send
 
         public ActorMessageEnvelope<P> SendMessage<R, P>(ActorIdentity remoteActor, ActorMessageEnvelope<R> request)
         {
@@ -121,6 +121,8 @@ namespace Redola.Rpc
 
         #endregion
 
+        #region Blocking Callback
+
         public void OnSyncMessage<P>(ActorSender sender, ActorMessageEnvelope<P> response)
         {
             if (response == null
@@ -144,5 +146,7 @@ namespace Redola.Rpc
                 catch (ObjectDisposedException) { }
             }
         }
+
+        #endregion
     }
 }
