@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using Logrila.Logging;
 using Logrila.Logging.NLogIntegration;
 using Redola.Rpc.TestContracts;
@@ -36,16 +37,27 @@ namespace Redola.Rpc.TestRpcServer
                     {
                         break;
                     }
+                    else if (text == "reconnect")
+                    {
+                        localActor.Shutdown();
+                        localActor.Bootup();
+                    }
+                    else if (Regex.Match(text, @"^notify(\d*)$").Success)
+                    {
+                        var match = Regex.Match(text, @"notify(\d*)$");
+                        int totalCalls = 0;
+                        if (!int.TryParse(match.Groups[1].Value, out totalCalls))
+                        {
+                            totalCalls = 1;
+                        }
+                        for (int i = 0; i < totalCalls; i++)
+                        {
+                            NotifyOrderChanged(log, orderService);
+                        }
+                    }
                     else
                     {
-                        int times = 0;
-                        if (int.TryParse(text, out times))
-                        {
-                            for (int i = 0; i < times; i++)
-                            {
-                                NotifyOrderChanged(log, orderService);
-                            }
-                        }
+                        log.WarnFormat("Cannot parse the operation for input [{0}].", text);
                     }
                 }
                 catch (Exception ex)
@@ -68,8 +80,7 @@ namespace Redola.Rpc.TestRpcServer
                 },
             };
 
-            log.DebugFormat("NotifyOrderChanged, notify order changed with MessageID[{0}].",
-                notification.MessageID);
+            log.DebugFormat("NotifyOrderChanged, notify order changed with MessageID[{0}].", notification.MessageID);
             orderService.NotifyOrderChanged(notification);
         }
     }
