@@ -22,3 +22,9 @@ message Hello10000Response
 {
 	required string Text = 10;
 }
+
+service HelloService
+{
+	rpc Hello (HelloRequest) returns (HelloResponse);
+	rpc Hello10000 (Hello10000Request) returns (Hello10000Response);
+}

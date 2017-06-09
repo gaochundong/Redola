@@ -34,3 +34,8 @@ message OrderStatusChangedNotification
 	required string OrderID = 10;
 	required int32 OrderStatus = 15;
 }
+
+service OrderService
+{
+	rpc PlaceOrder (PlaceOrderRequest) returns (PlaceOrderResponse);
+}

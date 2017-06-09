@@ -51,4 +51,11 @@ namespace Redola.Rpc.TestContracts
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
   
+    public interface ICalcService
+    {
+      Redola.Rpc.TestContracts.AddResponse Add(Redola.Rpc.TestContracts.AddRequest request);
+    
+    }
+    
+    
 }

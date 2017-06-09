@@ -125,4 +125,11 @@ namespace Redola.Rpc.TestContracts
       UnknownPlaceOrderError = 1
     }
   
+    public interface IOrderService
+    {
+      Redola.Rpc.TestContracts.PlaceOrderResponse PlaceOrder(Redola.Rpc.TestContracts.PlaceOrderRequest request);
+    
+    }
+    
+    
 }

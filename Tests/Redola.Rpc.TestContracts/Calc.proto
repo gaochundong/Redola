@@ -13,3 +13,8 @@ message AddResponse
 {
 	required int32 Result = 10;
 }
+
+service CalcService
+{
+	rpc Add (AddRequest) returns (AddResponse);
+}

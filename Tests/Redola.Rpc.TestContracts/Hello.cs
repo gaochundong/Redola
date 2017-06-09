@@ -78,4 +78,12 @@ namespace Redola.Rpc.TestContracts
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
   
+    public interface IHelloService
+    {
+      Redola.Rpc.TestContracts.HelloResponse Hello(Redola.Rpc.TestContracts.HelloRequest request);
+    Redola.Rpc.TestContracts.Hello10000Response Hello10000(Redola.Rpc.TestContracts.Hello10000Request request);
+    
+    }
+    
+    
 }
