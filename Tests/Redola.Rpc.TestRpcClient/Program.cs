@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Logrila.Logging;
 using Logrila.Logging.NLogIntegration;
@@ -15,17 +16,17 @@ namespace Redola.Rpc.TestRpcClient
 
             ILog log = Logger.Get<Program>();
 
-            var actor = new RpcActor();
+            var localActor = new RpcActor();
 
-            var helloClient = new HelloClient(actor);
-            var calcClient = new CalcClient(actor);
-            var orderClient = new OrderClient(actor);
+            var helloClient = new HelloClient(localActor);
+            var calcClient = new CalcClient(localActor);
+            var orderClient = new OrderClient(localActor);
 
-            actor.RegisterRpcService(helloClient);
-            actor.RegisterRpcService(calcClient);
-            actor.RegisterRpcService(orderClient);
+            localActor.RegisterRpcService(helloClient);
+            localActor.RegisterRpcService(calcClient);
+            localActor.RegisterRpcService(orderClient);
 
-            actor.Bootup();
+            localActor.Bootup();
 
             while (true)
             {
@@ -38,8 +39,8 @@ namespace Redola.Rpc.TestRpcClient
                     }
                     else if (text == "reconnect")
                     {
-                        actor.Shutdown();
-                        actor.Bootup();
+                        localActor.Shutdown();
+                        localActor.Bootup();
                     }
                     else if (text == "hello")
                     {
@@ -49,266 +50,20 @@ namespace Redola.Rpc.TestRpcClient
                     {
                         Hello10000(log, helloClient);
                     }
-                    #region hello10000
-                    else if (text == "hello10000x1")
+                    else if (Regex.Match(text, @"hello(\d+)x(\d+)").Success)
                     {
-                        Hello10000MultiThreading(log, helloClient, 10000, 1);
+                        var match = Regex.Match(text, @"hello(\d+)x(\d+)");
+                        int totalCalls = int.Parse(match.Groups[1].Value);
+                        int threadCount = int.Parse(match.Groups[2].Value);
+                        Hello10000MultiThreading(log, helloClient, totalCalls, threadCount);
                     }
-                    else if (text == "hello10000x2")
+                    else if (Regex.Match(text, @"add(\d+)x(\d+)").Success)
                     {
-                        Hello10000MultiThreading(log, helloClient, 10000, 2);
+                        var match = Regex.Match(text, @"add(\d+)x(\d+)");
+                        int totalCalls = int.Parse(match.Groups[1].Value);
+                        int threadCount = int.Parse(match.Groups[2].Value);
+                        Add10000MultiThreading(log, calcClient, totalCalls, threadCount);
                     }
-                    else if (text == "hello10000x4")
-                    {
-                        Hello10000MultiThreading(log, helloClient, 10000, 4);
-                    }
-                    else if (text == "hello10000x8")
-                    {
-                        Hello10000MultiThreading(log, helloClient, 10000, 8);
-                    }
-                    else if (text == "hello10000x16")
-                    {
-                        Hello10000MultiThreading(log, helloClient, 10000, 16);
-                    }
-                    else if (text == "hello10000x32")
-                    {
-                        Hello10000MultiThreading(log, helloClient, 10000, 32);
-                    }
-                    #endregion
-                    #region hello20000
-                    else if (text == "hello20000x1")
-                    {
-                        Hello10000MultiThreading(log, helloClient, 20000, 1);
-                    }
-                    else if (text == "hello20000x2")
-                    {
-                        Hello10000MultiThreading(log, helloClient, 20000, 2);
-                    }
-                    else if (text == "hello20000x4")
-                    {
-                        Hello10000MultiThreading(log, helloClient, 20000, 4);
-                    }
-                    else if (text == "hello20000x8")
-                    {
-                        Hello10000MultiThreading(log, helloClient, 20000, 8);
-                    }
-                    else if (text == "hello20000x16")
-                    {
-                        Hello10000MultiThreading(log, helloClient, 20000, 16);
-                    }
-                    else if (text == "hello20000x32")
-                    {
-                        Hello10000MultiThreading(log, helloClient, 20000, 32);
-                    }
-                    #endregion
-                    #region hello100000
-                    else if (text == "hello100000x1")
-                    {
-                        Hello10000MultiThreading(log, helloClient, 100000, 1);
-                    }
-                    else if (text == "hello100000x2")
-                    {
-                        Hello10000MultiThreading(log, helloClient, 100000, 2);
-                    }
-                    else if (text == "hello100000x4")
-                    {
-                        Hello10000MultiThreading(log, helloClient, 100000, 4);
-                    }
-                    else if (text == "hello100000x8")
-                    {
-                        Hello10000MultiThreading(log, helloClient, 100000, 8);
-                    }
-                    else if (text == "hello100000x16")
-                    {
-                        Hello10000MultiThreading(log, helloClient, 100000, 16);
-                    }
-                    else if (text == "hello100000x32")
-                    {
-                        Hello10000MultiThreading(log, helloClient, 100000, 32);
-                    }
-                    #endregion
-                    #region hello300000
-                    else if (text == "hello300000x1")
-                    {
-                        Hello10000MultiThreading(log, helloClient, 300000, 1);
-                    }
-                    else if (text == "hello300000x2")
-                    {
-                        Hello10000MultiThreading(log, helloClient, 300000, 2);
-                    }
-                    else if (text == "hello300000x4")
-                    {
-                        Hello10000MultiThreading(log, helloClient, 300000, 4);
-                    }
-                    else if (text == "hello300000x8")
-                    {
-                        Hello10000MultiThreading(log, helloClient, 300000, 8);
-                    }
-                    else if (text == "hello300000x16")
-                    {
-                        Hello10000MultiThreading(log, helloClient, 300000, 16);
-                    }
-                    else if (text == "hello300000x32")
-                    {
-                        Hello10000MultiThreading(log, helloClient, 300000, 32);
-                    }
-                    #endregion
-                    #region hello1500000
-                    else if (text == "hello1500000x1")
-                    {
-                        Hello10000MultiThreading(log, helloClient, 1500000, 1);
-                    }
-                    else if (text == "hello1500000x2")
-                    {
-                        Hello10000MultiThreading(log, helloClient, 1500000, 2);
-                    }
-                    else if (text == "hello1500000x4")
-                    {
-                        Hello10000MultiThreading(log, helloClient, 1500000, 4);
-                    }
-                    else if (text == "hello1500000x8")
-                    {
-                        Hello10000MultiThreading(log, helloClient, 1500000, 8);
-                    }
-                    else if (text == "hello1500000x16")
-                    {
-                        Hello10000MultiThreading(log, helloClient, 1500000, 16);
-                    }
-                    else if (text == "hello1500000x32")
-                    {
-                        Hello10000MultiThreading(log, helloClient, 1500000, 32);
-                    }
-                    #endregion
-                    #region add10000
-                    else if (text == "add10000x1")
-                    {
-                        Add10000MultiThreading(log, calcClient, 10000, 1);
-                    }
-                    else if (text == "add10000x2")
-                    {
-                        Add10000MultiThreading(log, calcClient, 10000, 2);
-                    }
-                    else if (text == "add10000x4")
-                    {
-                        Add10000MultiThreading(log, calcClient, 10000, 4);
-                    }
-                    else if (text == "add10000x8")
-                    {
-                        Add10000MultiThreading(log, calcClient, 10000, 8);
-                    }
-                    else if (text == "add10000x16")
-                    {
-                        Add10000MultiThreading(log, calcClient, 10000, 16);
-                    }
-                    else if (text == "add10000x32")
-                    {
-                        Add10000MultiThreading(log, calcClient, 10000, 32);
-                    }
-                    #endregion
-                    #region add20000
-                    else if (text == "add20000x1")
-                    {
-                        Add10000MultiThreading(log, calcClient, 20000, 1);
-                    }
-                    else if (text == "add20000x2")
-                    {
-                        Add10000MultiThreading(log, calcClient, 20000, 2);
-                    }
-                    else if (text == "add20000x4")
-                    {
-                        Add10000MultiThreading(log, calcClient, 20000, 4);
-                    }
-                    else if (text == "add20000x8")
-                    {
-                        Add10000MultiThreading(log, calcClient, 20000, 8);
-                    }
-                    else if (text == "add20000x16")
-                    {
-                        Add10000MultiThreading(log, calcClient, 20000, 16);
-                    }
-                    else if (text == "add20000x32")
-                    {
-                        Add10000MultiThreading(log, calcClient, 20000, 32);
-                    }
-                    #endregion
-                    #region add100000
-                    else if (text == "add100000x1")
-                    {
-                        Add10000MultiThreading(log, calcClient, 100000, 1);
-                    }
-                    else if (text == "add100000x2")
-                    {
-                        Add10000MultiThreading(log, calcClient, 100000, 2);
-                    }
-                    else if (text == "add100000x4")
-                    {
-                        Add10000MultiThreading(log, calcClient, 100000, 4);
-                    }
-                    else if (text == "add100000x8")
-                    {
-                        Add10000MultiThreading(log, calcClient, 100000, 8);
-                    }
-                    else if (text == "add100000x16")
-                    {
-                        Add10000MultiThreading(log, calcClient, 100000, 16);
-                    }
-                    else if (text == "add100000x32")
-                    {
-                        Add10000MultiThreading(log, calcClient, 100000, 32);
-                    }
-                    #endregion
-                    #region add300000
-                    else if (text == "add300000x1")
-                    {
-                        Add10000MultiThreading(log, calcClient, 300000, 1);
-                    }
-                    else if (text == "add300000x2")
-                    {
-                        Add10000MultiThreading(log, calcClient, 300000, 2);
-                    }
-                    else if (text == "add300000x4")
-                    {
-                        Add10000MultiThreading(log, calcClient, 300000, 4);
-                    }
-                    else if (text == "add300000x8")
-                    {
-                        Add10000MultiThreading(log, calcClient, 300000, 8);
-                    }
-                    else if (text == "add300000x16")
-                    {
-                        Add10000MultiThreading(log, calcClient, 300000, 16);
-                    }
-                    else if (text == "add300000x32")
-                    {
-                        Add10000MultiThreading(log, calcClient, 300000, 32);
-                    }
-                    #endregion
-                    #region add1500000
-                    else if (text == "add1500000x1")
-                    {
-                        Add10000MultiThreading(log, calcClient, 1500000, 1);
-                    }
-                    else if (text == "add1500000x2")
-                    {
-                        Add10000MultiThreading(log, calcClient, 1500000, 2);
-                    }
-                    else if (text == "add1500000x4")
-                    {
-                        Add10000MultiThreading(log, calcClient, 1500000, 4);
-                    }
-                    else if (text == "add1500000x8")
-                    {
-                        Add10000MultiThreading(log, calcClient, 1500000, 8);
-                    }
-                    else if (text == "add1500000x16")
-                    {
-                        Add10000MultiThreading(log, calcClient, 1500000, 16);
-                    }
-                    else if (text == "add1500000x32")
-                    {
-                        Add10000MultiThreading(log, calcClient, 1500000, 32);
-                    }
-                    #endregion
                     else
                     {
                         int times = 0;
@@ -327,7 +82,7 @@ namespace Redola.Rpc.TestRpcClient
                 }
             }
 
-            actor.Shutdown();
+            localActor.Shutdown();
         }
 
         private static void Hello10000(ILog log, HelloClient helloClient)
@@ -371,7 +126,7 @@ namespace Redola.Rpc.TestRpcClient
             Task.WaitAll(taskList);
             watch.Stop();
 
-            log.DebugFormat("Hello10000MultiThreading, TotalCalls[{0}], ThreadCount[{1}] end with cost [{2}] ms."
+            log.DebugFormat("Hello10000MultiThreading, TotalCalls[{0}], ThreadCount[{1}], end with cost [{2}] ms."
                 + "{3}{4}{5}{6}{7}{8}{9}{10}{11}{12}",
                 totalCalls, threadCount, watch.ElapsedMilliseconds,
                 Environment.NewLine, string.Format("   Concurrency level: {0} threads", threadCount),
@@ -419,7 +174,7 @@ namespace Redola.Rpc.TestRpcClient
             Task.WaitAll(taskList);
             watch.Stop();
 
-            log.DebugFormat("Add10000MultiThreading, TotalCalls[{0}], ThreadCount[{1}] end with cost [{2}] ms."
+            log.DebugFormat("Add10000MultiThreading, TotalCalls[{0}], ThreadCount[{1}], end with cost [{2}] ms."
                 + "{3}{4}{5}{6}{7}{8}{9}{10}{11}{12}",
                 totalCalls, threadCount, watch.ElapsedMilliseconds,
                 Environment.NewLine, string.Format("   Concurrency level: {0} threads", threadCount),

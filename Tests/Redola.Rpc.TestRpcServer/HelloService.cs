@@ -5,7 +5,7 @@ using Redola.Rpc.TestContracts;
 
 namespace Redola.Rpc.TestRpcServer
 {
-    public class HelloService : RpcService
+    internal class HelloService : RpcService, IHelloService
     {
         private ILog _log = Logger.Get<HelloService>();
 
@@ -35,7 +35,7 @@ namespace Redola.Rpc.TestRpcServer
             {
                 CorrelationID = request.MessageID,
                 CorrelationTime = request.MessageTime,
-                Message = new HelloResponse() { Text = DateTime.Now.ToString(@"yyyy-MM-dd HH:mm:ss.fffffff") },
+                Message = Hello(request.Message),
             };
 
             _log.DebugFormat("OnHelloRequest, say hello, MessageID[{0}], CorrelationID[{1}].",
@@ -49,10 +49,20 @@ namespace Redola.Rpc.TestRpcServer
             {
                 CorrelationID = request.MessageID,
                 CorrelationTime = request.MessageTime,
-                Message = new Hello10000Response() { Text = DateTime.Now.ToString(@"yyyy-MM-dd HH:mm:ss.fffffff") },
+                Message = Hello10000(request.Message),
             };
 
             this.Actor.BeginReply(sender.ChannelIdentifier, response);
+        }
+
+        public HelloResponse Hello(HelloRequest request)
+        {
+            return new HelloResponse() { Text = DateTime.Now.ToString(@"yyyy-MM-dd HH:mm:ss.fffffff") };
+        }
+
+        public Hello10000Response Hello10000(Hello10000Request request)
+        {
+            return new Hello10000Response() { Text = DateTime.Now.ToString(@"yyyy-MM-dd HH:mm:ss.fffffff") };
         }
     }
 }

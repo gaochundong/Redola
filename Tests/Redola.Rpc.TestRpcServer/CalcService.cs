@@ -4,7 +4,7 @@ using Redola.Rpc.TestContracts;
 
 namespace Redola.Rpc.TestRpcServer
 {
-    public class CalcService : RpcService
+    internal class CalcService : RpcService, ICalcService
     {
         private ILog _log = Logger.Get<CalcService>();
 
@@ -33,10 +33,15 @@ namespace Redola.Rpc.TestRpcServer
             {
                 CorrelationID = request.MessageID,
                 CorrelationTime = request.MessageTime,
-                Message = new AddResponse() { Result = request.Message.X + request.Message.Y },
+                Message = Add(request.Message),
             };
 
             this.Actor.BeginReply(sender.ChannelIdentifier, response);
+        }
+
+        public AddResponse Add(AddRequest request)
+        {
+            return new AddResponse() { Result = request.X + request.Y };
         }
     }
 }

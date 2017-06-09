@@ -4,7 +4,7 @@ using Redola.Rpc.TestContracts;
 
 namespace Redola.Rpc.TestRpcServer
 {
-    public class OrderService : RpcService
+    internal class OrderService : RpcService, IOrderService
     {
         private ILog _log = Logger.Get<OrderService>();
 
@@ -33,17 +33,22 @@ namespace Redola.Rpc.TestRpcServer
             {
                 CorrelationID = request.MessageID,
                 CorrelationTime = request.MessageTime,
-                Message = new PlaceOrderResponse()
-                {
-                    Contract = request.Message.Contract,
-                    Order = request.Message.Contract,
-                    ErrorCode = PlaceOrderErrorCode.OrderPlaced,
-                },
+                Message = PlaceOrder(request.Message),
             };
 
             _log.DebugFormat("OnPlaceOrderRequest, place order, MessageID[{0}], CorrelationID[{1}].",
                 response.MessageID, response.CorrelationID);
             this.Actor.BeginReply(sender.ChannelIdentifier, response);
+        }
+
+        public PlaceOrderResponse PlaceOrder(PlaceOrderRequest request)
+        {
+            return new PlaceOrderResponse()
+            {
+                Contract = request.Contract,
+                Order = request.Contract,
+                ErrorCode = PlaceOrderErrorCode.OrderPlaced,
+            };
         }
 
         public void NotifyOrderChanged(ActorMessageEnvelope<OrderStatusChangedNotification> notification)

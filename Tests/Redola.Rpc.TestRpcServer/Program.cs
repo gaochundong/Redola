@@ -13,19 +13,19 @@ namespace Redola.Rpc.TestRpcServer
 
             ILog log = Logger.Get<Program>();
 
-            var actor = new RpcActor();
+            var localActor = new RpcActor();
 
             var rateLimiter = new CountableRateLimiter();
 
-            var helloService = new HelloService(actor, rateLimiter);
-            var calcService = new CalcService(actor);
-            var orderService = new OrderService(actor, rateLimiter);
+            var helloService = new HelloService(localActor, rateLimiter);
+            var calcService = new CalcService(localActor);
+            var orderService = new OrderService(localActor, rateLimiter);
 
-            actor.RegisterRpcService(helloService);
-            actor.RegisterRpcService(calcService);
-            actor.RegisterRpcService(orderService);
+            localActor.RegisterRpcService(helloService);
+            localActor.RegisterRpcService(calcService);
+            localActor.RegisterRpcService(orderService);
 
-            actor.Bootup();
+            localActor.Bootup();
 
             while (true)
             {
@@ -54,7 +54,7 @@ namespace Redola.Rpc.TestRpcServer
                 }
             }
 
-            actor.Shutdown();
+            localActor.Shutdown();
         }
 
         private static void NotifyOrderChanged(ILog log, OrderService orderService)
