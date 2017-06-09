@@ -56,7 +56,7 @@ namespace Redola.Rpc
             _localActor.RegisterMessageHandler(service);
         }
 
-        #region Blocking
+        #region Blocking Envelope
 
         public ActorMessageEnvelope<P> Send<R, P>(ActorIdentity remoteActor, ActorMessageEnvelope<R> request)
         {
@@ -90,7 +90,53 @@ namespace Redola.Rpc
 
         #endregion
 
-        #region Send
+        #region Blocking Message
+
+        public P Send<R, P>(ActorIdentity remoteActor, R request)
+        {
+            return Send<R, P>(remoteActor, request, TimeSpan.FromSeconds(30));
+        }
+
+        public P Send<R, P>(ActorIdentity remoteActor, R request, TimeSpan timeout)
+        {
+            var envelope = new ActorMessageEnvelope<R>()
+            {
+                Message = request,
+            };
+            return this.Send<R, P>(remoteActor, envelope, timeout).Message;
+        }
+
+        public P Send<R, P>(string remoteActorType, string remoteActorName, R request)
+        {
+            return Send<R, P>(remoteActorType, remoteActorName, request, TimeSpan.FromSeconds(30));
+        }
+
+        public P Send<R, P>(string remoteActorType, string remoteActorName, R request, TimeSpan timeout)
+        {
+            var envelope = new ActorMessageEnvelope<R>()
+            {
+                Message = request,
+            };
+            return this.Send<R, P>(remoteActorType, remoteActorName, envelope, timeout).Message;
+        }
+
+        public P Send<R, P>(string remoteActorType, R request)
+        {
+            return Send<R, P>(remoteActorType, request, TimeSpan.FromSeconds(30));
+        }
+
+        public P Send<R, P>(string remoteActorType, R request, TimeSpan timeout)
+        {
+            var envelope = new ActorMessageEnvelope<R>()
+            {
+                Message = request,
+            };
+            return this.Send<R, P>(remoteActorType, envelope, timeout).Message;
+        }
+
+        #endregion
+
+        #region Send Envelope
 
         public void Send<T>(ActorIdentity remoteActor, ActorMessageEnvelope<T> message)
         {
@@ -124,21 +170,101 @@ namespace Redola.Rpc
 
         #endregion
 
-        #region Reply
+        #region Send Message
 
-        public void Reply<T>(string channelIdentifier, ActorMessageEnvelope<T> message)
+        public void Send<T>(ActorIdentity remoteActor, T message)
         {
-            _localActor.Reply(channelIdentifier, message.ToBytes(this.Encoder));
+            var envelope = new ActorMessageEnvelope<T>()
+            {
+                Message = message,
+            };
+            this.Send<T>(remoteActor, envelope);
         }
 
-        public void BeginReply<T>(string channelIdentifier, ActorMessageEnvelope<T> message)
+        public void BeginSend<T>(ActorIdentity remoteActor, T message)
         {
-            _localActor.BeginReply(channelIdentifier, message.ToBytes(this.Encoder));
+            var envelope = new ActorMessageEnvelope<T>()
+            {
+                Message = message,
+            };
+            this.BeginSend<T>(remoteActor, envelope);
+        }
+
+        public void Send<T>(string remoteActorType, string remoteActorName, T message)
+        {
+            var envelope = new ActorMessageEnvelope<T>()
+            {
+                Message = message,
+            };
+            this.Send<T>(remoteActorType, remoteActorName, envelope);
+        }
+
+        public void BeginSend<T>(string remoteActorType, string remoteActorName, T message)
+        {
+            var envelope = new ActorMessageEnvelope<T>()
+            {
+                Message = message,
+            };
+            this.BeginSend<T>(remoteActorType, remoteActorName, envelope);
+        }
+
+        public void Send<T>(string remoteActorType, T message)
+        {
+            var envelope = new ActorMessageEnvelope<T>()
+            {
+                Message = message,
+            };
+            this.Send<T>(remoteActorType, envelope);
+        }
+
+        public void BeginSend<T>(string remoteActorType, T message)
+        {
+            var envelope = new ActorMessageEnvelope<T>()
+            {
+                Message = message,
+            };
+            this.BeginSend<T>(remoteActorType, envelope);
         }
 
         #endregion
 
-        #region Broadcast
+        #region Reply Envelope
+
+        public void Reply<T>(string channelIdentifier, ActorMessageEnvelope<T> message)
+        {
+            _localActor.Reply(channelIdentifier, message);
+        }
+
+        public void BeginReply<T>(string channelIdentifier, ActorMessageEnvelope<T> message)
+        {
+            _localActor.BeginReply(channelIdentifier, message);
+        }
+
+        #endregion
+
+        #region Reply Message
+
+        public void Reply<T>(string channelIdentifier, T message)
+        {
+            var envelope = new ActorMessageEnvelope<T>()
+            {
+                Message = message,
+            };
+            this.Reply<T>(channelIdentifier, envelope);
+        }
+
+        public void BeginReply<T>(string channelIdentifier, T message)
+        {
+            var envelope = new ActorMessageEnvelope<T>()
+            {
+                Message = message,
+            };
+            this.BeginReply<T>(channelIdentifier, envelope);
+        }
+
+        #endregion
+
+        #region Broadcast Envelope
 
         public void Broadcast<T>(string remoteActorType, ActorMessageEnvelope<T> message)
         {
@@ -148,6 +274,28 @@ namespace Redola.Rpc
         public void BeginBroadcast<T>(string remoteActorType, ActorMessageEnvelope<T> message)
         {
             _localActor.BeginBroadcast(remoteActorType, message);
+        }
+
+        #endregion
+
+        #region Broadcast Message
+
+        public void Broadcast<T>(string remoteActorType, T message)
+        {
+            var envelope = new ActorMessageEnvelope<T>()
+            {
+                Message = message,
+            };
+            this.Broadcast<T>(remoteActorType, envelope);
+        }
+
+        public void BeginBroadcast<T>(string remoteActorType, T message)
+        {
+            var envelope = new ActorMessageEnvelope<T>()
+            {
+                Message = message,
+            };
+            this.BeginBroadcast<T>(remoteActorType, envelope);
         }
 
         #endregion

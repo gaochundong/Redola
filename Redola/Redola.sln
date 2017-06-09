@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26228.9
+VisualStudioVersion = 15.0.26403.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redola.ActorModel", "Redola.ActorModel\Redola.ActorModel.csproj", "{05E69E70-97FF-4FFF-B106-E423B6F51A00}"
 EndProject
@@ -27,6 +27,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redola.Rpc.TestHttpServer", "..\Tests\Redola.Rpc.TestHttpServer\Redola.Rpc.TestHttpServer.csproj", "{01EAA9D3-A299-4EC2-BADE-843BA7500174}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redola.Rpc.TestRpcCenter", "..\Tests\Redola.Rpc.TestRpcCenter\Redola.Rpc.TestRpcCenter.csproj", "{DCB0784A-622E-4EF6-BA1B-79099DA8D648}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redola.Rpc.DynamicProxy", "Redola.Rpc.DynamicProxy\Redola.Rpc.DynamicProxy.csproj", "{17B964E4-8D0F-4077-8F5A-7654E6403D09}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -62,6 +64,10 @@ Global
 		{DCB0784A-622E-4EF6-BA1B-79099DA8D648}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DCB0784A-622E-4EF6-BA1B-79099DA8D648}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DCB0784A-622E-4EF6-BA1B-79099DA8D648}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17B964E4-8D0F-4077-8F5A-7654E6403D09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17B964E4-8D0F-4077-8F5A-7654E6403D09}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17B964E4-8D0F-4077-8F5A-7654E6403D09}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17B964E4-8D0F-4077-8F5A-7654E6403D09}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

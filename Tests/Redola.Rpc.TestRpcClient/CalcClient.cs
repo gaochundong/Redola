@@ -29,11 +29,7 @@ namespace Redola.Rpc.TestRpcClient
 
         public AddResponse Add(AddRequest request)
         {
-            var envelope = new ActorMessageEnvelope<AddRequest>()
-            {
-                Message = request,
-            };
-            return this.Actor.Send<AddRequest, AddResponse>("server", envelope).Message;
+            return this.Actor.Send<AddRequest, AddResponse>("server", request);
         }
     }
 }
