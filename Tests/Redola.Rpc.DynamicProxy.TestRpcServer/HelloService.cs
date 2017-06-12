@@ -1,12 +1,16 @@
 ﻿using System;
+using Logrila.Logging;
 using Redola.Rpc.TestContracts;
 
 namespace Redola.Rpc.DynamicProxy.TestRpcServer
 {
     internal class HelloService : IHelloService
     {
+        private ILog _log = Logger.Get<HelloService>();
+
         public HelloResponse Hello(HelloRequest request)
         {
+            _log.DebugFormat("Hello, Text={0}", request.Text);
             return new HelloResponse() { Text = DateTime.Now.ToString(@"yyyy-MM-dd HH:mm:ss.fffffff") };
         }
 

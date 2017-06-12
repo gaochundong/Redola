@@ -1,12 +1,17 @@
-﻿using Redola.Rpc.TestContracts;
+﻿using Logrila.Logging;
+using Redola.Rpc.TestContracts;
 
 namespace Redola.Rpc.DynamicProxy.TestRpcServer
 {
     internal class CalcService : ICalcService
     {
+        private ILog _log = Logger.Get<CalcService>();
+
         public AddResponse Add(AddRequest request)
         {
-            return new AddResponse() { Result = request.X + request.Y };
+            var response = new AddResponse() { Result = request.X + request.Y };
+            _log.DebugFormat("Add, X={0}, Y={1}, Result={2}", request.X, request.Y, response.Result);
+            return response;
         }
     }
 }
