@@ -10,7 +10,7 @@
 // Generated from: Tests/Redola.Rpc.TestContracts/Hello.proto
 namespace Redola.Rpc.TestContracts
 {
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"HelloRequest")]
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"HelloRequest")]
   public partial class HelloRequest : global::ProtoBuf.IExtensible
   {
     public HelloRequest() {}

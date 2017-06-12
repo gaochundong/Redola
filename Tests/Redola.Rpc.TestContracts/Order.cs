@@ -10,7 +10,7 @@
 // Generated from: Tests/Redola.Rpc.TestContracts/Order.proto
 namespace Redola.Rpc.TestContracts
 {
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"Order")]
+    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"Order")]
   public partial class Order : global::ProtoBuf.IExtensible
   {
     public Order() {}

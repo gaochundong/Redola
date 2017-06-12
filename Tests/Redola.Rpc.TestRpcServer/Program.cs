@@ -21,7 +21,7 @@ namespace Redola.Rpc.TestRpcServer
             var orderService = new OrderService(localActor, new CountableRateLimiter());
 
             localActor.RegisterRpcService(helloService);
-            localActor.RegisterRpcService(calcService as RpcService);
+            localActor.RegisterRpcService(calcService);
             localActor.RegisterRpcService(orderService);
 
             localActor.Bootup();

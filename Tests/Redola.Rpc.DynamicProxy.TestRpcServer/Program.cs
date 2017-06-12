@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text.RegularExpressions;
 using Logrila.Logging;
 using Logrila.Logging.NLogIntegration;
 using Redola.Rpc.TestContracts;
