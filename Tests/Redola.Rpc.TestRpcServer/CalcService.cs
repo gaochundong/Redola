@@ -41,7 +41,9 @@ namespace Redola.Rpc.TestRpcServer
 
         public AddResponse Add(AddRequest request)
         {
-            return new AddResponse() { Result = request.X + request.Y };
+            var response = new AddResponse() { Result = request.X + request.Y };
+            _log.DebugFormat("Add, X={0}, Y={1}, Result={2}", request.X, request.Y, response.Result);
+            return response;
         }
     }
 }

@@ -38,8 +38,6 @@ namespace Redola.Rpc.TestRpcServer
                 Message = Hello(request.Message),
             };
 
-            _log.DebugFormat("OnHelloRequest, say hello, MessageID[{0}], CorrelationID[{1}].",
-                response.MessageID, response.CorrelationID);
             this.BeginReply(sender.ChannelIdentifier, response);
         }
 
@@ -57,6 +55,7 @@ namespace Redola.Rpc.TestRpcServer
 
         public HelloResponse Hello(HelloRequest request)
         {
+            _log.DebugFormat("Hello, Text={0}", request.Text);
             return new HelloResponse() { Text = DateTime.Now.ToString(@"yyyy-MM-dd HH:mm:ss.fffffff") };
         }
 

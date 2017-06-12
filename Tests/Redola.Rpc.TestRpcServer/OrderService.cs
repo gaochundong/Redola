@@ -36,13 +36,12 @@ namespace Redola.Rpc.TestRpcServer
                 Message = PlaceOrder(request.Message),
             };
 
-            _log.DebugFormat("OnPlaceOrderRequest, place order, MessageID[{0}], CorrelationID[{1}].",
-                response.MessageID, response.CorrelationID);
             this.BeginReply(sender.ChannelIdentifier, response);
         }
 
         public PlaceOrderResponse PlaceOrder(PlaceOrderRequest request)
         {
+            _log.DebugFormat("PlaceOrder, OrderID={0}", request.Contract.OrderID);
             return new PlaceOrderResponse()
             {
                 Contract = request.Contract,
