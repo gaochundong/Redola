@@ -58,6 +58,7 @@
     <Compile Include="Actor\Center\CenterActor.cs" />
     <Compile Include="Actor\Configuration\ByLocalXmlFile\XmlActorConfiguration.cs" />
     <Compile Include="Actor\Configuration\ByLocalXmlFile\LocalXmlFileActorConfiguration.cs" />
+    <Compile Include="Actor\Directory\EventArgs\ActorsChangedEventArgs.cs" />
     <Compile Include="Actor\Directory\IActorDirectory.cs" />
     <Compile Include="Actor\EventArgs\ActorConnectedEventArgs.cs" />
     <Compile Include="Actor\EventArgs\ActorDataReceivedEventArgs.cs" />

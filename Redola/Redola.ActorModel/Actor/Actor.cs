@@ -60,7 +60,7 @@ namespace Redola.ActorModel
                 throw new InvalidOperationException("Actor directory has already been assigned.");
             _directory = directory;
 
-            _manager = new ActorChannelManager(new ActorChannelFactory(_directory, this.ChannelConfiguration));
+            _manager = new ActorChannelManager(_directory, new ActorChannelFactory(_directory, this.ChannelConfiguration));
             _manager.ChannelConnected += OnActorChannelConnected;
             _manager.ChannelDisconnected += OnActorChannelDisconnected;
             _manager.ChannelDataReceived += OnActorChannelDataReceived;

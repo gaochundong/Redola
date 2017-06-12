@@ -12,6 +12,7 @@ namespace Redola.ActorModel
     {
         private ILog _log = Logger.Get<ActorChannelManager>();
         private ActorIdentity _localActor;
+        private IActorDirectory _directory;
         private ActorChannelFactory _factory;
 
         private class ChannelItem
@@ -38,12 +39,28 @@ namespace Redola.ActorModel
             = new ConcurrentDictionary<string, ChannelItem>(); // ChannelIdentifier -> ChannelItem
         private readonly object _syncLock = new object();
 
-        public ActorChannelManager(ActorChannelFactory factory)
+        public ActorChannelManager(IActorDirectory directory, ActorChannelFactory factory)
         {
+            if (directory == null)
+                throw new ArgumentNullException("directory");
             if (factory == null)
                 throw new ArgumentNullException("factory");
 
+            _directory = directory;
             _factory = factory;
+
+            _directory.ActorsChanged += OnDirectoryActorsChanged;
+        }
+
+        private void OnDirectoryActorsChanged(object sender, ActorsChangedEventArgs e)
+        {
+            foreach (var usingActorType in _channels.Values.Select(v => v.RemoteActor.Type).Distinct())
+            {
+                if (e.Actors.Any(a => a.Type == usingActorType))
+                {
+                    BuildAllActorChannels(usingActorType);
+                }
+            }
         }
 
         public void ActivateLocalActor(ActorIdentity localActor)
@@ -109,17 +126,16 @@ namespace Redola.ActorModel
                     return item.Channel;
                 }
 
-                var channel = _factory.BuildActorChannel(_localActor, actorType, actorName);
-                bool activated = ActivateChannel(channel);
-                if (activated)
+                BuildActorChannel(actorType, actorName);
+
+                item = _channels.Values.FirstOrDefault(i => i.RemoteActorKey == actorKey);
+                if (item != null)
                 {
-                    return channel;
+                    return item.Channel;
                 }
-                else
-                {
-                    throw new ActorNotFoundException(string.Format(
-                        "Activate channel failed, cannot connect remote actor, Type[{0}], Name[{1}].", actorType, actorName));
-                }
+
+                throw new ActorNotFoundException(string.Format(
+                    "Build actor channel failed, cannot connect remote actor, Type[{0}], Name[{1}].", actorType, actorName));
             }
         }
 
@@ -144,35 +160,17 @@ namespace Redola.ActorModel
                     return item.Channel;
                 }
 
-                var channel = _factory.BuildActorChannel(_localActor, actorType);
-                bool activated = ActivateChannel(channel);
-                if (activated)
+                BuildAllActorChannels(actorType);
+
+                item = _channels.Values.Where(i => i.RemoteActor.Type == actorType).OrderBy(t => Guid.NewGuid()).FirstOrDefault();
+                if (item != null)
                 {
-                    return channel;
+                    return item.Channel;
                 }
-                else
-                {
-                    throw new ActorNotFoundException(string.Format(
-                        "Activate channel failed, cannot connect remote actor, Type[{0}].", actorType));
-                }
+
+                throw new ActorNotFoundException(string.Format(
+                    "Build actor channel failed, cannot connect remote actor, Type[{0}].", actorType));
             }
-        }
-
-        public IActorChannel GetActorChannelByIdentifier(string identifier)
-        {
-            if (string.IsNullOrEmpty(identifier))
-                throw new ArgumentNullException("identifier");
-
-            ChannelItem item = null;
-
-            item = _channels.Values.FirstOrDefault(i => i.ChannelIdentifier == identifier);
-            if (item != null)
-            {
-                return item.Channel;
-            }
-
-            throw new ActorNotFoundException(string.Format(
-                "Cannot find channel by identifier, Identifier[{0}].", identifier));
         }
 
         private bool ActivateChannel(IActorChannel channel)
@@ -212,6 +210,59 @@ namespace Redola.ActorModel
                 CloseChannel(channel);
                 return false;
             }
+        }
+
+        private void BuildActorChannel(string actorType, string actorName)
+        {
+            lock (_syncLock)
+            {
+                var channel = _factory.BuildActorChannel(_localActor, actorType, actorName);
+                bool activated = ActivateChannel(channel);
+                if (activated)
+                {
+                    _log.DebugFormat("Build actor channel [{0}] to remote actor, ActorType[{1}], ActorName[{2}].",
+                        channel.Identifier, actorType, actorName);
+                }
+            }
+        }
+
+        private void BuildAllActorChannels(string actorType)
+        {
+            lock (_syncLock)
+            {
+                var remoteActors = _directory.LookupRemoteActors(actorType);
+                if (remoteActors != null && remoteActors.Any())
+                {
+                    foreach (var remoteActor in remoteActors)
+                    {
+                        try
+                        {
+                            GetActorChannel(remoteActor);
+                        }
+                        catch (Exception ex)
+                        {
+                            _log.Error(ex.Message, ex);
+                        }
+                    }
+                }
+            }
+        }
+
+        public IActorChannel GetActorChannelByIdentifier(string identifier)
+        {
+            if (string.IsNullOrEmpty(identifier))
+                throw new ArgumentNullException("identifier");
+
+            ChannelItem item = null;
+
+            item = _channels.Values.FirstOrDefault(i => i.ChannelIdentifier == identifier);
+            if (item != null)
+            {
+                return item.Channel;
+            }
+
+            throw new ActorNotFoundException(string.Format(
+                "Cannot find channel by identifier, Identifier[{0}].", identifier));
         }
 
         public IEnumerable<IActorChannel> GetActorChannels(string actorType)

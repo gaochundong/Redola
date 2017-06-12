@@ -74,22 +74,45 @@ namespace Redola.ActorModel
             return endpoints;
         }
 
+        public IEnumerable<ActorIdentity> LookupRemoteActors(string actorType)
+        {
+            if (string.IsNullOrEmpty(actorType))
+                throw new ArgumentNullException("actorType");
+
+            var remoteActors = LookupRemoteActors(
+                actorType,
+                (actors) =>
+                {
+                    return actors.Where(a => a.Type == actorType);
+                });
+
+            if (remoteActors == null || !remoteActors.Any())
+                throw new ActorNotFoundException(string.Format(
+                    "Cannot lookup remote actor, Type[{0}].", actorType));
+
+            return remoteActors;
+        }
+
         private IEnumerable<IPEndPoint> LookupRemoteActorEndPoints(string actorType, Func<IEnumerable<ActorIdentity>, IEnumerable<ActorIdentity>> matchActorFunc)
+        {
+            var remoteActors = LookupRemoteActors(actorType, matchActorFunc);
+
+            if (remoteActors != null && remoteActors.Any())
+            {
+                return remoteActors.Select(a => ConvertActorToEndPoint(a));
+            }
+
+            return null;
+        }
+
+        private IEnumerable<ActorIdentity> LookupRemoteActors(string actorType, Func<IEnumerable<ActorIdentity>, IEnumerable<ActorIdentity>> matchActorFunc)
         {
             _log.DebugFormat("Lookup actors [{0}].", _configuration.ActorDirectory.Count());
             var matchedActors = matchActorFunc(_configuration.ActorDirectory);
             if (matchedActors != null && matchedActors.Any())
             {
-                var actorEndPoints = new List<IPEndPoint>();
-                foreach (var item in matchedActors)
-                {
-                    IPAddress actorAddress = ResolveIPAddress(item.Address);
-                    int actorPort = int.Parse(item.Port);
-                    var actorEndPoint = new IPEndPoint(actorAddress, actorPort);
-                    actorEndPoints.Add(actorEndPoint);
-                }
-                _log.DebugFormat("Resolve actors [{0}].", actorEndPoints.Count);
-                return actorEndPoints;
+                _log.DebugFormat("Resolve actors [{0}].", matchedActors.Count());
+                return matchedActors;
             }
 
             return null;
@@ -126,6 +149,23 @@ namespace Redola.ActorModel
             }
 
             return remoteIPAddress;
+        }
+
+        private IPEndPoint ConvertActorToEndPoint(ActorIdentity actor)
+        {
+            var actorAddress = ResolveIPAddress(actor.Address);
+            int actorPort = int.Parse(actor.Port);
+            return new IPEndPoint(actorAddress, actorPort);
+        }
+
+        public event EventHandler<ActorsChangedEventArgs> ActorsChanged;
+
+        private void RaiseActorsChanged(IEnumerable<ActorIdentity> actors)
+        {
+            if (ActorsChanged != null)
+            {
+                ActorsChanged(this, new ActorsChangedEventArgs(actors));
+            }
         }
     }
 }
