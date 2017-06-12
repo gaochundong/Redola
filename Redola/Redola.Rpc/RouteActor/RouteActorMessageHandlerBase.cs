@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Logrila.Logging;
-using Redola.ActorModel;
 
 namespace Redola.Rpc
 {

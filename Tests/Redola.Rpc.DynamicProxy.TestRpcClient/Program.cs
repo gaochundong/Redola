@@ -6,7 +6,7 @@ using Logrila.Logging;
 using Logrila.Logging.NLogIntegration;
 using Redola.Rpc.TestContracts;
 
-namespace Redola.Rpc.TestRpcClient
+namespace Redola.Rpc.DynamicProxy.TestRpcClient
 {
     class Program
     {
@@ -18,13 +18,13 @@ namespace Redola.Rpc.TestRpcClient
 
             var localActor = new RpcActor();
 
-            var helloClient = new HelloClient(localActor);
-            var calcClient = new CalcClient(localActor);
-            var orderClient = new OrderClient(localActor);
+            var helloClient = RpcServiceProxyGenerator.CreateServiceProxy<IHelloService>(localActor, "server");
+            var calcClient = RpcServiceProxyGenerator.CreateServiceProxy<ICalcService>(localActor, "server");
+            var orderClient = RpcServiceProxyGenerator.CreateServiceProxy<IOrderService>(localActor, "server");
 
-            localActor.RegisterRpcService(helloClient);
-            localActor.RegisterRpcService(calcClient);
-            localActor.RegisterRpcService(orderClient);
+            localActor.RegisterRpcService(helloClient as RpcService);
+            localActor.RegisterRpcService(calcClient as RpcService);
+            localActor.RegisterRpcService(orderClient as RpcService);
 
             localActor.Bootup();
 

@@ -75,12 +75,13 @@
     <Compile Include="Message\Strategy\MessageHandleStrategy.cs" />
     <Compile Include="RouteActor\RouteActor.cs" />
     <Compile Include="RouteActor\RouteActorMessageHandlerBase.cs" />
+    <Compile Include="Rpc\Attributes\RpcServiceReplyAttribute.cs" />
     <Compile Include="Rpc\RpcMessage\RequestResponseMessageContract.cs" />
     <Compile Include="Rpc\RpcMessage\ReceiveMessageContract.cs" />
     <Compile Include="Rpc\RpcMessage\RpcMessageContract.cs" />
     <Compile Include="Rpc\RpcActor.cs" />
     <Compile Include="Rpc\RpcService.cs" />
-    <Compile Include="Rpc\RpcServiceSendAttribute.cs" />
+    <Compile Include="Rpc\Attributes\RpcServiceSendAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Redola.ActorModel\Redola.ActorModel.csproj">

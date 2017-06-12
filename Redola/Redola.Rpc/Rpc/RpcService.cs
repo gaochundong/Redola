@@ -240,6 +240,7 @@ namespace Redola.Rpc
 
         #region Reply Envelope
 
+        [RpcServiceReply]
         public void Reply<T>(string channelIdentifier, ActorMessageEnvelope<T> message)
         {
             this.Actor.Reply(channelIdentifier, message);

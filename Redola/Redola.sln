@@ -30,6 +30,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redola.Rpc.TestRpcCenter", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redola.Rpc.DynamicProxy", "Redola.Rpc.DynamicProxy\Redola.Rpc.DynamicProxy.csproj", "{17B964E4-8D0F-4077-8F5A-7654E6403D09}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redola.Rpc.DynamicProxy.TestRpcClient", "..\Tests\Redola.Rpc.DynamicProxy.TestRpcClient\Redola.Rpc.DynamicProxy.TestRpcClient.csproj", "{80A02268-72B7-4312-AF7A-C1DDD9654364}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redola.Rpc.DynamicProxy.TestRpcServer", "..\Tests\Redola.Rpc.DynamicProxy.TestRpcServer\Redola.Rpc.DynamicProxy.TestRpcServer.csproj", "{A4CE7BCE-7F4D-4E4B-AFC1-4A70F9A886A8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -68,6 +72,14 @@ Global
 		{17B964E4-8D0F-4077-8F5A-7654E6403D09}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{17B964E4-8D0F-4077-8F5A-7654E6403D09}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{17B964E4-8D0F-4077-8F5A-7654E6403D09}.Release|Any CPU.Build.0 = Release|Any CPU
+		{80A02268-72B7-4312-AF7A-C1DDD9654364}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80A02268-72B7-4312-AF7A-C1DDD9654364}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80A02268-72B7-4312-AF7A-C1DDD9654364}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80A02268-72B7-4312-AF7A-C1DDD9654364}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A4CE7BCE-7F4D-4E4B-AFC1-4A70F9A886A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4CE7BCE-7F4D-4E4B-AFC1-4A70F9A886A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4CE7BCE-7F4D-4E4B-AFC1-4A70F9A886A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4CE7BCE-7F4D-4E4B-AFC1-4A70F9A886A8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -78,5 +90,7 @@ Global
 		{FACCBF0D-1634-42F6-8011-22D3DDA54F18} = {49D4F9A0-5E09-4CE9-B9C3-49766ABACD19}
 		{01EAA9D3-A299-4EC2-BADE-843BA7500174} = {49D4F9A0-5E09-4CE9-B9C3-49766ABACD19}
 		{DCB0784A-622E-4EF6-BA1B-79099DA8D648} = {49D4F9A0-5E09-4CE9-B9C3-49766ABACD19}
+		{80A02268-72B7-4312-AF7A-C1DDD9654364} = {49D4F9A0-5E09-4CE9-B9C3-49766ABACD19}
+		{A4CE7BCE-7F4D-4E4B-AFC1-4A70F9A886A8} = {49D4F9A0-5E09-4CE9-B9C3-49766ABACD19}
 	EndGlobalSection
 EndGlobal

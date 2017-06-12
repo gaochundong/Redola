@@ -6,15 +6,13 @@ using Castle.DynamicProxy;
 
 namespace Redola.Rpc.DynamicProxy
 {
-    public class RpcServiceInterceptor : IInterceptor
+    public class RpcServiceInterceptor<T> : IInterceptor
     {
-        private Type _serviceType;
-        private string _serviceActorType;
+        private T _service;
 
-        public RpcServiceInterceptor(Type serviceType, string serviceActorType)
+        public RpcServiceInterceptor(T service)
         {
-            _serviceType = serviceType;
-            _serviceActorType = serviceActorType;
+            _service = service;
         }
 
         public void Intercept(IInvocation invocation)
@@ -23,9 +21,9 @@ namespace Redola.Rpc.DynamicProxy
             {
                 invocation.ReturnValue = BuildRpcMessageContracts();
             }
-            else if (_serviceType.GetMethods().Select(m => m.Name).Contains(invocation.Method.Name))
+            else if (invocation.Method.Name == "DoHandleMessage")
             {
-                invocation.ReturnValue = InvokeRpcMethod(invocation);
+                InvokeRpcMethod(invocation);
             }
             else
             {
@@ -37,39 +35,65 @@ namespace Redola.Rpc.DynamicProxy
         {
             var messages = new List<RpcMessageContract>();
 
-            var methods = _serviceType.GetMethods();
+            var methods = typeof(T).GetMethods();
             foreach (var method in methods)
             {
                 var methodParameters = method.GetParameters();
                 if (methodParameters.Any())
                 {
-                    if (method.ReturnType == typeof(void))
-                    {
-                        messages.Add(new ReceiveMessageContract(methodParameters.First().ParameterType));
-                    }
-                    else
-                    {
-                        messages.Add(new RequestResponseMessageContract(methodParameters.First().ParameterType, method.ReturnType));
-                    }
+                    messages.Add(new ReceiveMessageContract(methodParameters.First().ParameterType));
                 }
             }
 
             return messages;
         }
 
-        private object InvokeRpcMethod(IInvocation invocation)
+        private void InvokeRpcMethod(IInvocation invocation)
         {
-            var rpcMethod = _serviceType.GetMethods().First(m => m.Name == invocation.Method.Name);
+            var invokedSender = invocation.Arguments[0];
+            var invokedEnvelope = invocation.Arguments[1];
+
+            var sender = invokedSender.GetType();
+            var channelIdentifier = (string)sender.GetProperty("ChannelIdentifier").GetValue(invokedSender);
+
+            var envelope = invokedEnvelope.GetType();
+            var messageType = (string)envelope.GetProperty("MessageType").GetValue(invokedEnvelope);
+
+            var rpcMethod = typeof(T).GetMethods().First(m => m.GetParameters().Any(p => p.ParameterType.Name == messageType));
             var rpcMethodParameter = rpcMethod.GetParameters().First();
 
-            var sendMethod = typeof(RpcService).GetMethods().First(m => m.IsGenericMethod && m.GetCustomAttribute<RpcServiceSendAttribute>() != null);
-            var genericSendMethod = sendMethod.MakeGenericMethod(new Type[] { rpcMethodParameter.ParameterType, rpcMethod.ReturnType });
+            var actorHandler = typeof(RouteActorMessageHandlerBase);
+            var actor = (RouteActor)actorHandler.GetProperty("Actor").GetValue(invocation.Proxy);
 
-            var sendArguments = new List<object>();
-            sendArguments.Add(_serviceActorType);
-            sendArguments.AddRange(invocation.Arguments);
+            var instantiateMethod = typeof(ActorMessageEnvelopeExtensions)
+                .GetMethod("Instantiate", new Type[] { typeof(ActorMessageEnvelope), typeof(IActorMessageDecoder) })
+                .MakeGenericMethod(rpcMethodParameter.ParameterType);
+            var instantiatedEnvelope = instantiateMethod.Invoke(null, new object[] { invokedEnvelope, actor.Decoder });
 
-            return genericSendMethod.Invoke(invocation.Proxy, sendArguments.ToArray());
+            var messageID = (string)instantiatedEnvelope.GetType().GetProperty("MessageID").GetValue(instantiatedEnvelope);
+            var messageTime = (DateTime)instantiatedEnvelope.GetType().GetProperty("MessageTime").GetValue(instantiatedEnvelope);
+            var messageRequest = instantiatedEnvelope.GetType().GetProperty("Message").GetValue(instantiatedEnvelope);
+
+            var messageResponse = rpcMethod.Invoke(_service, new object[] { messageRequest });
+
+            if (rpcMethod.ReturnType != typeof(void))
+            {
+                var replyMethod = typeof(RpcService).GetMethods().First(m => m.GetCustomAttribute<RpcServiceReplyAttribute>() != null);
+                var genericReplyMethod = replyMethod.MakeGenericMethod(new Type[] { rpcMethod.ReturnType });
+
+                var responseEnvelope = typeof(ActorMessageEnvelope<>);
+                var responseType = responseEnvelope.MakeGenericType(rpcMethod.ReturnType);
+                var responseInstance = Activator.CreateInstance(responseType);
+                responseType.GetProperty("CorrelationID").SetValue(responseInstance, messageID);
+                responseType.GetProperty("CorrelationTime").SetValue(responseInstance, messageTime);
+                responseType.GetProperty("Message").SetValue(responseInstance, messageResponse);
+
+                var replyArguments = new List<object>();
+                replyArguments.Add(channelIdentifier);
+                replyArguments.Add(responseInstance);
+
+                genericReplyMethod.Invoke(invocation.Proxy, replyArguments.ToArray());
+            }
         }
     }
 }

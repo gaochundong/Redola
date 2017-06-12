@@ -16,14 +16,12 @@ namespace Redola.Rpc.TestRpcServer
 
             var localActor = new RpcActor();
 
-            var rateLimiter = new CountableRateLimiter();
-
-            var helloService = new HelloService(localActor, rateLimiter);
-            var calcService = new CalcService(localActor);
-            var orderService = new OrderService(localActor, rateLimiter);
+            var helloService = new HelloService(localActor, new CountableRateLimiter());
+            var calcService = new CalcService(localActor, new CountableRateLimiter());
+            var orderService = new OrderService(localActor, new CountableRateLimiter());
 
             localActor.RegisterRpcService(helloService);
-            localActor.RegisterRpcService(calcService);
+            localActor.RegisterRpcService(calcService as RpcService);
             localActor.RegisterRpcService(orderService);
 
             localActor.Bootup();

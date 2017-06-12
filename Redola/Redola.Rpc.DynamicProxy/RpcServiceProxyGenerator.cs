@@ -14,7 +14,18 @@ namespace Redola.Rpc.DynamicProxy
                 new Type[] { typeof(T) },
                 new ProxyGenerationOptions(),
                 new object[] { localActor },
-                new IInterceptor[] { new RpcServiceInterceptor(typeof(T), serviceActorType) });
+                new IInterceptor[] { new RpcServiceProxyInterceptor(typeof(T), serviceActorType) });
+            return (T)proxy;
+        }
+
+        public static T CreateService<T>(RpcActor localActor, T service)
+        {
+            var proxy = _proxyGenerator.CreateClassProxy(
+                typeof(RpcService),
+                new Type[] { typeof(T) },
+                new ProxyGenerationOptions(),
+                new object[] { localActor },
+                new IInterceptor[] { new RpcServiceInterceptor<T>(service) });
             return (T)proxy;
         }
     }
