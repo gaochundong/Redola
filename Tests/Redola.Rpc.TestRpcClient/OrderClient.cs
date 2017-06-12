@@ -26,7 +26,7 @@ namespace Redola.Rpc.TestRpcClient
 
         public PlaceOrderResponse PlaceOrder(PlaceOrderRequest request)
         {
-            return this.Actor.Send<PlaceOrderRequest, PlaceOrderResponse>("server", request);
+            return this.Send<PlaceOrderRequest, PlaceOrderResponse>("server", request);
         }
 
         private void OnOrderStatusChangedNotification(ActorSender sender, ActorMessageEnvelope<OrderStatusChangedNotification> message)

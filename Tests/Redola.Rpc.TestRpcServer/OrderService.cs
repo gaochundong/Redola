@@ -38,7 +38,7 @@ namespace Redola.Rpc.TestRpcServer
 
             _log.DebugFormat("OnPlaceOrderRequest, place order, MessageID[{0}], CorrelationID[{1}].",
                 response.MessageID, response.CorrelationID);
-            this.Actor.BeginReply(sender.ChannelIdentifier, response);
+            this.BeginReply(sender.ChannelIdentifier, response);
         }
 
         public PlaceOrderResponse PlaceOrder(PlaceOrderRequest request)
@@ -53,7 +53,7 @@ namespace Redola.Rpc.TestRpcServer
 
         public void NotifyOrderChanged(ActorMessageEnvelope<OrderStatusChangedNotification> notification)
         {
-            this.Actor.BeginSend("client", notification);
+            this.BeginSend("client", notification);
         }
     }
 }

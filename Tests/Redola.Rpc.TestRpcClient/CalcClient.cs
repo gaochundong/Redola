@@ -24,7 +24,7 @@ namespace Redola.Rpc.TestRpcClient
 
         public AddResponse Add(AddRequest request)
         {
-            return this.Actor.Send<AddRequest, AddResponse>("server", request);
+            return this.Send<AddRequest, AddResponse>("server", request);
         }
     }
 }

@@ -4,6 +4,8 @@ using Happer.Hosting.Self;
 using Logrila.Logging;
 using Logrila.Logging.NLogIntegration;
 using Redola.ActorModel;
+using Redola.Rpc.DynamicProxy;
+using Redola.Rpc.TestContracts;
 
 namespace Redola.Rpc.TestHttpServer
 {
@@ -21,11 +23,11 @@ namespace Redola.Rpc.TestHttpServer
 
             var localActor = new RpcActor(localXmlFileActorConfiguration);
 
-            var helloClient = new HelloClient(localActor);
-            var calcClient = new CalcClient(localActor);
+            var helloClient = RpcServiceProxyGenerator.CreateServiceProxy<IHelloService>(localActor);
+            var calcClient = RpcServiceProxyGenerator.CreateServiceProxy<ICalcService>(localActor);
 
-            localActor.RegisterRpcService(helloClient);
-            localActor.RegisterRpcService(calcClient);
+            localActor.RegisterRpcService(helloClient as RpcService);
+            localActor.RegisterRpcService(calcClient as RpcService);
 
             localActor.Bootup(localXmlFileActorDirectory);
 

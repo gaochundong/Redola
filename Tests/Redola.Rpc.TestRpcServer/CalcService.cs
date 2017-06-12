@@ -36,7 +36,7 @@ namespace Redola.Rpc.TestRpcServer
                 Message = Add(request.Message),
             };
 
-            this.Actor.BeginReply(sender.ChannelIdentifier, response);
+            this.BeginReply(sender.ChannelIdentifier, response);
         }
 
         public AddResponse Add(AddRequest request)

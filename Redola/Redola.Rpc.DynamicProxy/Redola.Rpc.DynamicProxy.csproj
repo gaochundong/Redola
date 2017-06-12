@@ -45,10 +45,17 @@
       <Link>SolutionVersion.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RpcServiceInterceptor.cs" />
     <Compile Include="RpcServiceProxyGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Redola.Rpc\Redola.Rpc.csproj">
+      <Project>{465f580d-f09f-4362-a6ee-40b2627b11a4}</Project>
+      <Name>Redola.Rpc</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

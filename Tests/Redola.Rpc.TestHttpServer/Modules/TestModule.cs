@@ -6,10 +6,10 @@ namespace Redola.Rpc.TestHttpServer
 {
     internal class TestModule : Module
     {
-        private HelloClient _helloService;
-        private CalcClient _calcService;
+        private IHelloService _helloService;
+        private ICalcService _calcService;
 
-        public TestModule(HelloClient helloService, CalcClient calcService)
+        public TestModule(IHelloService helloService, ICalcService calcService)
         {
             _helloService = helloService;
             _calcService = calcService;
@@ -35,7 +35,7 @@ namespace Redola.Rpc.TestHttpServer
             Get("/add", x =>
             {
                 var response = _calcService.Add(new AddRequest() { X = 1, Y = 2 });
-                return response.Result.ToString();
+                return string.Format("Result = {0}, Time = {1}", response.Result.ToString(), DateTime.Now.ToString(@"yyyy-MM-dd HH:mm:ss.fffffff"));
             });
         }
     }

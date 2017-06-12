@@ -80,6 +80,7 @@
     <Compile Include="Rpc\RpcMessage\RpcMessageContract.cs" />
     <Compile Include="Rpc\RpcActor.cs" />
     <Compile Include="Rpc\RpcService.cs" />
+    <Compile Include="Rpc\RpcServiceSendAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Redola.ActorModel\Redola.ActorModel.csproj">

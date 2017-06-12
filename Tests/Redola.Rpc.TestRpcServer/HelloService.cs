@@ -40,7 +40,7 @@ namespace Redola.Rpc.TestRpcServer
 
             _log.DebugFormat("OnHelloRequest, say hello, MessageID[{0}], CorrelationID[{1}].",
                 response.MessageID, response.CorrelationID);
-            this.Actor.BeginReply(sender.ChannelIdentifier, response);
+            this.BeginReply(sender.ChannelIdentifier, response);
         }
 
         private void OnHello10000Request(ActorSender sender, ActorMessageEnvelope<Hello10000Request> request)
@@ -52,7 +52,7 @@ namespace Redola.Rpc.TestRpcServer
                 Message = Hello10000(request.Message),
             };
 
-            this.Actor.BeginReply(sender.ChannelIdentifier, response);
+            this.BeginReply(sender.ChannelIdentifier, response);
         }
 
         public HelloResponse Hello(HelloRequest request)
