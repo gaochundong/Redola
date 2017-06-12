@@ -224,11 +224,11 @@ namespace Redola.ActorModel
                     var actors = actorLookupResponseData != null ? actorLookupResponseData.Items : null;
                     if (actors != null)
                     {
-                        _log.DebugFormat("Lookup actors [{0}].", actors.Count);
+                        _log.DebugFormat("Lookup actors, ActorType[{0}], Count[{1}].", actorType, actors.Count);
                         var matchedActors = matchActorFunc(actors);
                         if (matchedActors != null && matchedActors.Any())
                         {
-                            _log.DebugFormat("Resolve actors [{0}].", matchedActors.Count());
+                            _log.DebugFormat("Resolve actors, ActorType[{0}], Count[{1}].", actorType, matchedActors.Count());
                             return matchedActors;
                         }
                     }

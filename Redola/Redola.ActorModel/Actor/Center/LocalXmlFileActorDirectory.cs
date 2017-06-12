@@ -107,11 +107,11 @@ namespace Redola.ActorModel
 
         private IEnumerable<ActorIdentity> LookupRemoteActors(string actorType, Func<IEnumerable<ActorIdentity>, IEnumerable<ActorIdentity>> matchActorFunc)
         {
-            _log.DebugFormat("Lookup actors [{0}].", _configuration.ActorDirectory.Count());
+            _log.DebugFormat("Lookup actors, ActorType[{0}], Count[{1}].", actorType, _configuration.ActorDirectory.Count());
             var matchedActors = matchActorFunc(_configuration.ActorDirectory);
             if (matchedActors != null && matchedActors.Any())
             {
-                _log.DebugFormat("Resolve actors [{0}].", matchedActors.Count());
+                _log.DebugFormat("Resolve actors, ActorType[{0}], Count[{1}].", actorType, matchedActors.Count());
                 return matchedActors;
             }
 
