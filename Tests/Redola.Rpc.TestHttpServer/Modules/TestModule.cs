@@ -34,8 +34,8 @@ namespace Redola.Rpc.TestHttpServer
             });
             Get("/add", x =>
             {
-                var result = _calcService.Add(1, 2);
-                return result.ToString();
+                var response = _calcService.Add(new AddRequest() { X = 1, Y = 2 });
+                return response.Result.ToString();
             });
         }
     }

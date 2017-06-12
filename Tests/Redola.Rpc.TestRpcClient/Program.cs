@@ -179,7 +179,7 @@ namespace Redola.Rpc.TestRpcClient
                 {
                     for (var j = 0; j < totalCalls / threadCount; j++)
                     {
-                        calcClient.Add(1, 2);
+                        calcClient.Add(new AddRequest() { X = 1, Y = 2 });
                     }
                 },
                 TaskCreationOptions.PreferFairness);

@@ -22,11 +22,6 @@ namespace Redola.Rpc.TestRpcClient
             return messages;
         }
 
-        public int Add(int x, int y)
-        {
-            return Add(new AddRequest() { X = x, Y = y }).Result;
-        }
-
         public AddResponse Add(AddRequest request)
         {
             return this.Actor.Send<AddRequest, AddResponse>("server", request);
