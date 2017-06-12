@@ -8,11 +8,13 @@ namespace Redola.Rpc.DynamicProxy
 {
     public class RpcServiceInterceptor : IInterceptor
     {
-        private Type _targetType;
+        private Type _serviceType;
+        private string _serviceActorType;
 
-        public RpcServiceInterceptor(Type targetType)
+        public RpcServiceInterceptor(Type serviceType, string serviceActorType)
         {
-            _targetType = targetType;
+            _serviceType = serviceType;
+            _serviceActorType = serviceActorType;
         }
 
         public void Intercept(IInvocation invocation)
@@ -21,7 +23,7 @@ namespace Redola.Rpc.DynamicProxy
             {
                 invocation.ReturnValue = BuildRpcMessageContracts();
             }
-            else if (_targetType.GetMethods().Select(m => m.Name).Contains(invocation.Method.Name))
+            else if (_serviceType.GetMethods().Select(m => m.Name).Contains(invocation.Method.Name))
             {
                 invocation.ReturnValue = InvokeRpcMethod(invocation);
             }
@@ -35,7 +37,7 @@ namespace Redola.Rpc.DynamicProxy
         {
             var messages = new List<RpcMessageContract>();
 
-            var methods = _targetType.GetMethods();
+            var methods = _serviceType.GetMethods();
             foreach (var method in methods)
             {
                 var methodParameters = method.GetParameters();
@@ -57,7 +59,7 @@ namespace Redola.Rpc.DynamicProxy
 
         private object InvokeRpcMethod(IInvocation invocation)
         {
-            var rpcMethod = _targetType.GetMethods().First(m => m.Name == invocation.Method.Name);
+            var rpcMethod = _serviceType.GetMethods().First(m => m.Name == invocation.Method.Name);
             var rpcMethodParameter = rpcMethod.GetParameters().First();
 
             var sendMethods = typeof(RpcService).GetMethods().Where(m => m.Name == "Send");
@@ -65,7 +67,7 @@ namespace Redola.Rpc.DynamicProxy
             var genericSendMethod = sendMethod.MakeGenericMethod(new Type[] { rpcMethodParameter.ParameterType, rpcMethod.ReturnType });
 
             var sendArguments = new List<object>();
-            sendArguments.Add("server");
+            sendArguments.Add(_serviceActorType);
             sendArguments.AddRange(invocation.Arguments);
 
             return genericSendMethod.Invoke(invocation.Proxy, sendArguments.ToArray());
