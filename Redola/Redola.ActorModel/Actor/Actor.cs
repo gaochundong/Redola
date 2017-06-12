@@ -254,7 +254,7 @@ namespace Redola.ActorModel
             var channels = _manager.GetActorChannels(remoteActorType);
             foreach (var channel in channels.Where(c => c != null))
             {
-                channel.Send(remoteActorType, data, offset, count);
+                channel.Send(channel.Identifier, data, offset, count);
             }
         }
 
@@ -268,7 +268,35 @@ namespace Redola.ActorModel
             var channels = _manager.GetActorChannels(remoteActorType);
             foreach (var channel in channels.Where(c => c != null))
             {
-                channel.BeginSend(remoteActorType, data, offset, count);
+                channel.BeginSend(channel.Identifier, data, offset, count);
+            }
+        }
+
+        protected void Broadcast(byte[] data)
+        {
+            Broadcast(data, 0, data.Length);
+        }
+
+        protected void Broadcast(byte[] data, int offset, int count)
+        {
+            var channels = _manager.GetAllActorChannels();
+            foreach (var channel in channels.Where(c => c != null))
+            {
+                channel.Send(channel.Identifier, data, offset, count);
+            }
+        }
+
+        protected void BeginBroadcast(byte[] data)
+        {
+            BeginBroadcast(data, 0, data.Length);
+        }
+
+        protected void BeginBroadcast(byte[] data, int offset, int count)
+        {
+            var channels = _manager.GetAllActorChannels();
+            foreach (var channel in channels.Where(c => c != null))
+            {
+                channel.BeginSend(channel.Identifier, data, offset, count);
             }
         }
 

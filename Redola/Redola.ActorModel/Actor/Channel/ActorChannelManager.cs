@@ -357,7 +357,12 @@ namespace Redola.ActorModel
         public event EventHandler<ActorChannelDisconnectedEventArgs> ChannelDisconnected;
         public event EventHandler<ActorChannelDataReceivedEventArgs> ChannelDataReceived;
 
-        public List<ActorIdentity> GetAllActors()
+        internal IEnumerable<IActorChannel> GetAllActorChannels()
+        {
+            return _channels.Values.Select(v => v.Channel);
+        }
+
+        internal List<ActorIdentity> GetAllActors()
         {
             return _channels.Values.Select(c => c.RemoteActor).Where(f => f != null).ToList();
         }
