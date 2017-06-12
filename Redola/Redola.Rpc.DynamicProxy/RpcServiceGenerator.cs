@@ -3,18 +3,18 @@ using Castle.DynamicProxy;
 
 namespace Redola.Rpc.DynamicProxy
 {
-    public static class RpcServiceProxyGenerator
+    public static class RpcServiceGenerator
     {
         private static readonly IProxyGenerator _proxyGenerator = new ProxyGenerator();
 
-        public static T CreateServiceProxy<T>(RpcActor localActor, string serviceActorType)
+        public static T CreateService<T>(RpcActor localActor, T service)
         {
             var proxy = _proxyGenerator.CreateClassProxy(
                 typeof(RpcService),
                 new Type[] { typeof(T) },
                 new ProxyGenerationOptions(),
                 new object[] { localActor },
-                new IInterceptor[] { new RpcServiceProxyInterceptor(typeof(T), serviceActorType) });
+                new IInterceptor[] { new RpcServiceInterceptor<T>(service) });
             return (T)proxy;
         }
     }
