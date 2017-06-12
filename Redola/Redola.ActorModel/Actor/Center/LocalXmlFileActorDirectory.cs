@@ -37,48 +37,59 @@ namespace Redola.ActorModel
             if (string.IsNullOrEmpty(actorName))
                 throw new ArgumentNullException("actorName");
 
-            var endpoint = LookupRemoteActorEndPoint(
+            var endpoints = LookupRemoteActorEndPoints(
                 actorType,
                 (actors) =>
                 {
-                    return actors.FirstOrDefault(a => a.Type == actorType && a.Name == actorName);
+                    return actors.Where(a => a.Type == actorType && a.Name == actorName);
                 });
 
-            if (endpoint == null)
+            if (endpoints == null || endpoints.Count() == 0)
                 throw new ActorNotFoundException(string.Format(
                     "Cannot lookup remote actor, Type[{0}], Name[{1}].", actorType, actorName));
 
-            return endpoint;
+            if (endpoints.Count() > 1)
+                throw new ActorNotFoundException(string.Format(
+                    "Duplicate remote actor found, Type[{0}], Name[{1}].", actorType, actorName));
+
+            return endpoints.Single();
         }
 
-        public IPEndPoint LookupRemoteActorEndPoint(string actorType)
+        public IEnumerable<IPEndPoint> LookupRemoteActorEndPoints(string actorType)
         {
             if (string.IsNullOrEmpty(actorType))
                 throw new ArgumentNullException("actorType");
 
-            var endpoint = LookupRemoteActorEndPoint(
+            var endpoints = LookupRemoteActorEndPoints(
                 actorType,
                 (actors) =>
                 {
-                    return actors.Where(a => a.Type == actorType).OrderBy(t => Guid.NewGuid()).FirstOrDefault();
+                    return actors.Where(a => a.Type == actorType);
                 });
 
-            if (endpoint == null)
+            if (endpoints == null || !endpoints.Any())
                 throw new ActorNotFoundException(string.Format(
                     "Cannot lookup remote actor, Type[{0}].", actorType));
 
-            return endpoint;
+            return endpoints;
         }
 
-        private IPEndPoint LookupRemoteActorEndPoint(string actorType, Func<IEnumerable<ActorIdentity>, ActorIdentity> matchActorFunc)
+        private IEnumerable<IPEndPoint> LookupRemoteActorEndPoints(string actorType, Func<IEnumerable<ActorIdentity>, IEnumerable<ActorIdentity>> matchActorFunc)
         {
-            var actor = matchActorFunc(_configuration.ActorDirectory);
-            if (actor != null)
+            _log.DebugFormat("Lookup actors [{0}].", _configuration.ActorDirectory.Count());
+            var matchedActors = matchActorFunc(_configuration.ActorDirectory);
+            if (matchedActors != null && matchedActors.Any())
             {
-                IPAddress actorAddress = ResolveIPAddress(actor.Address);
-                int actorPort = int.Parse(actor.Port);
-                var actorEndPoint = new IPEndPoint(actorAddress, actorPort);
-                return actorEndPoint;
+                var actorEndPoints = new List<IPEndPoint>();
+                foreach (var item in matchedActors)
+                {
+                    IPAddress actorAddress = ResolveIPAddress(item.Address);
+                    int actorPort = int.Parse(item.Port);
+                    var actorEndPoint = new IPEndPoint(actorAddress, actorPort);
+                    actorEndPoints.Add(actorEndPoint);
+                }
+                _log.DebugFormat("Resolve actors [{0}].", actorEndPoints.Count);
+                return actorEndPoints;
             }
 
             return null;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using Logrila.Logging;
 
@@ -60,14 +61,14 @@ namespace Redola.ActorModel
 
         public IActorChannel BuildActorChannel(ActorIdentity localActor, string remoteActorType)
         {
-            var remoteActorEndPoint = _directory.LookupRemoteActorEndPoint(remoteActorType);
-            if (remoteActorEndPoint == null)
+            var remoteActorEndPoints = _directory.LookupRemoteActorEndPoints(remoteActorType);
+            if (remoteActorEndPoints == null || !remoteActorEndPoints.Any())
                 throw new ActorNotFoundException(string.Format(
                     "Cannot find remote actor endpoint, Type[{0}].", remoteActorType));
 
             var channel = new ActorConnectorChannel(
                 localActor,
-                new ActorTransportConnector(remoteActorEndPoint, _channelConfiguration.TransportConfiguration),
+                new ActorTransportConnector(remoteActorEndPoints.OrderBy(t => Guid.NewGuid()).FirstOrDefault(), _channelConfiguration.TransportConfiguration),
                 _channelConfiguration);
 
             return channel;

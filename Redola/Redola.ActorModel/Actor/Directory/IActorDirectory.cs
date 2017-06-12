@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Collections.Generic;
+using System.Net;
 
 namespace Redola.ActorModel
 {
@@ -9,6 +10,6 @@ namespace Redola.ActorModel
         void Close();
 
         IPEndPoint LookupRemoteActorEndPoint(string actorType, string actorName);
-        IPEndPoint LookupRemoteActorEndPoint(string actorType);
+        IEnumerable<IPEndPoint> LookupRemoteActorEndPoints(string actorType);
     }
 }
