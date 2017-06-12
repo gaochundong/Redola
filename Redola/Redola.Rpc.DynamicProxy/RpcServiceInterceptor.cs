@@ -62,8 +62,7 @@ namespace Redola.Rpc.DynamicProxy
             var rpcMethod = _serviceType.GetMethods().First(m => m.Name == invocation.Method.Name);
             var rpcMethodParameter = rpcMethod.GetParameters().First();
 
-            var sendMethods = typeof(RpcService).GetMethods().Where(m => m.Name == "Send");
-            var sendMethod = sendMethods.First(m => m.IsGenericMethod && m.GetCustomAttribute<RpcServiceSendAttribute>() != null);
+            var sendMethod = typeof(RpcService).GetMethods().First(m => m.IsGenericMethod && m.GetCustomAttribute<RpcServiceSendAttribute>() != null);
             var genericSendMethod = sendMethod.MakeGenericMethod(new Type[] { rpcMethodParameter.ParameterType, rpcMethod.ReturnType });
 
             var sendArguments = new List<object>();
