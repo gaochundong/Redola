@@ -7,8 +7,8 @@
     <ProjectGuid>{01EAA9D3-A299-4EC2-BADE-843BA7500174}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Redola.Rpc.TestHttpServer</RootNamespace>
-    <AssemblyName>Redola.Rpc.TestHttpServer</AssemblyName>
+    <RootNamespace>Redola.Rpc.TestHttpRelay</RootNamespace>
+    <AssemblyName>Redola.Rpc.TestHttpRelay</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -18,7 +18,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\bin\Debug\TestHttpServer\</OutputPath>
+    <OutputPath>..\bin\Debug\TestHttpRelay\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>

@@ -3,7 +3,7 @@ using Logrila.Logging;
 using Logrila.Logging.NLogIntegration;
 using Redola.ActorModel;
 
-namespace Redola.Rpc.TestRpcCenter
+namespace Redola.Rpc.TestRegisterCenter
 {
     class Program
     {

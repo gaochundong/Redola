@@ -7,8 +7,8 @@
     <ProjectGuid>{DCB0784A-622E-4EF6-BA1B-79099DA8D648}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Redola.Rpc.TestRpcCenter</RootNamespace>
-    <AssemblyName>Redola.Rpc.TestRpcCenter</AssemblyName>
+    <RootNamespace>Redola.Rpc.TestRegisterCenter</RootNamespace>
+    <AssemblyName>Redola.Rpc.TestRegisterCenter</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -18,7 +18,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\bin\Debug\TestRpcCenter\</OutputPath>
+    <OutputPath>..\bin\Debug\TestRegisterCenter\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>

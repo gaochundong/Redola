@@ -7,7 +7,7 @@ using Redola.ActorModel;
 using Redola.Rpc.DynamicProxy;
 using Redola.Rpc.TestContracts;
 
-namespace Redola.Rpc.TestHttpServer
+namespace Redola.Rpc.TestHttpRelay
 {
     class Program
     {

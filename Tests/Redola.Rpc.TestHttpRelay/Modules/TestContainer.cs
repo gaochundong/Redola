@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Happer;
 using Happer.Http;
 
-namespace Redola.Rpc.TestHttpServer
+namespace Redola.Rpc.TestHttpRelay
 {
     public class TestContainer : IModuleContainer
     {
