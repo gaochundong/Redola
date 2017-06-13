@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Logrila.Logging;
 using Redola.ActorModel.Extensions;
 
@@ -54,13 +55,16 @@ namespace Redola.ActorModel
 
         private void OnDirectoryActorsChanged(object sender, ActorsChangedEventArgs e)
         {
-            foreach (var usingActorType in _channels.Values.Select(v => v.RemoteActor.Type).Distinct())
+            Task.Factory.StartNew(() =>
             {
-                if (e.Actors.Any(a => a.Type == usingActorType))
+                foreach (var usingActorType in _channels.Values.Select(v => v.RemoteActor.Type).Distinct())
                 {
-                    BuildAllActorChannels(usingActorType);
+                    if (e.Actors.Any(a => a.Type == usingActorType))
+                    {
+                        BuildActorChannels(usingActorType);
+                    }
                 }
-            }
+            }, TaskCreationOptions.PreferFairness);
         }
 
         public void ActivateLocalActor(ActorIdentity localActor)
@@ -160,7 +164,7 @@ namespace Redola.ActorModel
                     return item.Channel;
                 }
 
-                BuildAllActorChannels(actorType);
+                BuildActorChannels(actorType);
 
                 item = _channels.Values.Where(i => i.RemoteActor.Type == actorType).OrderBy(t => Guid.NewGuid()).FirstOrDefault();
                 if (item != null)
@@ -226,7 +230,7 @@ namespace Redola.ActorModel
             }
         }
 
-        private void BuildAllActorChannels(string actorType)
+        private void BuildActorChannels(string actorType)
         {
             lock (_syncLock)
             {
@@ -270,6 +274,11 @@ namespace Redola.ActorModel
             if (string.IsNullOrEmpty(actorType))
                 throw new ArgumentNullException("actorType");
             return _channels.Values.Where(i => i.RemoteActor.Type == actorType).Select(v => v.Channel);
+        }
+
+        public IEnumerable<IActorChannel> GetActorChannels()
+        {
+            return _channels.Values.Where(v => !v.RemoteActor.Equals(_localActor)).Select(v => v.Channel).Where(f => f != null);
         }
 
         public void CloseAllChannels()
@@ -357,14 +366,9 @@ namespace Redola.ActorModel
         public event EventHandler<ActorChannelDisconnectedEventArgs> ChannelDisconnected;
         public event EventHandler<ActorChannelDataReceivedEventArgs> ChannelDataReceived;
 
-        internal IEnumerable<IActorChannel> GetAllActorChannels()
+        internal IEnumerable<ActorIdentity> GetAllActors()
         {
-            return _channels.Values.Select(v => v.Channel);
-        }
-
-        internal List<ActorIdentity> GetAllActors()
-        {
-            return _channels.Values.Select(c => c.RemoteActor).Where(f => f != null).ToList();
+            return _channels.Values.Where(v => !v.RemoteActor.Equals(_localActor)).Select(c => c.RemoteActor).Where(f => f != null);
         }
     }
 }

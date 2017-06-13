@@ -61,6 +61,22 @@ namespace Redola.ActorModel
             }
         }
 
+        public ActorIdentity LocalActor
+        {
+            get
+            {
+                return _localActor;
+            }
+        }
+
+        public ActorIdentity RemoteActor
+        {
+            get
+            {
+                return _localActor;
+            }
+        }
+
         public bool Active
         {
             get

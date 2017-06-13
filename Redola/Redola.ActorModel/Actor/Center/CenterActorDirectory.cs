@@ -74,6 +74,7 @@ namespace Redola.ActorModel
             }
             _log.DebugFormat("Connected to center actor [{0}].", _centerActor);
             _centerChannel = centerChannel;
+            _centerChannel.ChannelDataReceived += OnCenterChannelDataReceived;
         }
 
         public void Close()
@@ -81,6 +82,7 @@ namespace Redola.ActorModel
             if (_centerChannel != null)
             {
                 _centerChannel.Close();
+                _centerChannel.ChannelDataReceived -= OnCenterChannelDataReceived;
                 _centerChannel = null;
             }
         }
@@ -101,6 +103,32 @@ namespace Redola.ActorModel
                 localActor, centerConnector, _channelConfiguration);
 
             return centerChannel;
+        }
+
+        private void OnCenterChannelDataReceived(object sender, ActorChannelDataReceivedEventArgs e)
+        {
+            ActorFrameHeader actorChangeNotificationFrameHeader = null;
+            bool isHeaderDecoded = _channelConfiguration.FrameBuilder.TryDecodeFrameHeader(
+                e.Data, e.DataOffset, e.DataLength,
+                out actorChangeNotificationFrameHeader);
+            if (isHeaderDecoded && actorChangeNotificationFrameHeader.OpCode == OpCode.Change)
+            {
+                byte[] payload;
+                int payloadOffset;
+                int payloadCount;
+                _channelConfiguration.FrameBuilder.DecodePayload(
+                    e.Data, e.DataOffset, actorChangeNotificationFrameHeader,
+                    out payload, out payloadOffset, out payloadCount);
+                var actorChangeNotificationData = _channelConfiguration.FrameBuilder.ControlFrameDataDecoder.DecodeFrameData<ActorIdentityCollection>(
+                    payload, payloadOffset, payloadCount);
+
+                var actors = actorChangeNotificationData != null ? actorChangeNotificationData.Items : null;
+                if (actors != null && actors.Any())
+                {
+                    _log.DebugFormat("Actor changed, ActorType[{0}], AvailableCount[{1}].", actors.First().Type, actors.Count);
+                    RaiseActorsChanged(actors);
+                }
+            }
         }
 
         public IPEndPoint LookupRemoteActorEndPoint(string actorType, string actorName)

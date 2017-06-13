@@ -39,6 +39,22 @@ namespace Redola.ActorModel
             get { return string.Format("Session#{0}", this.SessionKey); }
         }
 
+        public ActorIdentity LocalActor
+        {
+            get
+            {
+                return _localActor;
+            }
+        }
+
+        public ActorIdentity RemoteActor
+        {
+            get
+            {
+                return _remoteActor;
+            }
+        }
+
         public bool Active
         {
             get

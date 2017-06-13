@@ -10,7 +10,8 @@
     // 5	Where Frame
     // 6    Here Frame
     // 7    Binary Frame
-    // 8-15	Unassigned
+    // 8    Change Frame
+    // 9-15	Unassigned
     public enum OpCode : byte
     {
         Hello = 1,
@@ -20,5 +21,6 @@
         Where = 5,
         Here = 6,
         Binary = 7,
+        Change = 8,
     }
 }

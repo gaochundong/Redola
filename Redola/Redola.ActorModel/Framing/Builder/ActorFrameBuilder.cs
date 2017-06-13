@@ -102,6 +102,11 @@ namespace Redola.ActorModel.Framing
             return Encode(frame.OpCode, frame.Data, frame.Offset, frame.Count, isMasked: frame.IsMasked);
         }
 
+        public byte[] EncodeFrame(ChangeFrame frame)
+        {
+            return Encode(frame.OpCode, frame.Data, 0, frame.Data.Length, isMasked: frame.IsMasked);
+        }
+
         private byte[] Encode(OpCode opCode, byte[] payload, int offset, int count, bool isMasked = true, bool isFin = true)
         {
             byte[] fragment;

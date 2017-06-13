@@ -110,7 +110,7 @@ namespace Redola.ActorModel
             }
         }
 
-        protected List<ActorIdentity> GetAllActors()
+        protected IEnumerable<ActorIdentity> GetAllActors()
         {
             return _manager.GetAllActors();
         }
@@ -252,7 +252,7 @@ namespace Redola.ActorModel
         public void Broadcast(string remoteActorType, byte[] data, int offset, int count)
         {
             var channels = _manager.GetActorChannels(remoteActorType);
-            foreach (var channel in channels.Where(c => c != null))
+            foreach (var channel in channels)
             {
                 channel.Send(channel.Identifier, data, offset, count);
             }
@@ -266,37 +266,35 @@ namespace Redola.ActorModel
         public void BeginBroadcast(string remoteActorType, byte[] data, int offset, int count)
         {
             var channels = _manager.GetActorChannels(remoteActorType);
-            foreach (var channel in channels.Where(c => c != null))
+            foreach (var channel in channels)
             {
                 channel.BeginSend(channel.Identifier, data, offset, count);
             }
         }
 
-        protected void Broadcast(byte[] data)
+        public void Broadcast(IEnumerable<string> remoteActorTypes, byte[] data)
         {
-            Broadcast(data, 0, data.Length);
+            Broadcast(remoteActorTypes, data, 0, data.Length);
         }
 
-        protected void Broadcast(byte[] data, int offset, int count)
+        public void Broadcast(IEnumerable<string> remoteActorTypes, byte[] data, int offset, int count)
         {
-            var channels = _manager.GetAllActorChannels();
-            foreach (var channel in channels.Where(c => c != null))
+            foreach (var remoteActorType in remoteActorTypes)
             {
-                channel.Send(channel.Identifier, data, offset, count);
+                Broadcast(remoteActorType, data, offset, count);
             }
         }
 
-        protected void BeginBroadcast(byte[] data)
+        public void BeginBroadcast(IEnumerable<string> remoteActorTypes, byte[] data)
         {
-            BeginBroadcast(data, 0, data.Length);
+            BeginBroadcast(remoteActorTypes, data, 0, data.Length);
         }
 
-        protected void BeginBroadcast(byte[] data, int offset, int count)
+        public void BeginBroadcast(IEnumerable<string> remoteActorTypes, byte[] data, int offset, int count)
         {
-            var channels = _manager.GetAllActorChannels();
-            foreach (var channel in channels.Where(c => c != null))
+            foreach (var remoteActorType in remoteActorTypes)
             {
-                channel.BeginSend(channel.Identifier, data, offset, count);
+                BeginBroadcast(remoteActorType, data, offset, count);
             }
         }
 

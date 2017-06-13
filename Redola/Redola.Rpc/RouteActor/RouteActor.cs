@@ -142,6 +142,16 @@ namespace Redola.Rpc
             BeginBroadcast(remoteActorType, message.ToBytes(this.Encoder));
         }
 
+        public void Broadcast<T>(IEnumerable<string> remoteActorTypes, ActorMessageEnvelope<T> message)
+        {
+            Broadcast(remoteActorTypes, message.ToBytes(this.Encoder));
+        }
+
+        public void BeginBroadcast<T>(IEnumerable<string> remoteActorTypes, ActorMessageEnvelope<T> message)
+        {
+            BeginBroadcast(remoteActorTypes, message.ToBytes(this.Encoder));
+        }
+
         #endregion
     }
 }

@@ -5,8 +5,10 @@ namespace Redola.ActorModel
     public interface IActorChannel
     {
         string Identifier { get; }
-        bool Active { get; }
+        ActorIdentity LocalActor { get; }
+        ActorIdentity RemoteActor { get; }
 
+        bool Active { get; }
         void Open();
         void Close();
 

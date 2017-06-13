@@ -287,6 +287,16 @@ namespace Redola.Rpc
             this.Actor.BeginBroadcast(remoteActorType, message);
         }
 
+        public void Broadcast<T>(IEnumerable<string> remoteActorTypes, ActorMessageEnvelope<T> message)
+        {
+            this.Actor.Broadcast(remoteActorTypes, message);
+        }
+
+        public void BeginBroadcast<T>(IEnumerable<string> remoteActorTypes, ActorMessageEnvelope<T> message)
+        {
+            this.Actor.BeginBroadcast(remoteActorTypes, message);
+        }
+
         #endregion
 
         #region Broadcast Message
@@ -307,6 +317,24 @@ namespace Redola.Rpc
                 Message = message,
             };
             this.BeginBroadcast<T>(remoteActorType, envelope);
+        }
+
+        public void Broadcast<T>(IEnumerable<string> remoteActorTypes, T message)
+        {
+            var envelope = new ActorMessageEnvelope<T>()
+            {
+                Message = message,
+            };
+            this.Broadcast<T>(remoteActorTypes, envelope);
+        }
+
+        public void BeginBroadcast<T>(IEnumerable<string> remoteActorTypes, T message)
+        {
+            var envelope = new ActorMessageEnvelope<T>()
+            {
+                Message = message,
+            };
+            this.BeginBroadcast<T>(remoteActorTypes, envelope);
         }
 
         #endregion

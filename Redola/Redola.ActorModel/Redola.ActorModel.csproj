@@ -95,6 +95,7 @@
     <Compile Include="Framing\Builder\Encoding\IActorControlFrameDataDecoder.cs" />
     <Compile Include="Framing\Builder\Encoding\IActorControlFrameDataEncoder.cs" />
     <Compile Include="Framing\Builder\Encoding\XmlActorControlFrameDataEncoder.cs" />
+    <Compile Include="Framing\ChangeFrame.cs" />
     <Compile Include="KeepAlive\KeepAliveTracker.cs" />
     <Compile Include="Serialization\Compression\GZipCompression.cs" />
     <Compile Include="Serialization\IMessageDecoder.cs" />

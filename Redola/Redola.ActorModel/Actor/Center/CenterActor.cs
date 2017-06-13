@@ -22,13 +22,17 @@ namespace Redola.ActorModel
         protected override void OnActorChannelConnected(object sender, ActorChannelConnectedEventArgs e)
         {
             base.OnActorChannelConnected(sender, e);
-            NotifyActorChanged(e.RemoteActor);
+
+            if (!e.RemoteActor.Equals(this.LocalActor))
+                NotifyActorChanged(e.RemoteActor);
         }
 
         protected override void OnActorChannelDisconnected(object sender, ActorChannelDisconnectedEventArgs e)
         {
             base.OnActorChannelDisconnected(sender, e);
-            NotifyActorChanged(e.RemoteActor);
+
+            if (!e.RemoteActor.Equals(this.LocalActor))
+                NotifyActorChanged(e.RemoteActor);
         }
 
         protected override void OnActorChannelDataReceived(object sender, ActorChannelDataReceivedEventArgs e)
@@ -72,20 +76,19 @@ namespace Redola.ActorModel
             var actorCollection = new ActorIdentityCollection();
             actorCollection.Items.AddRange(this.GetAllActors().Where(a => a.Type == changedActor.Type).ToList());
             var actorChangedNotificationData = this.ChannelConfiguration.FrameBuilder.ControlFrameDataEncoder.EncodeFrameData(actorCollection);
-            var actorChangedNotification = new HereFrame(actorChangedNotificationData);
+            var actorChangedNotification = new ChangeFrame(actorChangedNotificationData);
             var actorChangedNotificationBuffer = this.ChannelConfiguration.FrameBuilder.EncodeFrame(actorChangedNotification);
 
-            _log.DebugFormat("Broadcast actors changed, ActorType[{0}], Count[{1}].",
-                changedActor.Type, actorCollection.Items.Count);
-            this.BeginBroadcast(actorChangedNotificationBuffer);
+            _log.DebugFormat("Broadcast actors changes, ActorType[{0}], RemainCount[{1}].", changedActor.Type, actorCollection.Items.Count);
+            this.BeginBroadcast(this.GetAllActors().Where(a => a.Type != changedActor.Type).Select(a => a.Type).Distinct(), actorChangedNotificationBuffer);
         }
 
-        public new IEnumerable<ActorIdentity> GetAllActors()
+        internal new IEnumerable<ActorIdentity> GetAllActors()
         {
             return base.GetAllActors();
         }
 
-        public IEnumerable<ActorIdentity> GetAllActors(string actorType)
+        internal IEnumerable<ActorIdentity> GetAllActors(string actorType)
         {
             return this.GetAllActors().Where(a => a.Type == actorType);
         }
