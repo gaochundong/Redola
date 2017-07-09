@@ -8,12 +8,16 @@ namespace Redola.Rpc.TestRpcServer
 {
     class Program
     {
-        static void Main(string[] args)
+        static ILog _log;
+
+        static Program()
         {
             NLogLogger.Use();
+            _log = Logger.Get<Program>();
+        }
 
-            ILog log = Logger.Get<Program>();
-
+        static void Main(string[] args)
+        {
             var localActor = new RpcActor();
 
             var helloService = new HelloService(localActor, new CountableRateLimiter());
@@ -50,24 +54,24 @@ namespace Redola.Rpc.TestRpcServer
                         }
                         for (int i = 0; i < totalCalls; i++)
                         {
-                            NotifyOrderChanged(log, orderService);
+                            NotifyOrderChanged(orderService);
                         }
                     }
                     else
                     {
-                        log.WarnFormat("Cannot parse the operation for input [{0}].", text);
+                        _log.WarnFormat("Cannot parse the operation for input [{0}].", text);
                     }
                 }
                 catch (Exception ex)
                 {
-                    log.Error(ex.Message, ex);
+                    _log.Error(ex.Message, ex);
                 }
             }
 
             localActor.Shutdown();
         }
 
-        private static void NotifyOrderChanged(ILog log, OrderService orderService)
+        private static void NotifyOrderChanged(OrderService orderService)
         {
             var notification = new ActorMessageEnvelope<OrderStatusChangedNotification>()
             {
@@ -78,7 +82,7 @@ namespace Redola.Rpc.TestRpcServer
                 },
             };
 
-            log.DebugFormat("NotifyOrderChanged, notify order changed with MessageID[{0}].", notification.MessageID);
+            _log.DebugFormat("NotifyOrderChanged, notify order changed with MessageID[{0}].", notification.MessageID);
             orderService.NotifyOrderChanged(notification);
         }
     }

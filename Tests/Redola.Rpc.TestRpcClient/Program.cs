@@ -10,12 +10,16 @@ namespace Redola.Rpc.TestRpcClient
 {
     class Program
     {
-        static void Main(string[] args)
+        static ILog _log;
+
+        static Program()
         {
             NLogLogger.Use();
+            _log = Logger.Get<Program>();
+        }
 
-            ILog log = Logger.Get<Program>();
-
+        static void Main(string[] args)
+        {
             var localActor = new RpcActor();
 
             var helloClient = new HelloClient(localActor);
@@ -52,7 +56,7 @@ namespace Redola.Rpc.TestRpcClient
                         }
                         for (int i = 0; i < totalCalls; i++)
                         {
-                            Hello(log, helloClient);
+                            Hello(helloClient);
                         }
                     }
                     else if (Regex.Match(text, @"^add(\d*)$").Success)
@@ -65,7 +69,7 @@ namespace Redola.Rpc.TestRpcClient
                         }
                         for (int i = 0; i < totalCalls; i++)
                         {
-                            Add(log, calcClient);
+                            Add(calcClient);
                         }
                     }
                     else if (Regex.Match(text, @"^order(\d*)$").Success)
@@ -78,7 +82,7 @@ namespace Redola.Rpc.TestRpcClient
                         }
                         for (int i = 0; i < totalCalls; i++)
                         {
-                            PlaceOrder(log, orderClient);
+                            PlaceOrder(orderClient);
                         }
                     }
                     else if (Regex.Match(text, @"^hello(\d+)x(\d+)$").Success)
@@ -86,51 +90,51 @@ namespace Redola.Rpc.TestRpcClient
                         var match = Regex.Match(text, @"^hello(\d+)x(\d+)$");
                         int totalCalls = int.Parse(match.Groups[1].Value);
                         int threadCount = int.Parse(match.Groups[2].Value);
-                        Hello10000MultiThreading(log, helloClient, totalCalls, threadCount);
+                        Hello10000MultiThreading(helloClient, totalCalls, threadCount);
                     }
                     else if (Regex.Match(text, @"^add(\d+)x(\d+)$").Success)
                     {
                         var match = Regex.Match(text, @"^add(\d+)x(\d+)$");
                         int totalCalls = int.Parse(match.Groups[1].Value);
                         int threadCount = int.Parse(match.Groups[2].Value);
-                        Add10000MultiThreading(log, calcClient, totalCalls, threadCount);
+                        Add10000MultiThreading(calcClient, totalCalls, threadCount);
                     }
                     else
                     {
-                        log.WarnFormat("Cannot parse the operation for input [{0}].", text);
+                        _log.WarnFormat("Cannot parse the operation for input [{0}].", text);
                     }
                 }
                 catch (Exception ex)
                 {
-                    log.Error(ex.Message, ex);
+                    _log.Error(ex.Message, ex);
                 }
             }
 
             localActor.Shutdown();
         }
 
-        private static void Hello(ILog log, IHelloService helloClient)
+        private static void Hello(IHelloService helloClient)
         {
             var response = helloClient.Hello(new HelloRequest() { Text = DateTime.Now.ToString(@"yyyy-MM-dd HH:mm:ss.fffffff") });
 
-            log.DebugFormat("Hello, receive hello response from server with [{0}].", response.Text);
+            _log.DebugFormat("Hello, receive hello response from server with [{0}].", response.Text);
         }
 
-        private static void Hello10000(ILog log, IHelloService helloClient)
+        private static void Hello10000(IHelloService helloClient)
         {
-            log.DebugFormat("Hello10000, start ...");
+            _log.DebugFormat("Hello10000, start ...");
             var watch = Stopwatch.StartNew();
             for (var i = 0; i < 10000; i++)
             {
                 helloClient.Hello10000(new Hello10000Request() { Text = DateTime.Now.ToString(@"yyyy-MM-dd HH:mm:ss.fffffff") });
             }
             watch.Stop();
-            log.DebugFormat("Hello10000, end with cost {0} ms.", watch.ElapsedMilliseconds);
+            _log.DebugFormat("Hello10000, end with cost {0} ms.", watch.ElapsedMilliseconds);
         }
 
-        private static void Hello10000MultiThreading(ILog log, IHelloService helloClient, int totalCalls, int threadCount)
+        private static void Hello10000MultiThreading(IHelloService helloClient, int totalCalls, int threadCount)
         {
-            log.DebugFormat("Hello10000MultiThreading, TotalCalls[{0}], ThreadCount[{1}], start ...", totalCalls, threadCount);
+            _log.DebugFormat("Hello10000MultiThreading, TotalCalls[{0}], ThreadCount[{1}], start ...", totalCalls, threadCount);
 
             var taskList = new Task[threadCount];
             var watch = Stopwatch.StartNew();
@@ -149,7 +153,7 @@ namespace Redola.Rpc.TestRpcClient
             Task.WaitAll(taskList);
             watch.Stop();
 
-            log.DebugFormat("Hello10000MultiThreading, TotalCalls[{0}], ThreadCount[{1}], end with cost [{2}] ms."
+            _log.DebugFormat("Hello10000MultiThreading, TotalCalls[{0}], ThreadCount[{1}], end with cost [{2}] ms."
                 + "{3}{4}{5}{6}{7}{8}{9}{10}{11}{12}",
                 totalCalls, threadCount, watch.ElapsedMilliseconds,
                 Environment.NewLine, string.Format("   Concurrency level: {0} threads", threadCount),
@@ -160,16 +164,16 @@ namespace Redola.Rpc.TestRpcClient
                 );
         }
 
-        private static void Add(ILog log, ICalcService calcClient)
+        private static void Add(ICalcService calcClient)
         {
             var response = calcClient.Add(new AddRequest() { X = 3, Y = 4 });
 
-            log.DebugFormat("Add, receive add response from server with [{0}].", response.Result);
+            _log.DebugFormat("Add, receive add response from server with [{0}].", response.Result);
         }
 
-        private static void Add10000MultiThreading(ILog log, ICalcService calcClient, int totalCalls, int threadCount)
+        private static void Add10000MultiThreading(ICalcService calcClient, int totalCalls, int threadCount)
         {
-            log.DebugFormat("Add10000MultiThreading, TotalCalls[{0}], ThreadCount[{1}], start ...", totalCalls, threadCount);
+            _log.DebugFormat("Add10000MultiThreading, TotalCalls[{0}], ThreadCount[{1}], start ...", totalCalls, threadCount);
 
             var taskList = new Task[threadCount];
             var watch = Stopwatch.StartNew();
@@ -188,7 +192,7 @@ namespace Redola.Rpc.TestRpcClient
             Task.WaitAll(taskList);
             watch.Stop();
 
-            log.DebugFormat("Add10000MultiThreading, TotalCalls[{0}], ThreadCount[{1}], end with cost [{2}] ms."
+            _log.DebugFormat("Add10000MultiThreading, TotalCalls[{0}], ThreadCount[{1}], end with cost [{2}] ms."
                 + "{3}{4}{5}{6}{7}{8}{9}{10}{11}{12}",
                 totalCalls, threadCount, watch.ElapsedMilliseconds,
                 Environment.NewLine, string.Format("   Concurrency level: {0} threads", threadCount),
@@ -199,7 +203,7 @@ namespace Redola.Rpc.TestRpcClient
                 );
         }
 
-        private static void PlaceOrder(ILog log, IOrderService orderClient)
+        private static void PlaceOrder(IOrderService orderClient)
         {
             var request = new PlaceOrderRequest()
             {
@@ -213,7 +217,7 @@ namespace Redola.Rpc.TestRpcClient
 
             var response = orderClient.PlaceOrder(request);
 
-            log.DebugFormat("PlaceOrder, receive place order response from server with [{0}].", response.ErrorCode);
+            _log.DebugFormat("PlaceOrder, receive place order response from server with [{0}].", response.ErrorCode);
         }
     }
 }

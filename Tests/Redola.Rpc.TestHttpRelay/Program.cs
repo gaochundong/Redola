@@ -11,12 +11,16 @@ namespace Redola.Rpc.TestHttpRelay
 {
     class Program
     {
-        static void Main(string[] args)
+        static ILog _log;
+
+        static Program()
         {
             NLogLogger.Use();
+            _log = Logger.Get<Program>();
+        }
 
-            ILog log = Logger.Get<Program>();
-
+        static void Main(string[] args)
+        {
             var localXmlFilePath = Environment.CurrentDirectory + @"\\XmlConfiguration\\ActorConfiguration.xml";
             var localXmlFileActorConfiguration = LocalXmlFileActorConfiguration.Load(localXmlFilePath);
             var localXmlFileActorDirectory = new LocalXmlFileActorDirectory(localXmlFileActorConfiguration);

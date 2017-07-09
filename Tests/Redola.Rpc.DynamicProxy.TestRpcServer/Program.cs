@@ -7,12 +7,16 @@ namespace Redola.Rpc.DynamicProxy.TestRpcServer
 {
     class Program
     {
-        static void Main(string[] args)
+        static ILog _log;
+
+        static Program()
         {
             NLogLogger.Use();
+            _log = Logger.Get<Program>();
+        }
 
-            ILog log = Logger.Get<Program>();
-
+        static void Main(string[] args)
+        {
             var localActor = new RpcActor();
 
             localActor.Register<IHelloService>(new HelloService());
@@ -37,12 +41,12 @@ namespace Redola.Rpc.DynamicProxy.TestRpcServer
                     }
                     else
                     {
-                        log.WarnFormat("Cannot parse the operation for input [{0}].", text);
+                        _log.WarnFormat("Cannot parse the operation for input [{0}].", text);
                     }
                 }
                 catch (Exception ex)
                 {
-                    log.Error(ex.Message, ex);
+                    _log.Error(ex.Message, ex);
                 }
             }
 
