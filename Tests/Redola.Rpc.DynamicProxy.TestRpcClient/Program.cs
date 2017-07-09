@@ -18,13 +18,9 @@ namespace Redola.Rpc.DynamicProxy.TestRpcClient
 
             var localActor = new RpcActor();
 
-            var helloClient = RpcServiceProxyGenerator.CreateServiceProxy<IHelloService>(localActor, "server");
-            var calcClient = RpcServiceProxyGenerator.CreateServiceProxy<ICalcService>(localActor, "server");
-            var orderClient = RpcServiceProxyGenerator.CreateServiceProxy<IOrderService>(localActor, "server");
-
-            localActor.RegisterRpcService(helloClient as RpcService);
-            localActor.RegisterRpcService(calcClient as RpcService);
-            localActor.RegisterRpcService(orderClient as RpcService);
+            var helloClient = localActor.ProxyFor<IHelloService>("server");
+            var calcClient = localActor.ProxyFor<ICalcService>("server");
+            var orderClient = localActor.ProxyFor<IOrderService>("server");
 
             localActor.Bootup();
 
