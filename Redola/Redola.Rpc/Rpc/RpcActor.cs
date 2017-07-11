@@ -33,7 +33,8 @@ namespace Redola.Rpc
             _localActor = new BlockingRouteActor(configuration, encoder, decoder);
         }
 
-        public BlockingRouteActor Actor { get { return _localActor; } }
+        internal BlockingRouteActor Actor { get { return _localActor; } }
+        public bool Active { get { return _localActor.Active; } }
         public IActorMessageEncoder Encoder { get { return _localActor.Encoder; } }
         public IActorMessageDecoder Decoder { get { return _localActor.Decoder; } }
 
