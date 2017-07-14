@@ -6,7 +6,7 @@ namespace Redola.Rpc
     {
         public ProtocolBuffersMessageDecoder()
         {
-            this.CompressionEnabled = false;
+            this.CompressionEnabled = true;
         }
 
         public bool CompressionEnabled { get; set; }
