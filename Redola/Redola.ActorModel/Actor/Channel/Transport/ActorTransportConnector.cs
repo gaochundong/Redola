@@ -60,11 +60,14 @@ namespace Redola.ActorModel
             }
             catch
             {
-                _client.Close();
-                _client.ServerConnected -= OnServerConnected;
-                _client.ServerDisconnected -= OnServerDisconnected;
-                _client.ServerDataReceived -= OnServerDataReceived;
-                _client = null;
+                if (_client != null)
+                {
+                    _client.Close();
+                    _client.ServerConnected -= OnServerConnected;
+                    _client.ServerDisconnected -= OnServerDisconnected;
+                    _client.ServerDataReceived -= OnServerDataReceived;
+                    _client = null;
+                }
 
                 throw;
             }
