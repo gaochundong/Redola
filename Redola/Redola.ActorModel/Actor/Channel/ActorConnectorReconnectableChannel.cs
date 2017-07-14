@@ -9,9 +9,10 @@ namespace Redola.ActorModel
         private ILog _log = Logger.Get<ActorConnectorReconnectableChannel>();
         private System.Threading.Timer _retryTimer = null;
         private readonly object _retryLock = new object();
+        private readonly object _openLock = new object();
 
         public ActorConnectorReconnectableChannel(
-            ActorIdentity localActor, 
+            ActorIdentity localActor,
             ActorTransportConnector remoteConnector,
             ActorChannelConfiguration channelConfiguration)
             : base(localActor, remoteConnector, channelConfiguration)
@@ -51,13 +52,20 @@ namespace Redola.ActorModel
                     _retryTimer = new System.Threading.Timer(
                       (s) =>
                       {
-                          try
+                          if (Monitor.TryEnter(_openLock))
                           {
-                              Open();
-                          }
-                          catch (Exception ex)
-                          {
-                              _log.Error(ex.Message, ex);
+                              try
+                              {
+                                  Open();
+                              }
+                              catch (Exception ex)
+                              {
+                                  _log.Error(ex.Message, ex);
+                              }
+                              finally
+                              {
+                                  Monitor.Exit(_openLock);
+                              }
                           }
                       },
                       null, this.RetryPeriod, this.RetryPeriod);
