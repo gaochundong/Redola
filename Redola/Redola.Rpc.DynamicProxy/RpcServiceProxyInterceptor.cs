@@ -24,8 +24,7 @@ namespace Redola.Rpc.DynamicProxy
         {
             _sendMethod = typeof(RpcService).GetMethods()
                 .Where(m => m.Name == "Send" && m.IsGenericMethod)
-                .Where(m => m.ReturnType != typeof(void))
-                .Where(m => !m.ReturnType.IsGenericType)
+                .Where(m => m.ReturnType != typeof(void) && !m.ReturnType.IsGenericType)
                 .Where(m => m.GetParameters().Count() == 2)
                 .Where(m => m.GetParameters().Any(p => p.ParameterType == typeof(string)))
                 .First();

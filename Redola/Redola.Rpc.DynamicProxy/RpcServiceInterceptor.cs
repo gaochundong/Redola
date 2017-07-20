@@ -23,7 +23,9 @@ namespace Redola.Rpc.DynamicProxy
             _replyMethod = typeof(RpcService).GetMethods()
                 .Where(m => m.Name == "Reply" && m.IsGenericMethod)
                 .Where(m => m.ReturnType == typeof(void))
-                .Where(m => m.GetParameters().Any(p => p.ParameterType.IsGenericType))
+                .Where(m => m.GetParameters()
+                    .Any(p => p.ParameterType.IsGenericType
+                        && p.ParameterType.GetGenericTypeDefinition() == typeof(ActorMessageEnvelope<>)))
                 .First();
         }
 
