@@ -22,9 +22,9 @@ namespace Redola.Rpc.DynamicProxy.TestRpcClient
         {
             var localActor = new RpcActor();
 
-            var helloClient = localActor.ProxyFor<IHelloService>("server");
-            var calcClient = localActor.ProxyFor<ICalcService>("server");
-            var orderClient = localActor.ProxyFor<IOrderService>("server");
+            var helloClient = localActor.Resolve<IHelloService>("server");
+            var calcClient = localActor.Resolve<ICalcService>("server");
+            var orderClient = localActor.Resolve<IOrderService>("server");
 
             localActor.Bootup();
 

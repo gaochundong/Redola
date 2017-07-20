@@ -8,7 +8,7 @@
             localActor.RegisterRpcService(localService as RpcService);
         }
 
-        public static TService ProxyFor<TService>(this RpcActor localActor, string service)
+        public static TService Resolve<TService>(this RpcActor localActor, string service)
         {
             var remoteService = RpcServiceProxyGenerator.CreateServiceProxy<TService>(localActor, service);
             localActor.RegisterRpcService(remoteService as RpcService);
