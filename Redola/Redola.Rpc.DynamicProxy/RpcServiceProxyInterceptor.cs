@@ -10,11 +10,25 @@ namespace Redola.Rpc.DynamicProxy
     {
         private Type _serviceType;
         private string _serviceActorType;
+        private MethodInfo _sendMethod;
 
         public RpcServiceProxyInterceptor(Type serviceType, string serviceActorType)
         {
             _serviceType = serviceType;
             _serviceActorType = serviceActorType;
+
+            RetrieveSendMethod();
+        }
+
+        private void RetrieveSendMethod()
+        {
+            _sendMethod = typeof(RpcService).GetMethods()
+                .Where(m => m.Name == "Send" && m.IsGenericMethod)
+                .Where(m => m.ReturnType != typeof(void))
+                .Where(m => !m.ReturnType.IsGenericType)
+                .Where(m => m.GetParameters().Count() == 2)
+                .Where(m => m.GetParameters().Any(p => p.ParameterType == typeof(string)))
+                .First();
         }
 
         public void Intercept(IInvocation invocation)
@@ -62,8 +76,7 @@ namespace Redola.Rpc.DynamicProxy
             var rpcMethod = _serviceType.GetMethods().First(m => m.Name == invocation.Method.Name);
             var rpcMethodParameter = rpcMethod.GetParameters().First();
 
-            var sendMethod = typeof(RpcService).GetMethods().First(m => m.IsGenericMethod && m.GetCustomAttribute<RpcServiceSendAttribute>() != null);
-            var genericSendMethod = sendMethod.MakeGenericMethod(new Type[] { rpcMethodParameter.ParameterType, rpcMethod.ReturnType });
+            var genericSendMethod = _sendMethod.MakeGenericMethod(new Type[] { rpcMethodParameter.ParameterType, rpcMethod.ReturnType });
 
             var sendArguments = new List<object>();
             sendArguments.Add(_serviceActorType);

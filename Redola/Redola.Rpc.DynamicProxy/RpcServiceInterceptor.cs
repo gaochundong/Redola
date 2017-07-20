@@ -9,10 +9,22 @@ namespace Redola.Rpc.DynamicProxy
     public class RpcServiceInterceptor<T> : IInterceptor
     {
         private T _service;
+        private MethodInfo _replyMethod;
 
         public RpcServiceInterceptor(T service)
         {
             _service = service;
+
+            RetrieveReplyMethod();
+        }
+
+        private void RetrieveReplyMethod()
+        {
+            _replyMethod = typeof(RpcService).GetMethods()
+                .Where(m => m.Name == "Reply" && m.IsGenericMethod)
+                .Where(m => m.ReturnType == typeof(void))
+                .Where(m => m.GetParameters().Any(p => p.ParameterType.IsGenericType))
+                .First();
         }
 
         public void Intercept(IInvocation invocation)
@@ -78,8 +90,7 @@ namespace Redola.Rpc.DynamicProxy
 
             if (rpcMethod.ReturnType != typeof(void))
             {
-                var replyMethod = typeof(RpcService).GetMethods().First(m => m.GetCustomAttribute<RpcServiceReplyAttribute>() != null);
-                var genericReplyMethod = replyMethod.MakeGenericMethod(new Type[] { rpcMethod.ReturnType });
+                var genericReplyMethod = _replyMethod.MakeGenericMethod(new Type[] { rpcMethod.ReturnType });
 
                 var responseEnvelope = typeof(ActorMessageEnvelope<>);
                 var responseType = responseEnvelope.MakeGenericType(rpcMethod.ReturnType);

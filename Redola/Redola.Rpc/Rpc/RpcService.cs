@@ -129,7 +129,6 @@ namespace Redola.Rpc
             return this.Send<R, P>(remoteActorType, remoteActorName, envelope, timeout).Message;
         }
 
-        [RpcServiceSend]
         public P Send<R, P>(string remoteActorType, R request)
         {
             return Send<R, P>(remoteActorType, request, TimeSpan.FromSeconds(30));
@@ -240,7 +239,6 @@ namespace Redola.Rpc
 
         #region Reply Envelope
 
-        [RpcServiceReply]
         public void Reply<T>(string channelIdentifier, ActorMessageEnvelope<T> message)
         {
             this.Actor.Reply(channelIdentifier, message);
