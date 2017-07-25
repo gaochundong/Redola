@@ -3,7 +3,7 @@ using Logrila.Logging;
 using Logrila.Logging.NLogIntegration;
 using Redola.Rpc.TestContracts;
 
-namespace Redola.Rpc.DynamicProxy.TestRpcServer
+namespace Redola.Rpc.DynamicProxy.CastleIntegration.TestRpcServer
 {
     class Program
     {

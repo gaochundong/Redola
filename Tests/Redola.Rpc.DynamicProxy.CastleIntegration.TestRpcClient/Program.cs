@@ -6,7 +6,7 @@ using Logrila.Logging;
 using Logrila.Logging.NLogIntegration;
 using Redola.Rpc.TestContracts;
 
-namespace Redola.Rpc.DynamicProxy.TestRpcClient
+namespace Redola.Rpc.DynamicProxy.CastleIntegration.TestRpcClient
 {
     class Program
     {

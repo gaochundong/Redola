@@ -4,7 +4,7 @@ using Happer.Hosting.Self;
 using Logrila.Logging;
 using Logrila.Logging.NLogIntegration;
 using Redola.ActorModel;
-using Redola.Rpc.DynamicProxy;
+using Redola.Rpc.DynamicProxy.CastleIntegration;
 using Redola.Rpc.TestContracts;
 
 namespace Redola.Rpc.TestHttpRelay

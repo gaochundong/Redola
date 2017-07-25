@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using Castle.DynamicProxy;
 
-namespace Redola.Rpc.DynamicProxy
+namespace Redola.Rpc.DynamicProxy.CastleIntegration
 {
     public class RpcServiceInterceptor<T> : IInterceptor
     {

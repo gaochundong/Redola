@@ -1,7 +1,7 @@
 ﻿using Logrila.Logging;
 using Redola.Rpc.TestContracts;
 
-namespace Redola.Rpc.DynamicProxy.TestRpcServer
+namespace Redola.Rpc.DynamicProxy.CastleIntegration.TestRpcServer
 {
     internal class OrderService : IOrderService
     {

@@ -7,8 +7,8 @@
     <ProjectGuid>{17B964E4-8D0F-4077-8F5A-7654E6403D09}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Redola.Rpc.DynamicProxy</RootNamespace>
-    <AssemblyName>Redola.Rpc.DynamicProxy</AssemblyName>
+    <RootNamespace>Redola.Rpc.DynamicProxy.CastleIntegration</RootNamespace>
+    <AssemblyName>Redola.Rpc.DynamicProxy.CastleIntegration</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

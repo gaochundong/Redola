@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{A4CE7BCE-7F4D-4E4B-AFC1-4A70F9A886A8}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Redola.Rpc.DynamicProxy.TestRpcServer</RootNamespace>
-    <AssemblyName>Redola.Rpc.DynamicProxy.TestRpcServer</AssemblyName>
+    <RootNamespace>Redola.Rpc.DynamicProxy.CastleIntegration.TestRpcServer</RootNamespace>
+    <AssemblyName>Redola.Rpc.DynamicProxy.CastleIntegration.TestRpcServer</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\bin\Debug\DynamicProxy.TestRpcServer\</OutputPath>
+    <OutputPath>..\bin\Debug\DynamicProxy.CastleIntegration.TestRpcServer\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -63,9 +63,9 @@
       <Project>{05e69e70-97ff-4fff-b106-e423b6f51a00}</Project>
       <Name>Redola.ActorModel</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Redola\Redola.Rpc.DynamicProxy\Redola.Rpc.DynamicProxy.csproj">
+    <ProjectReference Include="..\..\Redola\Redola.Rpc.DynamicProxy.CastleIntegration\Redola.Rpc.DynamicProxy.CastleIntegration.csproj">
       <Project>{17b964e4-8d0f-4077-8f5a-7654e6403d09}</Project>
-      <Name>Redola.Rpc.DynamicProxy</Name>
+      <Name>Redola.Rpc.DynamicProxy.CastleIntegration</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Redola\Redola.Rpc\Redola.Rpc.csproj">
       <Project>{465f580d-f09f-4362-a6ee-40b2627b11a4}</Project>

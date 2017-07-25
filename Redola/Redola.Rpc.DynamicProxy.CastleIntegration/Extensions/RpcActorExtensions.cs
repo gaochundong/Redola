@@ -1,4 +1,4 @@
-﻿namespace Redola.Rpc.DynamicProxy
+﻿namespace Redola.Rpc.DynamicProxy.CastleIntegration
 {
     public static class RpcActorExtensions
     {
