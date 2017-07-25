@@ -73,14 +73,15 @@ namespace Redola.ActorModel
 
         private void NotifyActorChanged(ActorIdentity changedActor)
         {
-            var actorCollection = new ActorIdentityCollection();
-            actorCollection.Items.AddRange(this.GetAllActors().Where(a => a.Type == changedActor.Type).ToList());
-            var actorChangedNotificationData = this.ChannelConfiguration.FrameBuilder.ControlFrameDataEncoder.EncodeFrameData(actorCollection);
+            var availableActors = new ActorIdentityCollection();
+            availableActors.Items.AddRange(this.GetAllActors().Where(a => a.Type == changedActor.Type).ToList());
+            var actorChangedNotificationData = this.ChannelConfiguration.FrameBuilder.ControlFrameDataEncoder.EncodeFrameData(availableActors);
             var actorChangedNotification = new ChangeFrame(actorChangedNotificationData);
             var actorChangedNotificationBuffer = this.ChannelConfiguration.FrameBuilder.EncodeFrame(actorChangedNotification);
 
-            _log.DebugFormat("Broadcast actors changes, ActorType[{0}], RemainCount[{1}].", changedActor.Type, actorCollection.Items.Count);
-            this.BeginBroadcast(this.GetAllActors().Where(a => a.Type != changedActor.Type).Select(a => a.Type).Distinct(), actorChangedNotificationBuffer);
+            _log.DebugFormat("Broadcast actor changes, ActorType[{0}], RemainCount[{1}].", changedActor.Type, availableActors.Items.Count);
+            var notifiedActorTypes = this.GetAllActors().Where(a => a.Type != changedActor.Type).Select(a => a.Type).Distinct();
+            this.BeginBroadcast(notifiedActorTypes, actorChangedNotificationBuffer);
         }
 
         internal new IEnumerable<ActorIdentity> GetAllActors()

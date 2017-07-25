@@ -48,7 +48,7 @@ namespace Redola.ActorModel
                     string.Format("Center actor [{0}] has already been activated.", _centerActor));
 
             _log.DebugFormat("Activating center actor [{0}].", _centerActor);
-            var centerChannel = BuildActorCenterChannel(localActor);
+            var centerChannel = BuildCenterActorChannel(localActor);
 
             centerChannel.Open();
             int retryTimes = 1;
@@ -87,18 +87,18 @@ namespace Redola.ActorModel
             }
         }
 
-        private IActorChannel BuildActorCenterChannel(ActorIdentity localActor)
+        private IActorChannel BuildCenterActorChannel(ActorIdentity localActor)
         {
-            IPAddress actorCenterAddress = ResolveIPAddress(_centerActor.Address);
+            IPAddress centerActorAddress = ResolveIPAddress(_centerActor.Address);
 
-            int actorCenterPort = -1;
-            if (!int.TryParse(_centerActor.Port, out actorCenterPort) || actorCenterPort < 0)
+            int centerActorPort = -1;
+            if (!int.TryParse(_centerActor.Port, out centerActorPort) || centerActorPort < 0)
                 throw new InvalidOperationException(string.Format(
                     "Invalid center actor port, [{0}].", _centerActor));
 
-            var actorCenterEndPoint = new IPEndPoint(actorCenterAddress, actorCenterPort);
+            var centerActorEndPoint = new IPEndPoint(centerActorAddress, centerActorPort);
 
-            var centerConnector = new ActorTransportConnector(actorCenterEndPoint, _channelConfiguration.TransportConfiguration);
+            var centerConnector = new ActorTransportConnector(centerActorEndPoint, _channelConfiguration.TransportConfiguration);
             var centerChannel = new ActorConnectorReconnectableChannel(
                 localActor, centerConnector, _channelConfiguration);
 
