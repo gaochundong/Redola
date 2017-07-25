@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ActorConfiguration>
+    <CenterActor Type="no-center" Name="no-center" Address="localhost" Port="0"/>
+    <LocalActor Type="server" Name="server-dynamicproxy-castle" Address="localhost" Port="44444"/>
+    <ActorDirectory>
+        <ActorIdentity Type="client" Name="client-dynamicproxy-castle" Address="localhost" Port="22222"/>
+    </ActorDirectory>
+</ActorConfiguration>

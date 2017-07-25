@@ -1,6 +1,7 @@
 ﻿using System;
 using Logrila.Logging;
 using Logrila.Logging.NLogIntegration;
+using Redola.ActorModel;
 using Redola.Rpc.TestContracts;
 
 namespace Redola.Rpc.DynamicProxy.CastleIntegration.TestRpcServer
@@ -17,13 +18,17 @@ namespace Redola.Rpc.DynamicProxy.CastleIntegration.TestRpcServer
 
         static void Main(string[] args)
         {
-            var localActor = new RpcActor();
+            var localXmlFilePath = Environment.CurrentDirectory + @"\\XmlConfiguration\\ActorConfiguration.xml";
+            var localXmlFileActorConfiguration = LocalXmlFileActorConfiguration.Load(localXmlFilePath);
+            var localXmlFileActorDirectory = new LocalXmlFileActorDirectory(localXmlFileActorConfiguration);
+
+            var localActor = new RpcActor(localXmlFileActorConfiguration);
 
             localActor.Register<IHelloService>(new HelloService());
             localActor.Register<ICalcService>(new CalcService());
             localActor.Register<IOrderService>(new OrderService());
 
-            localActor.Bootup();
+            localActor.Bootup(localXmlFileActorDirectory);
 
             while (true)
             {

@@ -73,5 +73,10 @@
       <Name>Redola.Rpc.TestContracts</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="XmlConfiguration\ActorConfiguration.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
