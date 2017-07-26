@@ -26,22 +26,22 @@ namespace Redola.Rpc
         {
         }
 
-        public Type GetAdmissibleMessageType(string messageType)
+        protected virtual Type GetAdmissibleMessageType(string messageType)
         {
             return _admissibleMessages[messageType].MessageType;
         }
 
-        public MessageHandleStrategy GetAdmissibleMessageHandleStrategy(string messageType)
+        protected virtual MessageHandleStrategy GetAdmissibleMessageHandleStrategy(string messageType)
         {
             return _admissibleMessages[messageType];
         }
 
-        public bool CanHandleMessage(ActorMessageEnvelope envelope)
+        public virtual bool CanHandleMessage(ActorMessageEnvelope envelope)
         {
             return _admissibleMessages.ContainsKey(envelope.MessageType);
         }
 
-        public void HandleMessage(ActorSender sender, ActorMessageEnvelope envelope)
+        public virtual void HandleMessage(ActorSender sender, ActorMessageEnvelope envelope)
         {
             if (GetAdmissibleMessageHandleStrategy(envelope.MessageType).IsAsyncPattern)
             {
