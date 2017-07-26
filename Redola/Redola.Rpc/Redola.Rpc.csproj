@@ -72,7 +72,7 @@
     <Compile Include="RouteActor\IActorMessageHandler.cs" />
     <Compile Include="RouteActor\Blocking\IBlockingActorMessageHandler.cs" />
     <Compile Include="RouteActor\IRouteActorMessageHandler.cs" />
-    <Compile Include="Messaging\Strategy\MessageHandleStrategy.cs" />
+    <Compile Include="RouteActor\Strategy\MessageHandleStrategy.cs" />
     <Compile Include="RouteActor\RouteActor.cs" />
     <Compile Include="RouteActor\RouteActorMessageHandlerBase.cs" />
     <Compile Include="Rpc\Routing\MethodLocatorExtractor.cs" />
@@ -80,12 +80,12 @@
     <Compile Include="Rpc\Routing\MethodRouteBuilder.cs" />
     <Compile Include="Rpc\Routing\MethodRouteResolver.cs" />
     <Compile Include="Rpc\Routing\MethodRoute.cs" />
-    <Compile Include="Rpc\RpcMessage\InvokeMethodMessage.cs" />
-    <Compile Include="Rpc\RpcMessage\InvokeMethodResponse.cs" />
-    <Compile Include="Rpc\RpcMessage\InvokeMethodRequest.cs" />
-    <Compile Include="Rpc\RpcMessage\Contracts\RequestResponseMessageContract.cs" />
-    <Compile Include="Rpc\RpcMessage\Contracts\ReceiveMessageContract.cs" />
-    <Compile Include="Rpc\RpcMessage\Contracts\RpcMessageContract.cs" />
+    <Compile Include="Rpc\Message\InvokeMethodMessage.cs" />
+    <Compile Include="Rpc\Message\InvokeMethodResponse.cs" />
+    <Compile Include="Rpc\Message\InvokeMethodRequest.cs" />
+    <Compile Include="Rpc\Message\Contracts\RequestResponseMessageContract.cs" />
+    <Compile Include="Rpc\Message\Contracts\ReceiveMessageContract.cs" />
+    <Compile Include="Rpc\Message\Contracts\RpcMessageContract.cs" />
     <Compile Include="Rpc\RpcActor.cs" />
     <Compile Include="Rpc\RpcService.cs" />
     <Compile Include="Rpc\Routing\RpcServiceModule.cs" />
