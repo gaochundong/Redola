@@ -125,9 +125,10 @@ namespace Redola.Rpc
 
         public void OnSyncMessage<P>(ActorSender sender, ActorMessageEnvelope<P> response)
         {
-            if (response == null
-                || string.IsNullOrWhiteSpace(response.CorrelationID))
-                throw new InvalidOperationException("Invalid or empty message CorrelationID.");
+            if (response == null)
+                throw new InvalidOperationException("Invalid message response for message handling.");
+            if (string.IsNullOrWhiteSpace(response.CorrelationID))
+                throw new InvalidOperationException("Invalid or empty CorrelationID of message response.");
 
             BlockingCallbackHolder callback = null;
             if (_callbacks.TryRemove(response.CorrelationID, out callback)
