@@ -16,5 +16,10 @@ namespace Redola.Rpc
 
         public Type DeclaringType { get; set; }
         public object ServiceInstance { get; set; }
+
+        public override string ToString()
+        {
+            return string.Format("Type[{0}]", DeclaringType);
+        }
     }
 }
