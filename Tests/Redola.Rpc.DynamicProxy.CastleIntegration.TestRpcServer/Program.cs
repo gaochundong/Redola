@@ -22,11 +22,13 @@ namespace Redola.Rpc.DynamicProxy.CastleIntegration.TestRpcServer
             var localXmlFileActorConfiguration = LocalXmlFileActorConfiguration.Load(localXmlFilePath);
             var localXmlFileActorDirectory = new LocalXmlFileActorDirectory(localXmlFileActorConfiguration);
 
-            var localActor = new RpcActor(localXmlFileActorConfiguration);
+            var catalog = new ServiceCatalogProvider();
+            catalog.RegisterService<IHelloService>(new HelloService());
+            catalog.RegisterService<ICalcService>(new CalcService());
+            catalog.RegisterService<IOrderService>(new OrderService());
 
-            localActor.Register<IHelloService>(new HelloService());
-            localActor.Register<ICalcService>(new CalcService());
-            localActor.Register<IOrderService>(new OrderService());
+            var localActor = new RpcActor(localXmlFileActorConfiguration);
+            var rpcServer = new RpcServer(localActor, catalog);
 
             localActor.Bootup(localXmlFileActorDirectory);
 

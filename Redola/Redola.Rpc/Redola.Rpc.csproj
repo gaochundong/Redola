@@ -75,23 +75,25 @@
     <Compile Include="RouteActor\Strategy\MessageHandleStrategy.cs" />
     <Compile Include="RouteActor\RouteActor.cs" />
     <Compile Include="RouteActor\RouteActorMessageHandlerBase.cs" />
-    <Compile Include="Rpc\Module\Catalog\ServiceCatalogProvider.cs" />
-    <Compile Include="Rpc\Module\Method\MethodLocatorExtractor.cs" />
-    <Compile Include="Rpc\Module\Method\MethodRouteCache.cs" />
-    <Compile Include="Rpc\Module\Method\MethodRouteBuilder.cs" />
-    <Compile Include="Rpc\Module\Method\MethodRouteResolver.cs" />
-    <Compile Include="Rpc\Module\Method\MethodRoute.cs" />
+    <Compile Include="Rpc\Client\DynamicProxy\IServiceProxyGenerator.cs" />
+    <Compile Include="Rpc\Client\RpcClient.cs" />
+    <Compile Include="Rpc\Server\Catalog\ServiceCatalogProvider.cs" />
+    <Compile Include="Rpc\Server\Method\MethodLocatorExtractor.cs" />
+    <Compile Include="Rpc\Server\Method\MethodRouteCache.cs" />
+    <Compile Include="Rpc\Server\Method\MethodRouteBuilder.cs" />
+    <Compile Include="Rpc\Server\Method\MethodRouteResolver.cs" />
+    <Compile Include="Rpc\Server\Method\MethodRoute.cs" />
     <Compile Include="Rpc\Message\InvokeMethodMessage.cs" />
     <Compile Include="Rpc\Message\InvokeMethodResponse.cs" />
     <Compile Include="Rpc\Message\InvokeMethodRequest.cs" />
     <Compile Include="Rpc\Message\Contracts\RequestResponseMessageContract.cs" />
     <Compile Include="Rpc\Message\Contracts\ReceiveMessageContract.cs" />
     <Compile Include="Rpc\Message\Contracts\RpcMessageContract.cs" />
-    <Compile Include="Rpc\Module\Catalog\IServiceCatalogProvider.cs" />
-    <Compile Include="Rpc\Module\Catalog\ServiceEntry.cs" />
+    <Compile Include="Rpc\Server\Catalog\IServiceCatalogProvider.cs" />
+    <Compile Include="Rpc\Server\Catalog\ServiceEntry.cs" />
     <Compile Include="Rpc\Actor\RpcActor.cs" />
     <Compile Include="Rpc\Actor\RpcHandler.cs" />
-    <Compile Include="Rpc\Module\RpcModule.cs" />
+    <Compile Include="Rpc\Server\RpcServer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Redola.ActorModel\Redola.ActorModel.csproj">
@@ -103,6 +105,7 @@
     <None Include="Messaging\Envelope\ActorMessageEnvelope.proto" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

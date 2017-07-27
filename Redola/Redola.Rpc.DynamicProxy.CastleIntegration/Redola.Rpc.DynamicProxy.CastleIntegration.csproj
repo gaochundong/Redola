@@ -44,17 +44,23 @@
     <Compile Include="..\SolutionVersion.cs">
       <Link>SolutionVersion.cs</Link>
     </Compile>
-    <Compile Include="Extensions\RpcActorExtensions.cs" />
+    <Compile Include="Legacy\Extensions\RpcActorExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RpcServiceInterceptor.cs" />
-    <Compile Include="RpcServiceGenerator.cs" />
-    <Compile Include="RpcServiceProxyInterceptor.cs" />
-    <Compile Include="RpcServiceProxyGenerator.cs" />
+    <Compile Include="Legacy\RpcServiceInterceptor.cs" />
+    <Compile Include="Legacy\RpcServiceGenerator.cs" />
+    <Compile Include="Legacy\RpcServiceProxyInterceptor.cs" />
+    <Compile Include="Legacy\RpcServiceProxyGenerator.cs" />
+    <Compile Include="ServiceProxyInterceptor.cs" />
+    <Compile Include="ServiceProxyGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Redola.ActorModel\Redola.ActorModel.csproj">
+      <Project>{05e69e70-97ff-4fff-b106-e423b6f51a00}</Project>
+      <Name>Redola.ActorModel</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Redola.Rpc\Redola.Rpc.csproj">
       <Project>{465f580d-f09f-4362-a6ee-40b2627b11a4}</Project>
       <Name>Redola.Rpc</Name>

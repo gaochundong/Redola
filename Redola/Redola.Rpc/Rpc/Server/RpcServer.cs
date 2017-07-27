@@ -3,12 +3,12 @@ using System.Collections.Generic;
 
 namespace Redola.Rpc
 {
-    public class RpcModule : RpcHandler
+    public class RpcServer : RpcHandler
     {
         private IServiceCatalogProvider _serviceCatalogProvider;
         private MethodRouteResolver _methodRouteResolver;
 
-        public RpcModule(RpcActor localActor, IServiceCatalogProvider catalog)
+        public RpcServer(RpcActor localActor, IServiceCatalogProvider catalog)
             : base(localActor)
         {
             if (catalog == null)
@@ -18,7 +18,7 @@ namespace Redola.Rpc
             Initialize();
         }
 
-        public RpcModule(RpcActor localActor, IRateLimiter rateLimiter, IServiceCatalogProvider catalog)
+        public RpcServer(RpcActor localActor, IRateLimiter rateLimiter, IServiceCatalogProvider catalog)
             : base(localActor, rateLimiter)
         {
             if (catalog == null)
