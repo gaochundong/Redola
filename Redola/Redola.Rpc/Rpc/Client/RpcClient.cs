@@ -36,5 +36,10 @@ namespace Redola.Rpc
         {
             return _proxyGenerator.CreateServiceProxy<T>(this);
         }
+
+        public T Resolve<T>(IServiceLoadBalancingStrategy strategy)
+        {
+            return _proxyGenerator.CreateServiceProxy<T>(this, strategy);
+        }
     }
 }

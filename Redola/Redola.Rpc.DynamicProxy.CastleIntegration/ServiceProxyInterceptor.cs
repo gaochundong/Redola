@@ -7,21 +7,23 @@ namespace Redola.Rpc.DynamicProxy.CastleIntegration
     public class ServiceProxyInterceptor : IInterceptor
     {
         private Type _serviceType;
-        private RpcHandler _rpcHandler;
         private MethodLocatorExtractor _extractor;
+        private RpcHandler _rpcHandler;
+        private IServiceResolver _serviceResolver;
+        private IServiceLoadBalancingStrategy _strategy;
 
-        public ServiceProxyInterceptor(Type serviceType, RpcHandler rpcHandler, MethodLocatorExtractor extractor)
+        public ServiceProxyInterceptor(
+            Type serviceType,
+            MethodLocatorExtractor extractor,
+            RpcHandler rpcHandler,
+            IServiceResolver serviceResolver,
+            IServiceLoadBalancingStrategy strategy)
         {
-            if (serviceType == null)
-                throw new ArgumentNullException("serviceType");
-            if (rpcHandler == null)
-                throw new ArgumentNullException("rpcHandler");
-            if (extractor == null)
-                throw new ArgumentNullException("extractor");
-
             _serviceType = serviceType;
-            _rpcHandler = rpcHandler;
             _extractor = extractor;
+            _rpcHandler = rpcHandler;
+            _serviceResolver = serviceResolver;
+            _strategy = strategy;
         }
 
         public void Intercept(IInvocation invocation)
@@ -49,7 +51,8 @@ namespace Redola.Rpc.DynamicProxy.CastleIntegration
                 MethodArguments = invocation.Arguments,
             };
 
-            _rpcHandler.Send("", message);
+            var service = _serviceResolver.Resolve(_serviceType, _strategy);
+            _rpcHandler.Send(service, message);
         }
 
         private object InvokeRpcMethodReturn(IInvocation invocation)
@@ -65,7 +68,8 @@ namespace Redola.Rpc.DynamicProxy.CastleIntegration
                 MethodArguments = invocation.Arguments,
             };
 
-            var response = _rpcHandler.Send<InvokeMethodRequest, InvokeMethodResponse>("", request);
+            var service = _serviceResolver.Resolve(_serviceType, _strategy);
+            var response = _rpcHandler.Send<InvokeMethodRequest, InvokeMethodResponse>(service, request);
 
             return response.MethodReturnValue;
         }
