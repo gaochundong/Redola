@@ -75,20 +75,22 @@
     <Compile Include="RouteActor\Strategy\MessageHandleStrategy.cs" />
     <Compile Include="RouteActor\RouteActor.cs" />
     <Compile Include="RouteActor\RouteActorMessageHandlerBase.cs" />
-    <Compile Include="Rpc\Routing\MethodLocatorExtractor.cs" />
-    <Compile Include="Rpc\Routing\MethodRouteCache.cs" />
-    <Compile Include="Rpc\Routing\MethodRouteBuilder.cs" />
-    <Compile Include="Rpc\Routing\MethodRouteResolver.cs" />
-    <Compile Include="Rpc\Routing\MethodRoute.cs" />
+    <Compile Include="Rpc\Module\Method\MethodLocatorExtractor.cs" />
+    <Compile Include="Rpc\Module\Method\MethodRouteCache.cs" />
+    <Compile Include="Rpc\Module\Method\MethodRouteBuilder.cs" />
+    <Compile Include="Rpc\Module\Method\MethodRouteResolver.cs" />
+    <Compile Include="Rpc\Module\Method\MethodRoute.cs" />
     <Compile Include="Rpc\Message\InvokeMethodMessage.cs" />
     <Compile Include="Rpc\Message\InvokeMethodResponse.cs" />
     <Compile Include="Rpc\Message\InvokeMethodRequest.cs" />
     <Compile Include="Rpc\Message\Contracts\RequestResponseMessageContract.cs" />
     <Compile Include="Rpc\Message\Contracts\ReceiveMessageContract.cs" />
     <Compile Include="Rpc\Message\Contracts\RpcMessageContract.cs" />
-    <Compile Include="Rpc\RpcActor.cs" />
-    <Compile Include="Rpc\RpcService.cs" />
-    <Compile Include="Rpc\Routing\RpcServiceModule.cs" />
+    <Compile Include="Rpc\Module\Service\IServiceCatalogProvider.cs" />
+    <Compile Include="Rpc\Module\Service\ServiceEntry.cs" />
+    <Compile Include="Rpc\Actor\RpcActor.cs" />
+    <Compile Include="Rpc\Actor\RpcService.cs" />
+    <Compile Include="Rpc\Module\RpcModule.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Redola.ActorModel\Redola.ActorModel.csproj">

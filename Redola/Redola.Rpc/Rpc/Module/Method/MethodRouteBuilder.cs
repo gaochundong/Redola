@@ -16,14 +16,14 @@ namespace Redola.Rpc
             _extractor = extractor;
         }
 
-        public MethodRouteCache BuildCache(IEnumerable<Tuple<Type, object>> instances)
+        public MethodRouteCache BuildCache(IEnumerable<ServiceEntry> entries)
         {
             var cache = new MethodRouteCache();
 
-            foreach (var instance in instances)
+            foreach (var entry in entries)
             {
-                var serviceType = instance.Item1;
-                var serviceInstance = instance.Item2;
+                var serviceType = entry.DeclaringType;
+                var serviceInstance = entry.ServiceInstance;
 
                 var methods = serviceType.GetType().GetMethods(BindingFlags.Public | BindingFlags.InvokeMethod);
                 foreach (var method in methods)

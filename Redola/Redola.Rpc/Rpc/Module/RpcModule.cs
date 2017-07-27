@@ -1,22 +1,40 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Redola.Rpc
 {
-    public class RpcServiceModule : RpcService
+    public class RpcModule : RpcService
     {
-        private IList<Tuple<Type, object>> _services = new List<Tuple<Type, object>>();
+        private IServiceCatalogProvider _serviceCatalogProvider;
         private MethodRouteResolver _methodRouteResolver;
 
-        public RpcServiceModule(RpcActor localActor)
+        public RpcModule(RpcActor localActor, IServiceCatalogProvider catalog)
             : base(localActor)
         {
+            if (catalog == null)
+                throw new ArgumentNullException("catalog");
+            _serviceCatalogProvider = catalog;
+
+            Initialize();
         }
 
-        public RpcServiceModule(RpcActor localActor, IRateLimiter rateLimiter)
+        public RpcModule(RpcActor localActor, IRateLimiter rateLimiter, IServiceCatalogProvider catalog)
             : base(localActor, rateLimiter)
         {
+            if (catalog == null)
+                throw new ArgumentNullException("catalog");
+            _serviceCatalogProvider = catalog;
+
+            Initialize();
+        }
+
+        private void Initialize()
+        {
+            var services = _serviceCatalogProvider.GetServices();
+            var locatorExtractor = new MethodLocatorExtractor();
+            var routeBuilder = new MethodRouteBuilder(locatorExtractor);
+            var routeCache = routeBuilder.BuildCache(services);
+            _methodRouteResolver = new MethodRouteResolver(routeCache);
         }
 
         protected override IEnumerable<RpcMessageContract> RegisterRpcMessageContracts()
@@ -71,32 +89,6 @@ namespace Redola.Rpc
                 MethodReturnValue = returnValue,
             };
             return response;
-        }
-
-        public void RegisterService<T>(T service)
-        {
-            RegisterService(typeof(T), service);
-        }
-
-        public void RegisterService(Type declaringType, object service)
-        {
-            if (declaringType == null)
-                throw new ArgumentNullException("declaringType");
-            if (service == null)
-                throw new ArgumentNullException("service");
-
-            lock (_services)
-            {
-                if (_services.Any(s => s.Item1.Equals(declaringType)))
-                    throw new ArgumentException(string.Format("Type [{0}] has already been registered.", declaringType), "service");
-
-                _services.Add(new Tuple<Type, object>(declaringType, service));
-
-                var locatorExtractor = new MethodLocatorExtractor();
-                var routeBuilder = new MethodRouteBuilder(locatorExtractor);
-                var routeCache = routeBuilder.BuildCache(_services);
-                _methodRouteResolver = new MethodRouteResolver(routeCache);
-            }
         }
     }
 }
