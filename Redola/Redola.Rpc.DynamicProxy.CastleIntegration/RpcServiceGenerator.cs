@@ -10,7 +10,7 @@ namespace Redola.Rpc.DynamicProxy.CastleIntegration
         public static T CreateService<T>(RpcActor localActor, T service)
         {
             var proxy = _proxyGenerator.CreateClassProxy(
-                typeof(RpcService),
+                typeof(RpcHandler),
                 new Type[] { typeof(T) },
                 new ProxyGenerationOptions(),
                 new object[] { localActor },

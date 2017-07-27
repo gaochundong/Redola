@@ -89,7 +89,7 @@
     <Compile Include="Rpc\Module\Service\IServiceCatalogProvider.cs" />
     <Compile Include="Rpc\Module\Service\ServiceEntry.cs" />
     <Compile Include="Rpc\Actor\RpcActor.cs" />
-    <Compile Include="Rpc\Actor\RpcService.cs" />
+    <Compile Include="Rpc\Actor\RpcHandler.cs" />
     <Compile Include="Rpc\Module\RpcModule.cs" />
   </ItemGroup>
   <ItemGroup>

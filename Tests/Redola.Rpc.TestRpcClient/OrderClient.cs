@@ -4,7 +4,7 @@ using Redola.Rpc.TestContracts;
 
 namespace Redola.Rpc.TestRpcClient
 {
-    internal class OrderClient : RpcService, IOrderService
+    internal class OrderClient : RpcHandler, IOrderService
     {
         private ILog _log = Logger.Get<OrderClient>();
 

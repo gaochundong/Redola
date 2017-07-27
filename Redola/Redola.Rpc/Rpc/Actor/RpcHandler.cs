@@ -4,12 +4,12 @@ using Redola.ActorModel;
 
 namespace Redola.Rpc
 {
-    public abstract class RpcService : BlockingActorMessageHandlerBase
+    public abstract class RpcHandler : BlockingActorMessageHandlerBase
     {
         private RpcActor _localActor;
         private IRateLimiter _rateLimiter = null;
 
-        public RpcService(RpcActor localActor)
+        public RpcHandler(RpcActor localActor)
             : base(localActor.Actor)
         {
             if (localActor == null)
@@ -17,7 +17,7 @@ namespace Redola.Rpc
             _localActor = localActor;
         }
 
-        public RpcService(RpcActor localActor, IRateLimiter rateLimiter)
+        public RpcHandler(RpcActor localActor, IRateLimiter rateLimiter)
             : this(localActor)
         {
             if (rateLimiter == null)

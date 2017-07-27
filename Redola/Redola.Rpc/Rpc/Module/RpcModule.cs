@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Redola.Rpc
 {
-    public class RpcModule : RpcService
+    public class RpcModule : RpcHandler
     {
         private IServiceCatalogProvider _serviceCatalogProvider;
         private MethodRouteResolver _methodRouteResolver;

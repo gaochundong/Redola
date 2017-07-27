@@ -5,7 +5,7 @@ using Redola.Rpc.TestContracts;
 
 namespace Redola.Rpc.TestRpcServer
 {
-    internal class HelloService : RpcService, IHelloService
+    internal class HelloService : RpcHandler, IHelloService
     {
         private ILog _log = Logger.Get<HelloService>();
 

@@ -53,7 +53,7 @@ namespace Redola.Rpc
             _localActor.Shutdown();
         }
 
-        public void RegisterRpcService(RpcService service)
+        public void RegisterRpcService(RpcHandler service)
         {
             _localActor.RegisterMessageHandler(service);
         }

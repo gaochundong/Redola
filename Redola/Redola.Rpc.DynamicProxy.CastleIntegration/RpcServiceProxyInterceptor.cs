@@ -22,7 +22,7 @@ namespace Redola.Rpc.DynamicProxy.CastleIntegration
 
         private void RetrieveSendMethod()
         {
-            _sendMethod = typeof(RpcService).GetMethods()
+            _sendMethod = typeof(RpcHandler).GetMethods()
                 .Where(m => m.Name == "Send" && m.IsGenericMethod)
                 .Where(m => m.ReturnType != typeof(void) && !m.ReturnType.IsGenericType)
                 .Where(m => m.GetParameters().Count() == 2)

@@ -4,7 +4,7 @@ using Redola.Rpc.TestContracts;
 
 namespace Redola.Rpc.TestRpcClient
 {
-    internal class CalcClient : RpcService, ICalcService
+    internal class CalcClient : RpcHandler, ICalcService
     {
         private ILog _log = Logger.Get<CalcClient>();
 
