@@ -75,6 +75,7 @@
     <Compile Include="RouteActor\Strategy\MessageHandleStrategy.cs" />
     <Compile Include="RouteActor\RouteActor.cs" />
     <Compile Include="RouteActor\RouteActorMessageHandlerBase.cs" />
+    <Compile Include="Rpc\Module\Catalog\ServiceCatalogProvider.cs" />
     <Compile Include="Rpc\Module\Method\MethodLocatorExtractor.cs" />
     <Compile Include="Rpc\Module\Method\MethodRouteCache.cs" />
     <Compile Include="Rpc\Module\Method\MethodRouteBuilder.cs" />
@@ -86,8 +87,8 @@
     <Compile Include="Rpc\Message\Contracts\RequestResponseMessageContract.cs" />
     <Compile Include="Rpc\Message\Contracts\ReceiveMessageContract.cs" />
     <Compile Include="Rpc\Message\Contracts\RpcMessageContract.cs" />
-    <Compile Include="Rpc\Module\Service\IServiceCatalogProvider.cs" />
-    <Compile Include="Rpc\Module\Service\ServiceEntry.cs" />
+    <Compile Include="Rpc\Module\Catalog\IServiceCatalogProvider.cs" />
+    <Compile Include="Rpc\Module\Catalog\ServiceEntry.cs" />
     <Compile Include="Rpc\Actor\RpcActor.cs" />
     <Compile Include="Rpc\Actor\RpcHandler.cs" />
     <Compile Include="Rpc\Module\RpcModule.cs" />
