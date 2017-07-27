@@ -1,5 +1,4 @@
-﻿using System;
-using Castle.DynamicProxy;
+﻿using Castle.DynamicProxy;
 
 namespace Redola.Rpc.DynamicProxy.CastleIntegration
 {
@@ -7,33 +6,18 @@ namespace Redola.Rpc.DynamicProxy.CastleIntegration
     {
         private static readonly IProxyGenerator _proxyGenerator = new ProxyGenerator();
 
-        private MethodLocatorExtractor _extractor;
-        private RpcHandler _rpcHandler;
+        private MethodLocatorExtractor _locatorExtractor;
         private IServiceResolver _serviceResolver;
-        private IServiceLoadBalancingStrategy _strategy;
 
-        public ServiceProxyGenerator(
-            MethodLocatorExtractor extractor,
-            RpcHandler rpcHandler,
-            IServiceResolver serviceResolver,
-            IServiceLoadBalancingStrategy strategy)
+        public ServiceProxyGenerator(MethodLocatorExtractor locatorExtractor, IServiceResolver serviceResolver)
         {
-            _extractor = extractor;
-            _rpcHandler = rpcHandler;
+            _locatorExtractor = locatorExtractor;
             _serviceResolver = serviceResolver;
-            _strategy = strategy;
         }
 
         public T CreateServiceProxy<T>(RpcHandler handler)
         {
-            var proxy = _proxyGenerator.CreateInterfaceProxyWithoutTarget(
-                typeof(T),
-                new ProxyGenerationOptions(),
-                new IInterceptor[]
-                {
-                    new ServiceProxyInterceptor(typeof(T), _extractor, _rpcHandler, _serviceResolver, _strategy)
-                });
-            return (T)proxy;
+            return CreateServiceProxy<T>(handler, new RandomServiceLoadBalancingStrategy());
         }
 
         public T CreateServiceProxy<T>(RpcHandler handler, IServiceLoadBalancingStrategy strategy)
@@ -43,7 +27,7 @@ namespace Redola.Rpc.DynamicProxy.CastleIntegration
                 new ProxyGenerationOptions(),
                 new IInterceptor[]
                 {
-                    new ServiceProxyInterceptor(typeof(T), _extractor, _rpcHandler, _serviceResolver, strategy)
+                    new ServiceProxyInterceptor(typeof(T), _locatorExtractor, handler, _serviceResolver, strategy)
                 });
             return (T)proxy;
         }
