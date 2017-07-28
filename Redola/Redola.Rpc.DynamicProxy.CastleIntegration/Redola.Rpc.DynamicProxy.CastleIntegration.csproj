@@ -44,12 +44,7 @@
     <Compile Include="..\SolutionVersion.cs">
       <Link>SolutionVersion.cs</Link>
     </Compile>
-    <Compile Include="Legacy\Extensions\RpcActorExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Legacy\RpcServiceInterceptor.cs" />
-    <Compile Include="Legacy\RpcServiceGenerator.cs" />
-    <Compile Include="Legacy\RpcServiceProxyInterceptor.cs" />
-    <Compile Include="Legacy\RpcServiceProxyGenerator.cs" />
     <Compile Include="ServiceProxyInterceptor.cs" />
     <Compile Include="ServiceProxyGenerator.cs" />
   </ItemGroup>

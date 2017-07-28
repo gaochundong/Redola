@@ -5,6 +5,7 @@ using Logrila.Logging;
 using Logrila.Logging.NLogIntegration;
 using Redola.ActorModel;
 using Redola.Rpc.DynamicProxy.CastleIntegration;
+using Redola.Rpc.ServiceDiscovery.XmlIntegration;
 using Redola.Rpc.TestContracts;
 
 namespace Redola.Rpc.TestHttpRelay
@@ -26,11 +27,21 @@ namespace Redola.Rpc.TestHttpRelay
             var localXmlFileActorDirectory = new LocalXmlFileActorDirectory(localXmlFileActorConfiguration);
             var localActor = new RpcActor(localXmlFileActorConfiguration);
 
-            var helloClient = RpcServiceProxyGenerator.CreateServiceProxy<IHelloService>(localActor, "server");
-            var calcClient = RpcServiceProxyGenerator.CreateServiceProxy<ICalcService>(localActor, "server");
+            var localXmlFileServiceRegistryPath = Environment.CurrentDirectory + @"\\XmlConfiguration\\ServiceRegistry.xml";
+            var serviceDiscovery = new LocalXmlFileServiceDiscovery(localXmlFileServiceRegistryPath);
+            var serviceRetriever = new ServiceRetriever(serviceDiscovery);
+            var serviceResolver = new ServiceResolver(serviceRetriever);
+            var proxyGenerator = new ServiceProxyGenerator(serviceResolver);
 
-            localActor.RegisterRpcHandler(helloClient as RpcHandler);
-            localActor.RegisterRpcHandler(calcClient as RpcHandler);
+            var fixture = new RpcMethodFixture(
+                new MethodLocatorExtractor(),
+                new MethodArgumentEncoder(RpcActor.DefaultMessageEncoder),
+                new MethodArgumentDecoder(RpcActor.DefaultMessageDecoder));
+
+            var rpcClient = new RpcClient(localActor, proxyGenerator, fixture);
+
+            var helloClient = rpcClient.Resolve<IHelloService>();
+            var calcClient = rpcClient.Resolve<ICalcService>();
 
             localActor.Bootup(localXmlFileActorDirectory);
 
