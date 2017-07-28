@@ -1,4 +1,5 @@
-﻿using Castle.DynamicProxy;
+﻿using System;
+using Castle.DynamicProxy;
 
 namespace Redola.Rpc.DynamicProxy.CastleIntegration
 {
@@ -6,28 +7,33 @@ namespace Redola.Rpc.DynamicProxy.CastleIntegration
     {
         private static readonly IProxyGenerator _proxyGenerator = new ProxyGenerator();
 
-        private MethodLocatorExtractor _locatorExtractor;
         private IServiceResolver _serviceResolver;
 
-        public ServiceProxyGenerator(MethodLocatorExtractor locatorExtractor, IServiceResolver serviceResolver)
+        public ServiceProxyGenerator(IServiceResolver serviceResolver)
         {
-            _locatorExtractor = locatorExtractor;
+            if (serviceResolver == null)
+                throw new ArgumentNullException("serviceResolver");
             _serviceResolver = serviceResolver;
         }
 
-        public T CreateServiceProxy<T>(RpcHandler handler)
+        public T CreateServiceProxy<T>(RpcHandler handler, RpcMethodFixture fixture)
         {
-            return CreateServiceProxy<T>(handler, new RandomServiceLoadBalancingStrategy());
+            return CreateServiceProxy<T>(handler, fixture, new RandomServiceLoadBalancingStrategy());
         }
 
-        public T CreateServiceProxy<T>(RpcHandler handler, IServiceLoadBalancingStrategy strategy)
+        public T CreateServiceProxy<T>(RpcHandler handler, RpcMethodFixture fixture, IServiceLoadBalancingStrategy strategy)
         {
             var proxy = _proxyGenerator.CreateInterfaceProxyWithoutTarget(
                 typeof(T),
                 new ProxyGenerationOptions(),
                 new IInterceptor[]
                 {
-                    new ServiceProxyInterceptor(typeof(T), _locatorExtractor, handler, _serviceResolver, strategy)
+                    new ServiceProxyInterceptor(
+                        typeof(T),
+                        _serviceResolver,
+                        handler,
+                        fixture,
+                        strategy)
                 });
             return (T)proxy;
         }

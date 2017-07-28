@@ -5,36 +5,46 @@ namespace Redola.Rpc
 {
     public class RpcServer : RpcHandler
     {
-        private IServiceCatalogProvider _serviceCatalogProvider;
-        private MethodRouteResolver _methodRouteResolver;
+        private IServiceCatalogProvider _catalog;
+        private RpcMethodFixture _fixture;
+        private MethodRouteResolver _resolver;
 
-        public RpcServer(RpcActor localActor, IServiceCatalogProvider catalog)
+        public RpcServer(RpcActor localActor, IServiceCatalogProvider catalog, RpcMethodFixture fixture)
             : base(localActor)
         {
             if (catalog == null)
                 throw new ArgumentNullException("catalog");
-            _serviceCatalogProvider = catalog;
+            if (fixture == null)
+                throw new ArgumentNullException("fixture");
+
+            _catalog = catalog;
+            _fixture = fixture;
 
             Initialize();
         }
 
-        public RpcServer(RpcActor localActor, IRateLimiter rateLimiter, IServiceCatalogProvider catalog)
+        public RpcServer(RpcActor localActor, IRateLimiter rateLimiter, IServiceCatalogProvider catalog, RpcMethodFixture fixture)
             : base(localActor, rateLimiter)
         {
             if (catalog == null)
                 throw new ArgumentNullException("catalog");
-            _serviceCatalogProvider = catalog;
+            if (fixture == null)
+                throw new ArgumentNullException("fixture");
+
+            _catalog = catalog;
+            _fixture = fixture;
 
             Initialize();
         }
 
         private void Initialize()
         {
-            var services = _serviceCatalogProvider.GetServices();
-            var locatorExtractor = new MethodLocatorExtractor();
-            var routeBuilder = new MethodRouteBuilder(locatorExtractor);
+            var services = _catalog.GetServices();
+            var routeBuilder = new MethodRouteBuilder(_fixture.Extractor);
             var routeCache = routeBuilder.BuildCache(services);
-            _methodRouteResolver = new MethodRouteResolver(routeCache);
+            _resolver = new MethodRouteResolver(routeCache);
+
+            this.Actor.RegisterRpcHandler(this);
         }
 
         protected override IEnumerable<RpcMessageContract> RegisterRpcMessageContracts()
@@ -49,16 +59,21 @@ namespace Redola.Rpc
 
         private void OnInvokeMethodMessage(ActorSender sender, ActorMessageEnvelope<InvokeMethodMessage> request)
         {
+            request.Message.Deserialize(_fixture.ArgumentDecoder);
             InvokeMethod(request.Message);
         }
 
         private void OnInvokeMethodRequest(ActorSender sender, ActorMessageEnvelope<InvokeMethodRequest> request)
         {
+            request.Message.Deserialize(_fixture.ArgumentDecoder);
+            var message = InvokeMethod(request.Message);
+            message.Serialize(_fixture.ArgumentEncoder);
+
             var response = new ActorMessageEnvelope<InvokeMethodResponse>()
             {
                 CorrelationID = request.MessageID,
                 CorrelationTime = request.MessageTime,
-                Message = InvokeMethod(request.Message),
+                Message = message,
             };
 
             this.BeginReply(sender.ChannelIdentifier, response);
@@ -66,7 +81,7 @@ namespace Redola.Rpc
 
         private void InvokeMethod(InvokeMethodMessage message)
         {
-            var methodRoute = _methodRouteResolver.Resolve(message.MethodLocator);
+            var methodRoute = _resolver.Resolve(message.MethodLocator);
             if (methodRoute == null)
                 throw new InvalidOperationException(string.Format(
                     "Cannot resolve method route [{0}].", message.MethodLocator));
@@ -76,7 +91,7 @@ namespace Redola.Rpc
 
         private InvokeMethodResponse InvokeMethod(InvokeMethodRequest request)
         {
-            var methodRoute = _methodRouteResolver.Resolve(request.MethodLocator);
+            var methodRoute = _resolver.Resolve(request.MethodLocator);
             if (methodRoute == null)
                 throw new InvalidOperationException(string.Format(
                     "Cannot resolve method route [{0}].", request.MethodLocator));

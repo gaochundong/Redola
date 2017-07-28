@@ -6,8 +6,10 @@ namespace Redola.Rpc
 {
     public class RpcActor
     {
-        public static readonly IActorMessageEncoder DefaultActorMessageEncoder = new ActorMessageEncoder(new ProtocolBuffersMessageEncoder());
-        public static readonly IActorMessageDecoder DefaultActorMessageDecoder = new ActorMessageDecoder(new ProtocolBuffersMessageDecoder());
+        public static readonly IMessageEncoder DefaultMessageEncoder = new ProtocolBuffersMessageEncoder();
+        public static readonly IMessageDecoder DefaultMessageDecoder = new ProtocolBuffersMessageDecoder();
+        public static readonly IActorMessageEncoder DefaultActorMessageEncoder = new ActorMessageEncoder(DefaultMessageEncoder);
+        public static readonly IActorMessageDecoder DefaultActorMessageDecoder = new ActorMessageDecoder(DefaultMessageDecoder);
 
         private BlockingRouteActor _localActor = null;
 
@@ -53,9 +55,9 @@ namespace Redola.Rpc
             _localActor.Shutdown();
         }
 
-        public void RegisterRpcService(RpcHandler service)
+        public void RegisterRpcHandler(RpcHandler handler)
         {
-            _localActor.RegisterMessageHandler(service);
+            _localActor.RegisterMessageHandler(handler);
         }
 
         #region Blocking Envelope

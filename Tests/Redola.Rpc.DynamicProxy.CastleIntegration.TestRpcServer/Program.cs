@@ -28,7 +28,12 @@ namespace Redola.Rpc.DynamicProxy.CastleIntegration.TestRpcServer
             catalog.RegisterService<ICalcService>(new CalcService());
             catalog.RegisterService<IOrderService>(new OrderService());
 
-            var rpcServer = new RpcServer(localActor, catalog);
+            var fixture = new RpcMethodFixture(
+                new MethodLocatorExtractor(),
+                new MethodArgumentEncoder(RpcActor.DefaultMessageEncoder),
+                new MethodArgumentDecoder(RpcActor.DefaultMessageDecoder));
+
+            var rpcServer = new RpcServer(localActor, catalog, fixture);
 
             localActor.Bootup(localXmlFileActorDirectory);
 

@@ -26,9 +26,9 @@ namespace Redola.Rpc.TestRpcClient
             var calcClient = new CalcClient(localActor);
             var orderClient = new OrderClient(localActor);
 
-            localActor.RegisterRpcService(helloClient);
-            localActor.RegisterRpcService(calcClient);
-            localActor.RegisterRpcService(orderClient);
+            localActor.RegisterRpcHandler(helloClient);
+            localActor.RegisterRpcHandler(calcClient);
+            localActor.RegisterRpcHandler(orderClient);
 
             localActor.Bootup();
 

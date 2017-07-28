@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 
 namespace Redola.Rpc
 {
     public class MethodRouteBuilder
     {
-        private MethodLocatorExtractor _extractor;
+        private IMethodLocatorExtractor _extractor;
 
-        public MethodRouteBuilder(MethodLocatorExtractor extractor)
+        public MethodRouteBuilder(IMethodLocatorExtractor extractor)
         {
             if (extractor == null)
                 throw new ArgumentNullException("extractor");
@@ -25,7 +24,7 @@ namespace Redola.Rpc
                 var serviceType = entry.DeclaringType;
                 var serviceInstance = entry.ServiceInstance;
 
-                var methods = serviceType.GetMethods(BindingFlags.Public | BindingFlags.InvokeMethod);
+                var methods = serviceType.GetMethods();
                 foreach (var method in methods)
                 {
                     var methodLocator = _extractor.Extract(method);

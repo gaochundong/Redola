@@ -76,7 +76,7 @@ namespace Redola.Rpc
             }
 
             if (!handled)
-                _log.WarnFormat("OnActorDataReceived, cannot handle message [{0}] from sender [{1}].",
+                _log.WarnFormat("OnActorChannelDataReceived, cannot handle message [{0}] from sender [{1}].",
                     envelope.MessageType, new ActorSender(e.RemoteActor, e.ChannelIdentifier));
 
             base.OnActorChannelDataReceived(sender, e);

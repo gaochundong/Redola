@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Redola.Rpc
+﻿namespace Redola.Rpc
 {
     public class ActorMessageEncoder : IActorMessageEncoder
     {
@@ -11,24 +9,24 @@ namespace Redola.Rpc
             _encoder = encoder;
         }
 
-        public byte[] EncodeMessage(object data)
+        public byte[] EncodeMessage(object message)
         {
-            return _encoder.EncodeMessage(data);
+            return _encoder.EncodeMessage(message);
         }
 
-        public byte[] EncodeMessage<T>(T messageData)
+        public byte[] EncodeMessage<T>(T message)
         {
-            return _encoder.EncodeMessage(messageData);
+            return _encoder.EncodeMessage(message);
         }
 
-        public byte[] EncodeMessageEnvelope<T>(T messageData)
+        public byte[] EncodeMessageEnvelope<T>(T message)
         {
-            var message = new ActorMessageEnvelope()
+            var envelope = new ActorMessageEnvelope()
             {
                 MessageType = typeof(T).Name,
-                MessageData = EncodeMessage(messageData),
+                MessageData = EncodeMessage(message),
             };
-            return _encoder.EncodeMessage(message);
+            return _encoder.EncodeMessage(envelope);
         }
     }
 }

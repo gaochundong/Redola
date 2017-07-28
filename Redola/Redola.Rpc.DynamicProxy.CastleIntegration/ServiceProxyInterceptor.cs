@@ -7,22 +7,24 @@ namespace Redola.Rpc.DynamicProxy.CastleIntegration
     public class ServiceProxyInterceptor : IInterceptor
     {
         private Type _serviceType;
-        private MethodLocatorExtractor _extractor;
-        private RpcHandler _rpcHandler;
         private IServiceResolver _serviceResolver;
+
+        private RpcHandler _handler;
+        private RpcMethodFixture _fixture;
         private IServiceLoadBalancingStrategy _strategy;
 
         public ServiceProxyInterceptor(
             Type serviceType,
-            MethodLocatorExtractor extractor,
-            RpcHandler rpcHandler,
             IServiceResolver serviceResolver,
+            RpcHandler handler,
+            RpcMethodFixture fixture,
             IServiceLoadBalancingStrategy strategy)
         {
             _serviceType = serviceType;
-            _extractor = extractor;
-            _rpcHandler = rpcHandler;
             _serviceResolver = serviceResolver;
+
+            _handler = handler;
+            _fixture = fixture;
             _strategy = strategy;
         }
 
@@ -44,7 +46,7 @@ namespace Redola.Rpc.DynamicProxy.CastleIntegration
             if (rpcMethod == null)
                 throw new InvalidOperationException(string.Format("Cannot invoke method [{0}].", invocation.Method.Name));
 
-            var methodLocator = _extractor.Extract(rpcMethod);
+            var methodLocator = _fixture.Extractor.Extract(rpcMethod);
 
             var message = new InvokeMethodMessage()
             {
@@ -52,8 +54,10 @@ namespace Redola.Rpc.DynamicProxy.CastleIntegration
                 MethodArguments = invocation.Arguments,
             };
 
+            message.Serialize(_fixture.ArgumentEncoder);
+
             var service = _serviceResolver.Resolve(_serviceType, _strategy);
-            _rpcHandler.Send(service, message);
+            _handler.Send(service, message);
         }
 
         private object InvokeRpcMethodReturn(IInvocation invocation)
@@ -62,7 +66,7 @@ namespace Redola.Rpc.DynamicProxy.CastleIntegration
             if (rpcMethod == null)
                 throw new InvalidOperationException(string.Format("Cannot invoke method [{0}].", invocation.Method.Name));
 
-            var methodLocator = _extractor.Extract(rpcMethod);
+            var methodLocator = _fixture.Extractor.Extract(rpcMethod);
 
             var request = new InvokeMethodRequest()
             {
@@ -70,8 +74,12 @@ namespace Redola.Rpc.DynamicProxy.CastleIntegration
                 MethodArguments = invocation.Arguments,
             };
 
+            request.Serialize(_fixture.ArgumentEncoder);
+
             var service = _serviceResolver.Resolve(_serviceType, _strategy);
-            var response = _rpcHandler.Send<InvokeMethodRequest, InvokeMethodResponse>(service, request);
+            var response = _handler.Send<InvokeMethodRequest, InvokeMethodResponse>(service, request);
+
+            response.Deserialize(_fixture.ArgumentDecoder);
 
             return response.MethodReturnValue;
         }

@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace Redola.Rpc
 {
-    public class MethodLocatorExtractor
+    public class MethodLocatorExtractor : IMethodLocatorExtractor
     {
         public MethodLocatorExtractor()
         {

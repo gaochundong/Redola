@@ -29,8 +29,8 @@ namespace Redola.Rpc.TestHttpRelay
             var helloClient = RpcServiceProxyGenerator.CreateServiceProxy<IHelloService>(localActor, "server");
             var calcClient = RpcServiceProxyGenerator.CreateServiceProxy<ICalcService>(localActor, "server");
 
-            localActor.RegisterRpcService(helloClient as RpcHandler);
-            localActor.RegisterRpcService(calcClient as RpcHandler);
+            localActor.RegisterRpcHandler(helloClient as RpcHandler);
+            localActor.RegisterRpcHandler(calcClient as RpcHandler);
 
             localActor.Bootup(localXmlFileActorDirectory);
 

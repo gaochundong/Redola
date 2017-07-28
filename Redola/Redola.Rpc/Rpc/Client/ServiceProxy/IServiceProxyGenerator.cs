@@ -2,7 +2,7 @@
 {
     public interface IServiceProxyGenerator
     {
-        T CreateServiceProxy<T>(RpcHandler handler);
-        T CreateServiceProxy<T>(RpcHandler handler, IServiceLoadBalancingStrategy strategy);
+        T CreateServiceProxy<T>(RpcHandler handler, RpcMethodFixture fixture);
+        T CreateServiceProxy<T>(RpcHandler handler, RpcMethodFixture fixture, IServiceLoadBalancingStrategy strategy);
     }
 }
