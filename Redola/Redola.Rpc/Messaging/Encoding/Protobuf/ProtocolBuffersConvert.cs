@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace Redola.Rpc
 {
@@ -26,6 +27,22 @@ namespace Redola.Rpc
             }
 
             return data;
+        }
+
+        public static object DeserializeObject(Type type, byte[] data)
+        {
+            return DeserializeObject(type, data, 0, data.Length);
+        }
+
+        public static object DeserializeObject(Type type, byte[] data, int dataOffset, int dataLength)
+        {
+            object obj = null;
+            using (var stream = new MemoryStream(data, dataOffset, dataLength))
+            {
+                obj = ProtoBuf.Serializer.NonGeneric.Deserialize(type, stream);
+            }
+
+            return obj;
         }
 
         public static T DeserializeObject<T>(byte[] data)
