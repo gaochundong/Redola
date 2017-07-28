@@ -25,7 +25,7 @@ namespace Redola.Rpc
                 var serviceType = entry.DeclaringType;
                 var serviceInstance = entry.ServiceInstance;
 
-                var methods = serviceType.GetType().GetMethods(BindingFlags.Public | BindingFlags.InvokeMethod);
+                var methods = serviceType.GetMethods(BindingFlags.Public | BindingFlags.InvokeMethod);
                 foreach (var method in methods)
                 {
                     var methodLocator = _extractor.Extract(method);

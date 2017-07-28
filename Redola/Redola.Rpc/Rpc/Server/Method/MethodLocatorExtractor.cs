@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Reflection;
 
 namespace Redola.Rpc
@@ -11,6 +12,9 @@ namespace Redola.Rpc
 
         public string Extract(MethodInfo method)
         {
+            if (method == null)
+                throw new ArgumentNullException("method");
+
             var serviceType = method.DeclaringType;
 
             var methodLocator = string.Format("{0}/{1}", serviceType.FullName, method.Name);

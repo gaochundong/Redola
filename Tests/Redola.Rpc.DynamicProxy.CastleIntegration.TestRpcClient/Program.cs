@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Logrila.Logging;
 using Logrila.Logging.NLogIntegration;
 using Redola.ActorModel;
+using Redola.Rpc.ServiceDiscovery.XmlIntegration;
 using Redola.Rpc.TestContracts;
 
 namespace Redola.Rpc.DynamicProxy.CastleIntegration.TestRpcClient
@@ -21,22 +22,22 @@ namespace Redola.Rpc.DynamicProxy.CastleIntegration.TestRpcClient
 
         static void Main(string[] args)
         {
-            var localXmlFilePath = Environment.CurrentDirectory + @"\\XmlConfiguration\\ActorConfiguration.xml";
-            var localXmlFileActorConfiguration = LocalXmlFileActorConfiguration.Load(localXmlFilePath);
+            var localXmlFileActorPath = Environment.CurrentDirectory + @"\\XmlConfiguration\\ActorConfiguration.xml";
+            var localXmlFileActorConfiguration = LocalXmlFileActorConfiguration.Load(localXmlFileActorPath);
             var localXmlFileActorDirectory = new LocalXmlFileActorDirectory(localXmlFileActorConfiguration);
-
             var localActor = new RpcActor(localXmlFileActorConfiguration);
 
-            var locatorExtractor = new MethodLocatorExtractor();
-            var serviceRetriever = new ServiceRetriever(null);
+            var localXmlFileServiceRegistryPath = Environment.CurrentDirectory + @"\\XmlConfiguration\\ServiceRegistry.xml";
+            var serviceDiscovery = new LocalXmlFileServiceDiscovery(localXmlFileServiceRegistryPath);
+            var serviceRetriever = new ServiceRetriever(serviceDiscovery);
             var serviceResolver = new ServiceResolver(serviceRetriever);
-            var proxyGenerator = new ServiceProxyGenerator(locatorExtractor, serviceResolver);
+            var proxyGenerator = new ServiceProxyGenerator(new MethodLocatorExtractor(), serviceResolver);
+
             var rpcClient = new RpcClient(localActor, proxyGenerator);
 
-            var strategy = new RandomServiceLoadBalancingStrategy();
-            var helloClient = rpcClient.Resolve<IHelloService>(strategy);
-            var calcClient = rpcClient.Resolve<ICalcService>(strategy);
-            var orderClient = rpcClient.Resolve<IOrderService>(strategy);
+            var helloClient = rpcClient.Resolve<IHelloService>();
+            var calcClient = rpcClient.Resolve<ICalcService>();
+            var orderClient = rpcClient.Resolve<IOrderService>();
 
             localActor.Bootup(localXmlFileActorDirectory);
 

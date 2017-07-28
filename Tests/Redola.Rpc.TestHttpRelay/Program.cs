@@ -21,10 +21,9 @@ namespace Redola.Rpc.TestHttpRelay
 
         static void Main(string[] args)
         {
-            var localXmlFilePath = Environment.CurrentDirectory + @"\\XmlConfiguration\\ActorConfiguration.xml";
-            var localXmlFileActorConfiguration = LocalXmlFileActorConfiguration.Load(localXmlFilePath);
+            var localXmlFileActorPath = Environment.CurrentDirectory + @"\\XmlConfiguration\\ActorConfiguration.xml";
+            var localXmlFileActorConfiguration = LocalXmlFileActorConfiguration.Load(localXmlFileActorPath);
             var localXmlFileActorDirectory = new LocalXmlFileActorDirectory(localXmlFileActorConfiguration);
-
             var localActor = new RpcActor(localXmlFileActorConfiguration);
 
             var helloClient = RpcServiceProxyGenerator.CreateServiceProxy<IHelloService>(localActor, "server");

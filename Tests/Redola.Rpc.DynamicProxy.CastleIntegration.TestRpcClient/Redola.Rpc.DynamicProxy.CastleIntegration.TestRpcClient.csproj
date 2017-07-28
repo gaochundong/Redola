@@ -64,6 +64,10 @@
       <Project>{17b964e4-8d0f-4077-8f5a-7654e6403d09}</Project>
       <Name>Redola.Rpc.DynamicProxy.CastleIntegration</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Redola\Redola.Rpc.ServiceDiscovery.XmlIntegration\Redola.Rpc.ServiceDiscovery.XmlIntegration.csproj">
+      <Project>{d708e4c4-c49d-4554-a960-bc8688f8bc49}</Project>
+      <Name>Redola.Rpc.ServiceDiscovery.XmlIntegration</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Redola\Redola.Rpc\Redola.Rpc.csproj">
       <Project>{465f580d-f09f-4362-a6ee-40b2627b11a4}</Project>
       <Name>Redola.Rpc</Name>
@@ -74,6 +78,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="XmlConfiguration\ServiceRegistry.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="XmlConfiguration\ActorConfiguration.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
