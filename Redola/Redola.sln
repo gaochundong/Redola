@@ -30,11 +30,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redola.Rpc.TestHttpRelay", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redola.Rpc.DynamicProxy.CastleIntegration", "Redola.Rpc.DynamicProxy.CastleIntegration\Redola.Rpc.DynamicProxy.CastleIntegration.csproj", "{17B964E4-8D0F-4077-8F5A-7654E6403D09}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redola.Rpc.DynamicProxy.CastleIntegration.TestRpcClient", "..\Tests\Redola.Rpc.DynamicProxy.CastleIntegration.TestRpcClient\Redola.Rpc.DynamicProxy.CastleIntegration.TestRpcClient.csproj", "{80A02268-72B7-4312-AF7A-C1DDD9654364}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redola.Rpc.DynamicProxy.CastleIntegration.TestRpcServer", "..\Tests\Redola.Rpc.DynamicProxy.CastleIntegration.TestRpcServer\Redola.Rpc.DynamicProxy.CastleIntegration.TestRpcServer.csproj", "{A4CE7BCE-7F4D-4E4B-AFC1-4A70F9A886A8}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redola.Rpc.ServiceDiscovery.XmlIntegration", "Redola.Rpc.ServiceDiscovery.XmlIntegration\Redola.Rpc.ServiceDiscovery.XmlIntegration.csproj", "{D708E4C4-C49D-4554-A960-BC8688F8BC49}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redola.Rpc.TestDynamicRpcClient", "..\Tests\Redola.Rpc.TestDynamicRpcClient\Redola.Rpc.TestDynamicRpcClient.csproj", "{80A02268-72B7-4312-AF7A-C1DDD9654364}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redola.Rpc.TestDynamicRpcServer", "..\Tests\Redola.Rpc.TestDynamicRpcServer\Redola.Rpc.TestDynamicRpcServer.csproj", "{A4CE7BCE-7F4D-4E4B-AFC1-4A70F9A886A8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -74,6 +74,10 @@ Global
 		{17B964E4-8D0F-4077-8F5A-7654E6403D09}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{17B964E4-8D0F-4077-8F5A-7654E6403D09}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{17B964E4-8D0F-4077-8F5A-7654E6403D09}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D708E4C4-C49D-4554-A960-BC8688F8BC49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D708E4C4-C49D-4554-A960-BC8688F8BC49}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D708E4C4-C49D-4554-A960-BC8688F8BC49}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D708E4C4-C49D-4554-A960-BC8688F8BC49}.Release|Any CPU.Build.0 = Release|Any CPU
 		{80A02268-72B7-4312-AF7A-C1DDD9654364}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{80A02268-72B7-4312-AF7A-C1DDD9654364}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{80A02268-72B7-4312-AF7A-C1DDD9654364}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -82,10 +86,6 @@ Global
 		{A4CE7BCE-7F4D-4E4B-AFC1-4A70F9A886A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A4CE7BCE-7F4D-4E4B-AFC1-4A70F9A886A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A4CE7BCE-7F4D-4E4B-AFC1-4A70F9A886A8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D708E4C4-C49D-4554-A960-BC8688F8BC49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D708E4C4-C49D-4554-A960-BC8688F8BC49}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D708E4C4-C49D-4554-A960-BC8688F8BC49}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D708E4C4-C49D-4554-A960-BC8688F8BC49}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

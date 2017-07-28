@@ -5,10 +5,11 @@ using System.Threading.Tasks;
 using Logrila.Logging;
 using Logrila.Logging.NLogIntegration;
 using Redola.ActorModel;
+using Redola.Rpc.DynamicProxy.CastleIntegration;
 using Redola.Rpc.ServiceDiscovery.XmlIntegration;
 using Redola.Rpc.TestContracts;
 
-namespace Redola.Rpc.DynamicProxy.CastleIntegration.TestRpcClient
+namespace Redola.Rpc.TestDynamicRpcClient
 {
     class Program
     {

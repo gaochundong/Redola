@@ -1,11 +1,11 @@
 ﻿using System.Reflection;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("Redola.Rpc.DynamicProxy.CastleIntegration.TestRpcClient")]
+[assembly: AssemblyTitle("Redola.Rpc.TestDynamicRpcClient")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Dennis Gao")]
-[assembly: AssemblyProduct("Redola.Rpc.DynamicProxy.CastleIntegration.TestRpcClient")]
+[assembly: AssemblyProduct("Redola.Rpc.TestDynamicRpcClient")]
 [assembly: AssemblyCopyright("Copyright © 2016-2017, Dennis Gao")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

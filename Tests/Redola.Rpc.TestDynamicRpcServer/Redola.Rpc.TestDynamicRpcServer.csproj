@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{80A02268-72B7-4312-AF7A-C1DDD9654364}</ProjectGuid>
+    <ProjectGuid>{A4CE7BCE-7F4D-4E4B-AFC1-4A70F9A886A8}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Redola.Rpc.DynamicProxy.CastleIntegration.TestRpcClient</RootNamespace>
-    <AssemblyName>Redola.Rpc.DynamicProxy.CastleIntegration.TestRpcClient</AssemblyName>
+    <RootNamespace>Redola.Rpc.TestDynamicRpcServer</RootNamespace>
+    <AssemblyName>Redola.Rpc.TestDynamicRpcServer</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\bin\Debug\DynamicProxy.CastleIntegration.TestRpcClient\</OutputPath>
+    <OutputPath>..\bin\Debug\Redola.Rpc.TestDynamicRpcServer\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -48,6 +48,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CalcService.cs" />
+    <Compile Include="HelloService.cs" />
+    <Compile Include="OrderService.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -78,9 +81,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="XmlConfiguration\ServiceRegistry.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="XmlConfiguration\ActorConfiguration.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
