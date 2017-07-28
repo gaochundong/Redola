@@ -10,11 +10,6 @@ namespace Redola.ActorModel
         private string _localXmlFilePath = string.Empty;
         private XmlActorConfiguration _configuration;
 
-        public LocalXmlFileActorConfiguration()
-            : this(Environment.CurrentDirectory + @"\\ActorConfiguration.xml")
-        {
-        }
-
         public LocalXmlFileActorConfiguration(string localXmlFilePath)
         {
             if (string.IsNullOrEmpty(localXmlFilePath))
@@ -87,13 +82,6 @@ namespace Redola.ActorModel
             actor.Port = actorPort;
 
             return actor;
-        }
-
-        public static LocalXmlFileActorConfiguration Load()
-        {
-            var configuration = new LocalXmlFileActorConfiguration();
-            configuration.Build();
-            return configuration;
         }
 
         public static LocalXmlFileActorConfiguration Load(string localXmlFilePath)

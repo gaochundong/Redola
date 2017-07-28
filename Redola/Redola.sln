@@ -34,6 +34,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redola.Rpc.DynamicProxy.Cas
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redola.Rpc.DynamicProxy.CastleIntegration.TestRpcServer", "..\Tests\Redola.Rpc.DynamicProxy.CastleIntegration.TestRpcServer\Redola.Rpc.DynamicProxy.CastleIntegration.TestRpcServer.csproj", "{A4CE7BCE-7F4D-4E4B-AFC1-4A70F9A886A8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redola.Rpc.ServiceDiscovery.XmlIntegration", "Redola.Rpc.ServiceDiscovery.XmlIntegration\Redola.Rpc.ServiceDiscovery.XmlIntegration.csproj", "{D708E4C4-C49D-4554-A960-BC8688F8BC49}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -80,6 +82,10 @@ Global
 		{A4CE7BCE-7F4D-4E4B-AFC1-4A70F9A886A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A4CE7BCE-7F4D-4E4B-AFC1-4A70F9A886A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A4CE7BCE-7F4D-4E4B-AFC1-4A70F9A886A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D708E4C4-C49D-4554-A960-BC8688F8BC49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D708E4C4-C49D-4554-A960-BC8688F8BC49}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D708E4C4-C49D-4554-A960-BC8688F8BC49}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D708E4C4-C49D-4554-A960-BC8688F8BC49}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
