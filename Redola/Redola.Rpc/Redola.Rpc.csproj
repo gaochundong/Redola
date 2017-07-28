@@ -83,6 +83,7 @@
     <Compile Include="Rpc\Client\ServiceResolver\Retrieval\IServiceRetriever.cs" />
     <Compile Include="Rpc\Client\ServiceResolver\Retrieval\ServiceRetriever.cs" />
     <Compile Include="Rpc\Client\ServiceResolver\ServiceResolver.cs" />
+    <Compile Include="Rpc\Discovery\IServiceDiscovery.cs" />
     <Compile Include="Rpc\Server\Catalog\ServiceCatalogProvider.cs" />
     <Compile Include="Rpc\Server\Method\MethodLocatorExtractor.cs" />
     <Compile Include="Rpc\Server\Method\MethodRouteCache.cs" />

@@ -6,14 +6,18 @@ namespace Redola.Rpc
 {
     public class ServiceRetriever : IServiceRetriever
     {
-        public ServiceRetriever()
-        {
+        private IServiceDiscovery _discovery;
 
+        public ServiceRetriever(IServiceDiscovery discovery)
+        {
+            if (discovery == null)
+                throw new ArgumentNullException("discovery");
+            _discovery = discovery;
         }
 
         public IEnumerable<ActorIdentity> Retrieve(Type serviceType)
         {
-            throw new NotImplementedException();
+            return _discovery.Discover(serviceType);
         }
     }
 }

@@ -28,7 +28,7 @@ namespace Redola.Rpc.DynamicProxy.CastleIntegration.TestRpcClient
             var localActor = new RpcActor(localXmlFileActorConfiguration);
 
             var locatorExtractor = new MethodLocatorExtractor();
-            var serviceRetriever = new ServiceRetriever();
+            var serviceRetriever = new ServiceRetriever(null);
             var serviceResolver = new ServiceResolver(serviceRetriever);
             var proxyGenerator = new ServiceProxyGenerator(locatorExtractor, serviceResolver);
             var rpcClient = new RpcClient(localActor, proxyGenerator);
