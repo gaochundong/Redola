@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Xml.Serialization;
 
-namespace Redola.ActorModel
+namespace Redola.Rpc
 {
     [Serializable]
     [XmlRoot]

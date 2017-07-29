@@ -1,5 +1,4 @@
 ﻿using System.Xml.Serialization;
-using Redola.ActorModel;
 
 namespace Redola.Rpc.ServiceDiscovery.XmlIntegration
 {

@@ -1,5 +1,4 @@
 ﻿using System;
-using Redola.ActorModel;
 
 namespace Redola.Rpc
 {
