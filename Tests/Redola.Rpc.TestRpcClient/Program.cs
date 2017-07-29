@@ -9,7 +9,7 @@ using Redola.Rpc.DynamicProxy.CastleIntegration;
 using Redola.Rpc.ServiceDiscovery.XmlIntegration;
 using Redola.Rpc.TestContracts;
 
-namespace Redola.Rpc.TestDynamicRpcClient
+namespace Redola.Rpc.TestRpcClient
 {
     class Program
     {

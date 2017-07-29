@@ -4,7 +4,7 @@ using Logrila.Logging.NLogIntegration;
 using Redola.ActorModel;
 using Redola.Rpc.TestContracts;
 
-namespace Redola.Rpc.TestDynamicRpcServer
+namespace Redola.Rpc.TestRpcServer
 {
     class Program
     {
