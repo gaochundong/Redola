@@ -13,5 +13,10 @@ namespace Redola.ActorModel
 
         [XmlArray(ElementName = "ActorDirectory")]
         public List<ActorIdentity> Directory { get; set; }
+
+        public override string ToString()
+        {
+            return string.Format("{0}", this.LocalActor);
+        }
     }
 }
