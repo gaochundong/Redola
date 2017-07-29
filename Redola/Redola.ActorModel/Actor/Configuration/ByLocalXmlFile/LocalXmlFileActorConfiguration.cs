@@ -10,6 +10,15 @@ namespace Redola.ActorModel
         private string _localXmlFilePath = string.Empty;
         private XmlActorConfiguration _configuration;
 
+        private static readonly ActorIdentity NoCenterActor
+            = new ActorIdentity()
+            {
+                Type = "type-of-no-center-actor",
+                Name = "name-of-no-center-actor",
+                Address = "localhost",
+                Port = "0",
+            };
+
         public LocalXmlFileActorConfiguration(string localXmlFilePath)
         {
             if (string.IsNullOrEmpty(localXmlFilePath))
@@ -34,6 +43,9 @@ namespace Redola.ActorModel
 
         protected override ActorIdentity BuildCenterActor()
         {
+            if (_configuration.CenterActor == null)
+                return NoCenterActor;
+
             var actorType = _configuration.CenterActor.Type;
             var actorName = _configuration.CenterActor.Name;
             var actorAddress = _configuration.CenterActor.Address;
