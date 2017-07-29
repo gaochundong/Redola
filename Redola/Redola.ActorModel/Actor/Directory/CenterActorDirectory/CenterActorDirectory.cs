@@ -11,22 +11,18 @@ namespace Redola.ActorModel
     public class CenterActorDirectory : IActorDirectory
     {
         private ILog _log = Logger.Get<CenterActorDirectory>();
-        private ActorIdentity _centerActor;
-        private ActorChannelConfiguration _channelConfiguration;
+        private CenterActorDirectoryConfiguration _configuration;
         private IActorChannel _centerChannel;
 
-        public CenterActorDirectory(
-            ActorIdentity centerActor,
-            ActorChannelConfiguration channelConfiguration)
+        public CenterActorDirectory(CenterActorDirectoryConfiguration configuration)
         {
-            if (centerActor == null)
-                throw new ArgumentNullException("centerActor");
-            if (channelConfiguration == null)
-                throw new ArgumentNullException("channelConfiguration");
-
-            _centerActor = centerActor;
-            _channelConfiguration = channelConfiguration;
+            if (configuration == null)
+                throw new ArgumentNullException("configuration");
+            _configuration = configuration;
         }
+
+        public ActorIdentity CenterActor { get { return _configuration.CenterActor; } }
+        public ActorChannelConfiguration ChannelConfiguration { get { return _configuration.ChannelConfiguration; } }
 
         public bool Active
         {
@@ -39,15 +35,15 @@ namespace Redola.ActorModel
             }
         }
 
-        public void Activate(ActorIdentity localActor)
+        public void Register(ActorIdentity localActor)
         {
             if (localActor == null)
                 throw new ArgumentNullException("localActor");
             if (this.Active)
                 throw new InvalidOperationException(
-                    string.Format("Center actor [{0}] has already been activated.", _centerActor));
+                    string.Format("Center actor [{0}] has already been registered.", this.CenterActor));
 
-            _log.DebugFormat("Activating center actor [{0}].", _centerActor);
+            _log.DebugFormat("Connecting to center actor [{0}].", this.CenterActor);
             var centerChannel = BuildCenterActorChannel(localActor);
 
             centerChannel.Open();
@@ -69,10 +65,10 @@ namespace Redola.ActorModel
                     centerChannel.Close();
                     throw new InvalidOperationException(
                         string.Format("Cannot connect to center actor [{0}] after wait [{1}] milliseconds.",
-                            _centerActor, retryTimes * (int)retryPeriod.TotalMilliseconds));
+                            this.CenterActor, retryTimes * (int)retryPeriod.TotalMilliseconds));
                 }
             }
-            _log.DebugFormat("Connected to center actor [{0}].", _centerActor);
+            _log.DebugFormat("Connected to center actor [{0}].", this.CenterActor);
             _centerChannel = centerChannel;
             _centerChannel.ChannelDataReceived += OnCenterChannelDataReceived;
         }
@@ -89,18 +85,18 @@ namespace Redola.ActorModel
 
         private IActorChannel BuildCenterActorChannel(ActorIdentity localActor)
         {
-            IPAddress centerActorAddress = ResolveIPAddress(_centerActor.Address);
+            IPAddress centerActorAddress = ResolveIPAddress(this.CenterActor.Address);
 
             int centerActorPort = -1;
-            if (!int.TryParse(_centerActor.Port, out centerActorPort) || centerActorPort < 0)
+            if (!int.TryParse(this.CenterActor.Port, out centerActorPort) || centerActorPort < 0)
                 throw new InvalidOperationException(string.Format(
-                    "Invalid center actor port, [{0}].", _centerActor));
+                    "Invalid center actor port, [{0}].", this.CenterActor));
 
             var centerActorEndPoint = new IPEndPoint(centerActorAddress, centerActorPort);
 
-            var centerConnector = new ActorTransportConnector(centerActorEndPoint, _channelConfiguration.TransportConfiguration);
+            var centerConnector = new ActorTransportConnector(centerActorEndPoint, this.ChannelConfiguration.TransportConfiguration);
             var centerChannel = new ActorConnectorReconnectableChannel(
-                localActor, centerConnector, _channelConfiguration);
+                localActor, centerConnector, this.ChannelConfiguration);
 
             return centerChannel;
         }
@@ -108,7 +104,7 @@ namespace Redola.ActorModel
         private void OnCenterChannelDataReceived(object sender, ActorChannelDataReceivedEventArgs e)
         {
             ActorFrameHeader actorChangeNotificationFrameHeader = null;
-            bool isHeaderDecoded = _channelConfiguration.FrameBuilder.TryDecodeFrameHeader(
+            bool isHeaderDecoded = this.ChannelConfiguration.FrameBuilder.TryDecodeFrameHeader(
                 e.Data, e.DataOffset, e.DataLength,
                 out actorChangeNotificationFrameHeader);
             if (isHeaderDecoded && actorChangeNotificationFrameHeader.OpCode == OpCode.Change)
@@ -116,10 +112,10 @@ namespace Redola.ActorModel
                 byte[] payload;
                 int payloadOffset;
                 int payloadCount;
-                _channelConfiguration.FrameBuilder.DecodePayload(
+                this.ChannelConfiguration.FrameBuilder.DecodePayload(
                     e.Data, e.DataOffset, actorChangeNotificationFrameHeader,
                     out payload, out payloadOffset, out payloadCount);
-                var actorChangeNotificationData = _channelConfiguration.FrameBuilder.ControlFrameDataDecoder.DecodeFrameData<ActorIdentityCollection>(
+                var actorChangeNotificationData = this.ChannelConfiguration.FrameBuilder.ControlFrameDataDecoder.DecodeFrameData<ActorIdentityCollection>(
                     payload, payloadOffset, payloadCount);
 
                 var actors = actorChangeNotificationData != null ? actorChangeNotificationData.Items : null;
@@ -212,9 +208,9 @@ namespace Redola.ActorModel
             {
                 Type = actorType,
             };
-            var actorLookupRequestData = _channelConfiguration.FrameBuilder.ControlFrameDataEncoder.EncodeFrameData(actorLookupCondition);
+            var actorLookupRequestData = this.ChannelConfiguration.FrameBuilder.ControlFrameDataEncoder.EncodeFrameData(actorLookupCondition);
             var actorLookupRequest = new WhereFrame(actorLookupRequestData);
-            var actorLookupRequestBuffer = _channelConfiguration.FrameBuilder.EncodeFrame(actorLookupRequest);
+            var actorLookupRequestBuffer = this.ChannelConfiguration.FrameBuilder.EncodeFrame(actorLookupRequest);
 
             ManualResetEventSlim waitingResponse = new ManualResetEventSlim(false);
             ActorChannelDataReceivedEventArgs lookupResponseEvent = null;
@@ -235,7 +231,7 @@ namespace Redola.ActorModel
             if (lookedup && lookupResponseEvent != null)
             {
                 ActorFrameHeader actorLookupResponseFrameHeader = null;
-                bool isHeaderDecoded = _channelConfiguration.FrameBuilder.TryDecodeFrameHeader(
+                bool isHeaderDecoded = this.ChannelConfiguration.FrameBuilder.TryDecodeFrameHeader(
                     lookupResponseEvent.Data, lookupResponseEvent.DataOffset, lookupResponseEvent.DataLength,
                     out actorLookupResponseFrameHeader);
                 if (isHeaderDecoded && actorLookupResponseFrameHeader.OpCode == OpCode.Here)
@@ -243,10 +239,10 @@ namespace Redola.ActorModel
                     byte[] payload;
                     int payloadOffset;
                     int payloadCount;
-                    _channelConfiguration.FrameBuilder.DecodePayload(
+                    this.ChannelConfiguration.FrameBuilder.DecodePayload(
                         lookupResponseEvent.Data, lookupResponseEvent.DataOffset, actorLookupResponseFrameHeader,
                         out payload, out payloadOffset, out payloadCount);
-                    var actorLookupResponseData = _channelConfiguration.FrameBuilder.ControlFrameDataDecoder.DecodeFrameData<ActorIdentityCollection>(
+                    var actorLookupResponseData = this.ChannelConfiguration.FrameBuilder.ControlFrameDataDecoder.DecodeFrameData<ActorIdentityCollection>(
                         payload, payloadOffset, payloadCount);
 
                     var actors = actorLookupResponseData != null ? actorLookupResponseData.Items : null;

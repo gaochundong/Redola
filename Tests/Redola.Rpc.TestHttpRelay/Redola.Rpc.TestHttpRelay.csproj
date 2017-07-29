@@ -94,7 +94,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="XmlConfiguration\ActorConfiguration.xml">
+    <Content Include="XmlConfiguration\LocalActor.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="XmlConfiguration\ActorDirectory.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="XmlConfiguration\ServiceRegistry.xml">

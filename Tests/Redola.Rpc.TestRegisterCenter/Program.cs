@@ -17,9 +17,12 @@ namespace Redola.Rpc.TestRegisterCenter
 
         static void Main(string[] args)
         {
-            var master = new CenterActor();
+            var localActorConfiguration = AppConfigActorConfiguration.Load();
+            var localActor = new CenterActor(localActorConfiguration);
 
-            master.Bootup();
+            var directoryConfiguration = AppConfigCenterActorDirectoryConfiguration.Load();
+            var directory = new CenterActorDirectory(directoryConfiguration);
+            localActor.Bootup(directory);
 
             while (true)
             {
@@ -35,7 +38,7 @@ namespace Redola.Rpc.TestRegisterCenter
                 }
             }
 
-            master.Shutdown();
+            localActor.Shutdown();
         }
     }
 }

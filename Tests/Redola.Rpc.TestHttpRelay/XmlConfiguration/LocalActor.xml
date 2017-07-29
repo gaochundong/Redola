@@ -1,0 +1,4 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Configuration>
+    <LocalActor Type="http" Name="http-22222" Address="localhost" Port="22222"/>
+</Configuration>

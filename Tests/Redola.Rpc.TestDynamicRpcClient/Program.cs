@@ -23,10 +23,13 @@ namespace Redola.Rpc.TestDynamicRpcClient
 
         static void Main(string[] args)
         {
-            var localXmlFileActorPath = Environment.CurrentDirectory + @"\\XmlConfiguration\\ActorConfiguration.xml";
-            var localXmlFileActorConfiguration = LocalXmlFileActorConfiguration.Load(localXmlFileActorPath);
-            var localXmlFileActorDirectory = new LocalXmlFileActorDirectory(localXmlFileActorConfiguration);
-            var localActor = new RpcActor(localXmlFileActorConfiguration);
+            var localXmlFileLocalActorPath = Environment.CurrentDirectory + @"\\XmlConfiguration\\LocalActor.xml";
+            var localXmlFileLocalActorConfiguration = LocalXmlFileActorConfiguration.Load(localXmlFileLocalActorPath);
+            var localActor = new RpcActor(localXmlFileLocalActorConfiguration);
+
+            var localXmlFileActorDirectoryPath = Environment.CurrentDirectory + @"\\XmlConfiguration\\ActorDirectory.xml";
+            var localXmlFileActorDirectoryConfiguration = LocalXmlFileActorDirectoryConfiguration.Load(localXmlFileActorDirectoryPath);
+            var localXmlFileActorDirectory = new LocalXmlFileActorDirectory(localXmlFileActorDirectoryConfiguration);
 
             var localXmlFileServiceRegistryPath = Environment.CurrentDirectory + @"\\XmlConfiguration\\ServiceRegistry.xml";
             var serviceDiscovery = new LocalXmlFileServiceDiscovery(localXmlFileServiceRegistryPath);
@@ -59,7 +62,9 @@ namespace Redola.Rpc.TestDynamicRpcClient
                     else if (text == "reconnect")
                     {
                         localActor.Shutdown();
-                        localActor.Bootup();
+
+                        localXmlFileActorDirectory = new LocalXmlFileActorDirectory(localXmlFileActorDirectoryConfiguration);
+                        localActor.Bootup(localXmlFileActorDirectory);
                     }
                     else if (Regex.Match(text, @"^hello(\d*)$").Success)
                     {

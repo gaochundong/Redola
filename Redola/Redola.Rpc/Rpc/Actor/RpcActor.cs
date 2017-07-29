@@ -13,11 +13,6 @@ namespace Redola.Rpc
 
         private BlockingRouteActor _localActor = null;
 
-        public RpcActor()
-            : this(AppConfigActorConfiguration.Load())
-        {
-        }
-
         public RpcActor(ActorConfiguration configuration)
             : this(configuration, DefaultActorMessageEncoder, DefaultActorMessageDecoder)
         {
@@ -39,11 +34,6 @@ namespace Redola.Rpc
         public bool Active { get { return _localActor.Active; } }
         public IActorMessageEncoder Encoder { get { return _localActor.Encoder; } }
         public IActorMessageDecoder Decoder { get { return _localActor.Decoder; } }
-
-        public void Bootup()
-        {
-            _localActor.Bootup();
-        }
 
         public void Bootup(IActorDirectory directory)
         {

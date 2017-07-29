@@ -2,32 +2,32 @@
 
 namespace Redola.ActorModel
 {
-    public class AppConfigActorConfiguration : ActorConfiguration
+    public class AppConfigCenterActorDirectoryConfiguration : CenterActorDirectoryConfiguration
     {
-        private AppConfigActorSettingItems _appConfig = AppConfigActorSettingItems.Singleton();
+        private AppConfigCenterActorDirectorySettingItems _appConfig = AppConfigCenterActorDirectorySettingItems.Singleton();
 
-        public AppConfigActorConfiguration()
+        public AppConfigCenterActorDirectoryConfiguration()
         {
         }
 
-        protected override ActorIdentity BuildLocalActor()
+        protected override ActorIdentity BuildCenterActor()
         {
-            var actorType = _appConfig.GetItem<string>(AppConfigActorSettingItems.ActorTypeKey);
-            var actorName = _appConfig.GetItem<string>(AppConfigActorSettingItems.ActorNameKey);
-            var actorAddress = _appConfig.GetItem<string>(AppConfigActorSettingItems.ActorAddressKey);
-            var actorPort = _appConfig.GetItem<string>(AppConfigActorSettingItems.ActorPortKey);
+            var actorType = _appConfig.GetItem<string>(AppConfigCenterActorDirectorySettingItems.CenterActorTypeKey);
+            var actorName = _appConfig.GetItem<string>(AppConfigCenterActorDirectorySettingItems.CenterActorNameKey);
+            var actorAddress = _appConfig.GetItem<string>(AppConfigCenterActorDirectorySettingItems.CenterActorAddressKey);
+            var actorPort = _appConfig.GetItem<string>(AppConfigCenterActorDirectorySettingItems.CenterActorPortKey);
             if (string.IsNullOrWhiteSpace(actorType))
                 throw new InvalidProgramException(
-                    string.Format("Item [{0}] setting cannot be empty.", AppConfigActorSettingItems.ActorTypeKey));
+                    string.Format("Item [{0}] setting cannot be empty.", AppConfigCenterActorDirectorySettingItems.CenterActorTypeKey));
             if (string.IsNullOrWhiteSpace(actorName))
                 throw new InvalidProgramException(
-                    string.Format("Item [{0}] setting cannot be empty.", AppConfigActorSettingItems.ActorNameKey));
+                    string.Format("Item [{0}] setting cannot be empty.", AppConfigCenterActorDirectorySettingItems.CenterActorNameKey));
             if (string.IsNullOrWhiteSpace(actorAddress))
                 throw new InvalidProgramException(
-                    string.Format("Item [{0}] setting cannot be empty.", AppConfigActorSettingItems.ActorAddressKey));
+                    string.Format("Item [{0}] setting cannot be empty.", AppConfigCenterActorDirectorySettingItems.CenterActorAddressKey));
             if (string.IsNullOrWhiteSpace(actorPort))
                 throw new InvalidProgramException(
-                    string.Format("Item [{0}] setting cannot be empty.", AppConfigActorSettingItems.ActorPortKey));
+                    string.Format("Item [{0}] setting cannot be empty.", AppConfigCenterActorDirectorySettingItems.CenterActorPortKey));
 
             var actor = new ActorIdentity(actorType, actorName);
             actor.Address = actorAddress;
@@ -67,9 +67,9 @@ namespace Redola.ActorModel
             return configuration;
         }
 
-        public static AppConfigActorConfiguration Load()
+        public static AppConfigCenterActorDirectoryConfiguration Load()
         {
-            var configuration = new AppConfigActorConfiguration();
+            var configuration = new AppConfigCenterActorDirectoryConfiguration();
             configuration.Build();
             return configuration;
         }

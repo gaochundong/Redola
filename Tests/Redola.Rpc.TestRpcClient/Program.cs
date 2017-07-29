@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Logrila.Logging;
 using Logrila.Logging.NLogIntegration;
+using Redola.ActorModel;
 using Redola.Rpc.TestContracts;
 
 namespace Redola.Rpc.TestRpcClient
@@ -20,7 +21,8 @@ namespace Redola.Rpc.TestRpcClient
 
         static void Main(string[] args)
         {
-            var localActor = new RpcActor();
+            var localActorConfiguration = AppConfigActorConfiguration.Load();
+            var localActor = new RpcActor(localActorConfiguration);
 
             var helloClient = new HelloClient(localActor);
             var calcClient = new CalcClient(localActor);
@@ -30,7 +32,9 @@ namespace Redola.Rpc.TestRpcClient
             localActor.RegisterRpcHandler(calcClient);
             localActor.RegisterRpcHandler(orderClient);
 
-            localActor.Bootup();
+            var directoryConfiguration = AppConfigCenterActorDirectoryConfiguration.Load();
+            var directory = new CenterActorDirectory(directoryConfiguration);
+            localActor.Bootup(directory);
 
             while (true)
             {
@@ -44,7 +48,9 @@ namespace Redola.Rpc.TestRpcClient
                     else if (text == "reconnect")
                     {
                         localActor.Shutdown();
-                        localActor.Bootup();
+
+                        directory = new CenterActorDirectory(directoryConfiguration);
+                        localActor.Bootup(directory);
                     }
                     else if (Regex.Match(text, @"^hello(\d*)$").Success)
                     {

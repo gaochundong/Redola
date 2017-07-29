@@ -3,15 +3,15 @@
     <Entries>
         <Entry>
             <ServiceType>Redola.Rpc.TestContracts.IHelloService</ServiceType>
-            <ServiceActor Type="server" Name="server-dynamicproxy-castle" Address="localhost" Port="44444"/>
+            <ServiceActor Type="server" Name="server-33333" Address="localhost" Port="33333"/>
         </Entry>
         <Entry>
             <ServiceType>Redola.Rpc.TestContracts.ICalcService</ServiceType>
-            <ServiceActor Type="server" Name="server-dynamicproxy-castle" Address="localhost" Port="44444"/>
+            <ServiceActor Type="server" Name="server-33333" Address="localhost" Port="33333"/>
         </Entry>
         <Entry>
             <ServiceType>Redola.Rpc.TestContracts.IOrderService</ServiceType>
-            <ServiceActor Type="server" Name="server-dynamicproxy-castle" Address="localhost" Port="44444"/>
+            <ServiceActor Type="server" Name="server-33333" Address="localhost" Port="33333"/>
         </Entry>
     </Entries>
 </Registry>

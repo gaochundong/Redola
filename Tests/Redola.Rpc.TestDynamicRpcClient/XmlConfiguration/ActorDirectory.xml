@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Configuration>
+    <ActorDirectory>
+        <ActorIdentity Type="server" Name="server-33333" Address="localhost" Port="33333"/>
+    </ActorDirectory>
+</Configuration>

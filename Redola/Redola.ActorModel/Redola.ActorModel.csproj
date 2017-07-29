@@ -50,14 +50,21 @@
       <Link>SolutionVersion.cs</Link>
     </Compile>
     <Compile Include="Actor\Actor.cs" />
-    <Compile Include="Actor\Directory\ByLocalXmlFile\LocalXmlFileActorDirectory.cs" />
+    <Compile Include="Actor\Directory\CenterActorDirectory\Configuration\ByAppConfig\AppConfigCenterActorDirectoryConfiguration.cs" />
+    <Compile Include="Actor\Directory\CenterActorDirectory\Configuration\ByAppConfig\AppConfigCenterActorDirectorySettingItems.cs" />
+    <Compile Include="Actor\Directory\CenterActorDirectory\Configuration\ByLocalXmlFile\LocalXmlFileCenterActorDirectoryConfiguration.cs" />
+    <Compile Include="Actor\Directory\CenterActorDirectory\Configuration\ByLocalXmlFile\XmlCenterActorDirectoryConfiguration.cs" />
+    <Compile Include="Actor\Directory\LocalXmlFileActorDirectory\Configuration\XmlLocalXmlFileActorDirectoryConfiguration.cs" />
+    <Compile Include="Actor\Directory\LocalXmlFileActorDirectory\Configuration\LocalXmlFileActorDirectoryConfiguration.cs" />
+    <Compile Include="Actor\Directory\LocalXmlFileActorDirectory\LocalXmlFileActorDirectory.cs" />
     <Compile Include="Actor\Channel\Transport\Configuration\ActorTransportConfiguration.cs" />
     <Compile Include="Actor\Configuration\ByAppConfig\AppConfigActorConfiguration.cs" />
     <Compile Include="Actor\Configuration\ActorConfiguration.cs" />
-    <Compile Include="Actor\Directory\ByCenterActor\CenterActorDirectory.cs" />
+    <Compile Include="Actor\Directory\CenterActorDirectory\CenterActorDirectory.cs" />
     <Compile Include="Actor\Center\CenterActor.cs" />
     <Compile Include="Actor\Configuration\ByLocalXmlFile\XmlActorConfiguration.cs" />
     <Compile Include="Actor\Configuration\ByLocalXmlFile\LocalXmlFileActorConfiguration.cs" />
+    <Compile Include="Actor\Directory\CenterActorDirectory\Configuration\CenterActorDirectoryConfiguration.cs" />
     <Compile Include="Actor\Directory\EventArgs\ActorsChangedEventArgs.cs" />
     <Compile Include="Actor\Directory\IActorDirectory.cs" />
     <Compile Include="Actor\EventArgs\ActorConnectedEventArgs.cs" />

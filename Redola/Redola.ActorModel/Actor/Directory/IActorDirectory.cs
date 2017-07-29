@@ -7,7 +7,7 @@ namespace Redola.ActorModel
     public interface IActorDirectory
     {
         bool Active { get; }
-        void Activate(ActorIdentity localActor);
+        void Register(ActorIdentity localActor);
         void Close();
 
         IPEndPoint LookupRemoteActorEndPoint(string actorType, string actorName);

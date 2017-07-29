@@ -9,9 +9,10 @@ namespace Redola.ActorModel
     public class LocalXmlFileActorDirectory : IActorDirectory
     {
         private ILog _log = Logger.Get<LocalXmlFileActorDirectory>();
-        private LocalXmlFileActorConfiguration _configuration;
+        private LocalXmlFileActorDirectoryConfiguration _configuration;
+        private ActorIdentity _localActor;
 
-        public LocalXmlFileActorDirectory(LocalXmlFileActorConfiguration configuration)
+        public LocalXmlFileActorDirectory(LocalXmlFileActorDirectoryConfiguration configuration)
         {
             if (configuration == null)
                 throw new ArgumentNullException("configuration");
@@ -20,8 +21,12 @@ namespace Redola.ActorModel
 
         public bool Active { get; private set; }
 
-        public void Activate(ActorIdentity localActor)
+        public void Register(ActorIdentity localActor)
         {
+            if (localActor == null)
+                throw new ArgumentNullException("localActor");
+
+            _localActor = localActor;
             this.Active = true;
         }
 

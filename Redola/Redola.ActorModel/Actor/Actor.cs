@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Logrila.Logging;
 
 namespace Redola.ActorModel
@@ -19,7 +18,6 @@ namespace Redola.ActorModel
             _configuration = configuration;
         }
 
-        public ActorIdentity CenterActor { get { return _configuration.CenterActor; } }
         public ActorIdentity LocalActor { get { return _configuration.LocalActor; } }
         public ActorChannelConfiguration ChannelConfiguration { get { return _configuration.ChannelConfiguration; } }
         public string Type { get { return this.LocalActor.Type; } }
@@ -38,12 +36,6 @@ namespace Redola.ActorModel
                 else
                     return channel.Active;
             }
-        }
-
-        public void Bootup()
-        {
-            var defaultDirectory = new CenterActorDirectory(this.CenterActor, this.ChannelConfiguration);
-            Bootup(defaultDirectory);
         }
 
         public void Bootup(IActorDirectory directory)
@@ -81,7 +73,7 @@ namespace Redola.ActorModel
             {
                 if (!_directory.Active)
                 {
-                    _directory.Activate(this.LocalActor);
+                    _directory.Register(this.LocalActor);
                 }
             }
             catch (Exception ex)
@@ -89,7 +81,7 @@ namespace Redola.ActorModel
                 _log.Error(ex.Message, ex);
                 Shutdown();
                 throw new InvalidOperationException(
-                    string.Format("Cannot connect to center actor [{0}] during bootup.", this.CenterActor));
+                    string.Format("Cannot connect to actor directory during bootup, [{0}].", this.LocalActor));
             }
         }
 

@@ -3,15 +3,15 @@
     <Entries>
         <Entry>
             <ServiceType>Redola.Rpc.TestContracts.IHelloService</ServiceType>
-            <ServiceActor Type="server" Name="server-001" Address="localhost" Port="44444"/>
+            <ServiceActor Type="server" Name="server-333" Address="localhost" Port="44444"/>
         </Entry>
         <Entry>
             <ServiceType>Redola.Rpc.TestContracts.ICalcService</ServiceType>
-            <ServiceActor Type="server" Name="server-001" Address="localhost" Port="44444"/>
+            <ServiceActor Type="server" Name="server-333" Address="localhost" Port="44444"/>
         </Entry>
         <Entry>
             <ServiceType>Redola.Rpc.TestContracts.IOrderService</ServiceType>
-            <ServiceActor Type="server" Name="server-001" Address="localhost" Port="44444"/>
+            <ServiceActor Type="server" Name="server-333" Address="localhost" Port="44444"/>
         </Entry>
     </Entries>
 </Registry>

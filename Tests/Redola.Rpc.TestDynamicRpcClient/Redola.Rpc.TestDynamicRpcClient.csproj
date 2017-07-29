@@ -78,10 +78,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="XmlConfiguration\LocalActor.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="XmlConfiguration\ServiceRegistry.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="XmlConfiguration\ActorConfiguration.xml">
+    <Content Include="XmlConfiguration\ActorDirectory.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

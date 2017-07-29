@@ -1,26 +1,26 @@
 ﻿namespace Redola.ActorModel
 {
-    public abstract class ActorConfiguration
+    public abstract class CenterActorDirectoryConfiguration
     {
-        private ActorIdentity _localActor;
+        private ActorIdentity _centerActor;
         private ActorChannelConfiguration _channelConfiguration;
 
-        public ActorConfiguration()
+        public CenterActorDirectoryConfiguration()
         {
         }
-        
-        public ActorIdentity LocalActor { get { return _localActor; } }
+
+        public ActorIdentity CenterActor { get { return _centerActor; } }
         public ActorChannelConfiguration ChannelConfiguration { get { return _channelConfiguration; } }
 
-        public ActorConfiguration Build()
+        public CenterActorDirectoryConfiguration Build()
         {
-            _localActor = BuildLocalActor();
+            _centerActor = BuildCenterActor();
             _channelConfiguration = BuildChannelConfiguration();
 
             return this;
         }
-        
-        protected abstract ActorIdentity BuildLocalActor();
+
+        protected abstract ActorIdentity BuildCenterActor();
 
         protected virtual ActorChannelConfiguration BuildChannelConfiguration()
         {

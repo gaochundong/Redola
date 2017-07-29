@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using Redola.ActorModel.Serialization;
 
@@ -9,15 +8,6 @@ namespace Redola.ActorModel
     {
         private string _localXmlFilePath = string.Empty;
         private XmlActorConfiguration _configuration;
-
-        private static readonly ActorIdentity NoCenterActor
-            = new ActorIdentity()
-            {
-                Type = "type-of-no-center-actor",
-                Name = "name-of-no-center-actor",
-                Address = "localhost",
-                Port = "0",
-            };
 
         public LocalXmlFileActorConfiguration(string localXmlFilePath)
         {
@@ -34,40 +24,6 @@ namespace Redola.ActorModel
         public string LocalXmlFilePath
         {
             get { return _localXmlFilePath; }
-        }
-
-        public IEnumerable<ActorIdentity> ActorDirectory
-        {
-            get { return _configuration.Directory; }
-        }
-
-        protected override ActorIdentity BuildCenterActor()
-        {
-            if (_configuration.CenterActor == null)
-                return NoCenterActor;
-
-            var actorType = _configuration.CenterActor.Type;
-            var actorName = _configuration.CenterActor.Name;
-            var actorAddress = _configuration.CenterActor.Address;
-            var actorPort = _configuration.CenterActor.Port;
-            if (string.IsNullOrWhiteSpace(actorType))
-                throw new InvalidProgramException(
-                    string.Format("Center actor type cannot be empty."));
-            if (string.IsNullOrWhiteSpace(actorName))
-                throw new InvalidProgramException(
-                    string.Format("Center actor name cannot be empty."));
-            if (string.IsNullOrWhiteSpace(actorAddress))
-                throw new InvalidProgramException(
-                    string.Format("Center actor address cannot be empty."));
-            if (string.IsNullOrWhiteSpace(actorPort))
-                throw new InvalidProgramException(
-                    string.Format("Center actor port cannot be empty."));
-
-            var actor = new ActorIdentity(actorType, actorName);
-            actor.Address = actorAddress;
-            actor.Port = actorPort;
-
-            return actor;
         }
 
         protected override ActorIdentity BuildLocalActor()

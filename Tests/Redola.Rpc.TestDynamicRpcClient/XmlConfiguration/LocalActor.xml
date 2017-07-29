@@ -1,0 +1,4 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Configuration>
+    <LocalActor Type="client" Name="client-44444" Address="localhost" Port="44444"/>
+</Configuration>

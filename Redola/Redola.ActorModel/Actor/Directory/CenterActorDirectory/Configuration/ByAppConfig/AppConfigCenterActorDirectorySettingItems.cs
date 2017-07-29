@@ -5,20 +5,20 @@ using System.Linq;
 
 namespace Redola.ActorModel
 {
-    public class AppConfigActorSettingItems
+    public class AppConfigCenterActorDirectorySettingItems
     {
-        public const string ActorTypeKey = @"ActorType";
-        public const string ActorNameKey = @"ActorName";
-        public const string ActorAddressKey = @"ActorAddress";
-        public const string ActorPortKey = @"ActorPort";
+        public const string CenterActorTypeKey = @"CenterActorType";
+        public const string CenterActorNameKey = @"CenterActorName";
+        public const string CenterActorAddressKey = @"CenterActorAddress";
+        public const string CenterActorPortKey = @"CenterActorPort";
 
         public const string KeepAliveIntervalKey = @"KeepAliveIntervalByMilliseconds";
         public const string KeepAliveTimeoutKey = @"KeepAliveTimeoutByMilliseconds";
         public const string KeepAliveEnabledKey = @"KeepAliveEnabled";
 
-        private static AppConfigActorSettingItems _instance = new AppConfigActorSettingItems();
+        private static AppConfigCenterActorDirectorySettingItems _instance = new AppConfigCenterActorDirectorySettingItems();
 
-        public static AppConfigActorSettingItems Singleton()
+        public static AppConfigCenterActorDirectorySettingItems Singleton()
         {
             return _instance;
         }
