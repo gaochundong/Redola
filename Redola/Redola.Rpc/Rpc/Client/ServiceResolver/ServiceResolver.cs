@@ -15,7 +15,7 @@ namespace Redola.Rpc
             _retriever = retriever;
         }
 
-        public ActorIdentity Resolve(Type serviceType)
+        public ServiceActor Resolve(Type serviceType)
         {
             if (serviceType == null)
                 throw new ArgumentNullException("serviceType");
@@ -24,7 +24,7 @@ namespace Redola.Rpc
             return _defaultStrategy.Select(services);
         }
 
-        public ActorIdentity Resolve(Type serviceType, IServiceLoadBalancingStrategy strategy)
+        public ServiceActor Resolve(Type serviceType, IServiceLoadBalancingStrategy strategy)
         {
             if (serviceType == null)
                 throw new ArgumentNullException("serviceType");

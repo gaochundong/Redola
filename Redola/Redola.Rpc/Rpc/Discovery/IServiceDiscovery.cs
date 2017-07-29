@@ -6,6 +6,6 @@ namespace Redola.Rpc
 {
     public interface IServiceDiscovery
     {
-        IEnumerable<ActorIdentity> Discover(Type serviceType);
+        IEnumerable<ServiceActor> Discover(Type serviceType);
     }
 }

@@ -5,6 +5,6 @@ namespace Redola.Rpc
 {
     public interface IServiceLoadBalancingStrategy
     {
-        ActorIdentity Select(IEnumerable<ActorIdentity> services);
+        ServiceActor Select(IEnumerable<ServiceActor> services);
     }
 }

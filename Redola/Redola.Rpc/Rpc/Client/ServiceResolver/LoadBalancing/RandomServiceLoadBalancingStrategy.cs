@@ -7,7 +7,7 @@ namespace Redola.Rpc
 {
     public class RandomServiceLoadBalancingStrategy : IServiceLoadBalancingStrategy
     {
-        public ActorIdentity Select(IEnumerable<ActorIdentity> services)
+        public ServiceActor Select(IEnumerable<ServiceActor> services)
         {
             return services.OrderBy(t => Guid.NewGuid()).FirstOrDefault();
         }

@@ -9,7 +9,7 @@ namespace Redola.Rpc.ServiceDiscovery.XmlIntegration
         [XmlElement(ElementName = "ServiceType")]
         public string ServiceType { get; set; }
         [XmlElement(ElementName = "ServiceActor")]
-        public ActorIdentity ServiceActor { get; set; }
+        public ServiceActor ServiceActor { get; set; }
 
         public override string ToString()
         {

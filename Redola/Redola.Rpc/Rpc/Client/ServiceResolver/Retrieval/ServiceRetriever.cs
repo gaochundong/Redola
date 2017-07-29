@@ -15,7 +15,7 @@ namespace Redola.Rpc
             _discovery = discovery;
         }
 
-        public IEnumerable<ActorIdentity> Retrieve(Type serviceType)
+        public IEnumerable<ServiceActor> Retrieve(Type serviceType)
         {
             return _discovery.Discover(serviceType);
         }

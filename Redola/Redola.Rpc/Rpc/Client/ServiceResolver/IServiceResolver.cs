@@ -5,7 +5,7 @@ namespace Redola.Rpc
 {
     public interface IServiceResolver
     {
-        ActorIdentity Resolve(Type serviceType);
-        ActorIdentity Resolve(Type serviceType, IServiceLoadBalancingStrategy strategy);
+        ServiceActor Resolve(Type serviceType);
+        ServiceActor Resolve(Type serviceType, IServiceLoadBalancingStrategy strategy);
     }
 }

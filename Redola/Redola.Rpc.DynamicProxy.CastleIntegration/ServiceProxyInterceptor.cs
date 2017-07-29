@@ -57,7 +57,7 @@ namespace Redola.Rpc.DynamicProxy.CastleIntegration
             message.Serialize(_fixture.ArgumentEncoder);
 
             var service = _serviceResolver.Resolve(_serviceType, _strategy);
-            _handler.Send(service, message);
+            _handler.Send(service.Type, service.Name, message);
         }
 
         private object InvokeRpcMethodReturn(IInvocation invocation)
@@ -77,7 +77,7 @@ namespace Redola.Rpc.DynamicProxy.CastleIntegration
             request.Serialize(_fixture.ArgumentEncoder);
 
             var service = _serviceResolver.Resolve(_serviceType, _strategy);
-            var response = _handler.Send<InvokeMethodRequest, InvokeMethodResponse>(service, request);
+            var response = _handler.Send<InvokeMethodRequest, InvokeMethodResponse>(service.Type, service.Name, request);
 
             response.Deserialize(_fixture.ArgumentDecoder);
 

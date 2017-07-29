@@ -6,6 +6,6 @@ namespace Redola.Rpc
 {
     public interface IServiceRetriever
     {
-        IEnumerable<ActorIdentity> Retrieve(Type serviceType);
+        IEnumerable<ServiceActor> Retrieve(Type serviceType);
     }
 }
