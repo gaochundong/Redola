@@ -7,7 +7,7 @@ using Logrila.Logging.NLogIntegration;
 using Redola.ActorModel;
 using Redola.Rpc.TestContracts;
 
-namespace Redola.Rpc.TestRpcClient
+namespace Redola.Rpc.TestActorClient
 {
     class Program
     {

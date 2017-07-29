@@ -7,8 +7,8 @@
     <ProjectGuid>{94B31D55-C3A9-43C9-8819-61753B4B2435}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Redola.Rpc.TestRpcClient</RootNamespace>
-    <AssemblyName>Redola.Rpc.TestRpcClient</AssemblyName>
+    <RootNamespace>Redola.Rpc.TestActorClient</RootNamespace>
+    <AssemblyName>Redola.Rpc.TestActorClient</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -18,7 +18,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\bin\Debug\TestRpcClient\</OutputPath>
+    <OutputPath>..\bin\Debug\TestActorClient\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>

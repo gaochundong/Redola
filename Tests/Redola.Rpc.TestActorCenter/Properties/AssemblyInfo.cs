@@ -1,16 +1,16 @@
 ﻿using System.Reflection;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("Redola.Rpc.TestRpcClient")]
+[assembly: AssemblyTitle("Redola.Rpc.TestActorCenter")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Dennis Gao")]
-[assembly: AssemblyProduct("Redola.Rpc.TestRpcClient")]
+[assembly: AssemblyProduct("Redola.Rpc.TestActorCenter")]
 [assembly: AssemblyCopyright("Copyright © 2016-2017, Dennis Gao")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
 [assembly: ComVisible(false)]
-[assembly: Guid("94b31d55-c3a9-43c9-8819-61753b4b2435")]
+[assembly: Guid("dcb0784a-622e-4ef6-ba1b-79099da8d648")]
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]

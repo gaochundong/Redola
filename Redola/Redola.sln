@@ -1,17 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26403.3
+VisualStudioVersion = 15.0.26403.7
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redola.ActorModel", "Redola.ActorModel\Redola.ActorModel.csproj", "{05E69E70-97FF-4FFF-B106-E423B6F51A00}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redola.Rpc", "Redola.Rpc\Redola.Rpc.csproj", "{465F580D-F09F-4362-A6EE-40B2627B11A4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{49D4F9A0-5E09-4CE9-B9C3-49766ABACD19}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redola.Rpc.TestRpcServer", "..\Tests\Redola.Rpc.TestRpcServer\Redola.Rpc.TestRpcServer.csproj", "{C06D311C-BD6A-4E5C-86DF-1BDA937A5FE0}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redola.Rpc.TestRpcClient", "..\Tests\Redola.Rpc.TestRpcClient\Redola.Rpc.TestRpcClient.csproj", "{94B31D55-C3A9-43C9-8819-61753B4B2435}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{595851A8-E320-48C2-A09E-33BD17647DD2}"
 	ProjectSection(SolutionItems) = preProject
@@ -24,8 +20,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redola.Rpc.TestContracts", "..\Tests\Redola.Rpc.TestContracts\Redola.Rpc.TestContracts.csproj", "{FACCBF0D-1634-42F6-8011-22D3DDA54F18}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redola.Rpc.TestRegisterCenter", "..\Tests\Redola.Rpc.TestRegisterCenter\Redola.Rpc.TestRegisterCenter.csproj", "{DCB0784A-622E-4EF6-BA1B-79099DA8D648}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redola.Rpc.TestHttpRelay", "..\Tests\Redola.Rpc.TestHttpRelay\Redola.Rpc.TestHttpRelay.csproj", "{01EAA9D3-A299-4EC2-BADE-843BA7500174}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redola.Rpc.DynamicProxy.CastleIntegration", "Redola.Rpc.DynamicProxy.CastleIntegration\Redola.Rpc.DynamicProxy.CastleIntegration.csproj", "{17B964E4-8D0F-4077-8F5A-7654E6403D09}"
@@ -35,6 +29,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redola.Rpc.TestDynamicRpcClient", "..\Tests\Redola.Rpc.TestDynamicRpcClient\Redola.Rpc.TestDynamicRpcClient.csproj", "{80A02268-72B7-4312-AF7A-C1DDD9654364}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redola.Rpc.TestDynamicRpcServer", "..\Tests\Redola.Rpc.TestDynamicRpcServer\Redola.Rpc.TestDynamicRpcServer.csproj", "{A4CE7BCE-7F4D-4E4B-AFC1-4A70F9A886A8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redola.Rpc.TestActorCenter", "..\Tests\Redola.Rpc.TestActorCenter\Redola.Rpc.TestActorCenter.csproj", "{DCB0784A-622E-4EF6-BA1B-79099DA8D648}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redola.Rpc.TestActorClient", "..\Tests\Redola.Rpc.TestActorClient\Redola.Rpc.TestActorClient.csproj", "{94B31D55-C3A9-43C9-8819-61753B4B2435}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redola.Rpc.TestActorServer", "..\Tests\Redola.Rpc.TestActorServer\Redola.Rpc.TestActorServer.csproj", "{C06D311C-BD6A-4E5C-86DF-1BDA937A5FE0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -50,22 +50,10 @@ Global
 		{465F580D-F09F-4362-A6EE-40B2627B11A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{465F580D-F09F-4362-A6EE-40B2627B11A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{465F580D-F09F-4362-A6EE-40B2627B11A4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C06D311C-BD6A-4E5C-86DF-1BDA937A5FE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C06D311C-BD6A-4E5C-86DF-1BDA937A5FE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C06D311C-BD6A-4E5C-86DF-1BDA937A5FE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C06D311C-BD6A-4E5C-86DF-1BDA937A5FE0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{94B31D55-C3A9-43C9-8819-61753B4B2435}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{94B31D55-C3A9-43C9-8819-61753B4B2435}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{94B31D55-C3A9-43C9-8819-61753B4B2435}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{94B31D55-C3A9-43C9-8819-61753B4B2435}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FACCBF0D-1634-42F6-8011-22D3DDA54F18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FACCBF0D-1634-42F6-8011-22D3DDA54F18}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FACCBF0D-1634-42F6-8011-22D3DDA54F18}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FACCBF0D-1634-42F6-8011-22D3DDA54F18}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DCB0784A-622E-4EF6-BA1B-79099DA8D648}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DCB0784A-622E-4EF6-BA1B-79099DA8D648}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DCB0784A-622E-4EF6-BA1B-79099DA8D648}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DCB0784A-622E-4EF6-BA1B-79099DA8D648}.Release|Any CPU.Build.0 = Release|Any CPU
 		{01EAA9D3-A299-4EC2-BADE-843BA7500174}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{01EAA9D3-A299-4EC2-BADE-843BA7500174}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{01EAA9D3-A299-4EC2-BADE-843BA7500174}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -86,17 +74,29 @@ Global
 		{A4CE7BCE-7F4D-4E4B-AFC1-4A70F9A886A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A4CE7BCE-7F4D-4E4B-AFC1-4A70F9A886A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A4CE7BCE-7F4D-4E4B-AFC1-4A70F9A886A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DCB0784A-622E-4EF6-BA1B-79099DA8D648}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DCB0784A-622E-4EF6-BA1B-79099DA8D648}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DCB0784A-622E-4EF6-BA1B-79099DA8D648}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DCB0784A-622E-4EF6-BA1B-79099DA8D648}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94B31D55-C3A9-43C9-8819-61753B4B2435}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94B31D55-C3A9-43C9-8819-61753B4B2435}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94B31D55-C3A9-43C9-8819-61753B4B2435}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94B31D55-C3A9-43C9-8819-61753B4B2435}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C06D311C-BD6A-4E5C-86DF-1BDA937A5FE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C06D311C-BD6A-4E5C-86DF-1BDA937A5FE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C06D311C-BD6A-4E5C-86DF-1BDA937A5FE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C06D311C-BD6A-4E5C-86DF-1BDA937A5FE0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{C06D311C-BD6A-4E5C-86DF-1BDA937A5FE0} = {49D4F9A0-5E09-4CE9-B9C3-49766ABACD19}
-		{94B31D55-C3A9-43C9-8819-61753B4B2435} = {49D4F9A0-5E09-4CE9-B9C3-49766ABACD19}
 		{FACCBF0D-1634-42F6-8011-22D3DDA54F18} = {49D4F9A0-5E09-4CE9-B9C3-49766ABACD19}
-		{DCB0784A-622E-4EF6-BA1B-79099DA8D648} = {49D4F9A0-5E09-4CE9-B9C3-49766ABACD19}
 		{01EAA9D3-A299-4EC2-BADE-843BA7500174} = {49D4F9A0-5E09-4CE9-B9C3-49766ABACD19}
 		{80A02268-72B7-4312-AF7A-C1DDD9654364} = {49D4F9A0-5E09-4CE9-B9C3-49766ABACD19}
 		{A4CE7BCE-7F4D-4E4B-AFC1-4A70F9A886A8} = {49D4F9A0-5E09-4CE9-B9C3-49766ABACD19}
+		{DCB0784A-622E-4EF6-BA1B-79099DA8D648} = {49D4F9A0-5E09-4CE9-B9C3-49766ABACD19}
+		{94B31D55-C3A9-43C9-8819-61753B4B2435} = {49D4F9A0-5E09-4CE9-B9C3-49766ABACD19}
+		{C06D311C-BD6A-4E5C-86DF-1BDA937A5FE0} = {49D4F9A0-5E09-4CE9-B9C3-49766ABACD19}
 	EndGlobalSection
 EndGlobal

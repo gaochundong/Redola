@@ -2,7 +2,7 @@
 using Logrila.Logging;
 using Redola.Rpc.TestContracts;
 
-namespace Redola.Rpc.TestRpcClient
+namespace Redola.Rpc.TestActorClient
 {
     internal class OrderClient : RpcHandler, IOrderService
     {
