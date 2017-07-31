@@ -32,7 +32,7 @@ namespace Redola.Rpc.ServiceDiscovery.ConsulIntegration
 
             var registration = new AgentServiceRegistration()
             {
-                ID = actor.Name,
+                ID = string.Format("{0}/{1}/", actor.Type, actor.Name),
                 Name = actor.Type,
                 Tags = tags == null ? null : tags.ToArray(),
                 Address = actor.Address,
@@ -53,22 +53,26 @@ namespace Redola.Rpc.ServiceDiscovery.ConsulIntegration
                 actor, string.Join(",", tags), result.StatusCode, result.RequestTime.TotalMilliseconds);
         }
 
-        public void DeregisterActor(string actorName)
+        public void DeregisterActor(string actorType, string actorName)
         {
+            if (string.IsNullOrWhiteSpace(actorType))
+                throw new ArgumentNullException("actorType");
             if (string.IsNullOrWhiteSpace(actorName))
                 throw new ArgumentNullException("actorName");
 
-            var result = _consul.Agent.ServiceDeregister(actorName).GetAwaiter().GetResult();
+            var serviceID = string.Format("{0}/{1}", actorType, actorName);
+
+            var result = _consul.Agent.ServiceDeregister(serviceID).GetAwaiter().GetResult();
 
             if (result.StatusCode != HttpStatusCode.OK)
             {
                 throw new InvalidOperationException(string.Format(
                     "Cannot deregister the actor [{0}] with result [{1}] and cost [{2}] milliseconds.",
-                    actorName, result.StatusCode, result.RequestTime.TotalMilliseconds));
+                    serviceID, result.StatusCode, result.RequestTime.TotalMilliseconds));
             }
 
             _log.DebugFormat("DeregisterActor, deregister the actor [{0}] with result [{1}] and cost [{2}] milliseconds.",
-                actorName, result.StatusCode, result.RequestTime.TotalMilliseconds);
+                serviceID, result.StatusCode, result.RequestTime.TotalMilliseconds);
         }
 
         public IEnumerable<ConsulActorRegistryEntry> GetActors(string actorType)
@@ -91,8 +95,8 @@ namespace Redola.Rpc.ServiceDiscovery.ConsulIntegration
             return result.Response.Select(r =>
                 new ConsulActorRegistryEntry()
                 {
-                    ActorKey = ActorIdentity.GetKey(r.ServiceName, r.ServiceID),
-                    ActorIdentity = new ActorIdentity(r.ServiceName, r.ServiceID)
+                    ActorKey = ActorIdentity.GetKey(r.ServiceName, r.ServiceID.Split('/')[1]),
+                    ActorIdentity = new ActorIdentity(r.ServiceName, r.ServiceID.Split('/')[1])
                     {
                         Address = r.ServiceAddress,
                         Port = r.ServicePort.ToString(),

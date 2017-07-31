@@ -45,7 +45,7 @@ namespace Redola.Rpc.ServiceDiscovery.ConsulIntegration
             {
                 if (_localActor != null)
                 {
-                    _registry.DeregisterActor(_localActor.Name);
+                    _registry.DeregisterActor(_localActor.Type, _localActor.Name);
                     _localActor = null;
                 }
                 this.Active = false;
