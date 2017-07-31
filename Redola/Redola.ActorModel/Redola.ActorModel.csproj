@@ -54,9 +54,6 @@
     <Compile Include="Actor\Directory\CenterActorDirectory\Configuration\ByAppConfig\AppConfigCenterActorDirectorySettingItems.cs" />
     <Compile Include="Actor\Directory\CenterActorDirectory\Configuration\ByLocalXmlFile\LocalXmlFileCenterActorDirectoryConfiguration.cs" />
     <Compile Include="Actor\Directory\CenterActorDirectory\Configuration\ByLocalXmlFile\XmlCenterActorDirectoryConfiguration.cs" />
-    <Compile Include="Actor\Directory\LocalXmlFileActorDirectory\Configuration\XmlLocalXmlFileActorDirectoryConfiguration.cs" />
-    <Compile Include="Actor\Directory\LocalXmlFileActorDirectory\Configuration\LocalXmlFileActorDirectoryConfiguration.cs" />
-    <Compile Include="Actor\Directory\LocalXmlFileActorDirectory\LocalXmlFileActorDirectory.cs" />
     <Compile Include="Actor\Channel\Transport\Configuration\ActorTransportConfiguration.cs" />
     <Compile Include="Actor\Configuration\ByAppConfig\AppConfigActorConfiguration.cs" />
     <Compile Include="Actor\Configuration\ActorConfiguration.cs" />

@@ -2,6 +2,7 @@
 using Logrila.Logging;
 using Logrila.Logging.NLogIntegration;
 using Redola.ActorModel;
+using Redola.Rpc.ServiceDiscovery.XmlIntegration;
 using Redola.Rpc.TestContracts;
 
 namespace Redola.Rpc.TestRpcServer
@@ -22,9 +23,9 @@ namespace Redola.Rpc.TestRpcServer
             var localXmlFileLocalActorConfiguration = LocalXmlFileActorConfiguration.Load(localXmlFileLocalActorPath);
             var localActor = new RpcActor(localXmlFileLocalActorConfiguration);
 
-            var localXmlFileActorDirectoryPath = Environment.CurrentDirectory + @"\\XmlConfiguration\\ActorDirectory.xml";
-            var localXmlFileActorDirectoryConfiguration = LocalXmlFileActorDirectoryConfiguration.Load(localXmlFileActorDirectoryPath);
-            var localXmlFileActorDirectory = new LocalXmlFileActorDirectory(localXmlFileActorDirectoryConfiguration);
+            var localXmlFileActorRegistryPath = Environment.CurrentDirectory + @"\\XmlConfiguration\\ActorRegistry.xml";
+            var localXmlFileActorRegistry = LocalXmlFileActorRegistry.Load(localXmlFileActorRegistryPath);
+            var localXmlFileActorDirectory = new LocalXmlFileActorDirectory(localXmlFileActorRegistry);
 
             var catalog = new ServiceCatalogProvider();
             catalog.RegisterService<IHelloService>(new HelloService());
@@ -53,7 +54,7 @@ namespace Redola.Rpc.TestRpcServer
                     {
                         localActor.Shutdown();
 
-                        localXmlFileActorDirectory = new LocalXmlFileActorDirectory(localXmlFileActorDirectoryConfiguration);
+                        localXmlFileActorDirectory = new LocalXmlFileActorDirectory(localXmlFileActorRegistry);
                         localActor.Bootup(localXmlFileActorDirectory);
                     }
                     else

@@ -3,20 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using Logrila.Logging;
+using Redola.ActorModel;
 
-namespace Redola.ActorModel
+namespace Redola.Rpc.ServiceDiscovery.XmlIntegration
 {
     public class LocalXmlFileActorDirectory : IActorDirectory
     {
         private ILog _log = Logger.Get<LocalXmlFileActorDirectory>();
-        private LocalXmlFileActorDirectoryConfiguration _configuration;
+        private LocalXmlFileActorRegistry _registry;
         private ActorIdentity _localActor;
 
-        public LocalXmlFileActorDirectory(LocalXmlFileActorDirectoryConfiguration configuration)
+        public LocalXmlFileActorDirectory(LocalXmlFileActorRegistry registry)
         {
-            if (configuration == null)
-                throw new ArgumentNullException("configuration");
-            _configuration = configuration;
+            if (registry == null)
+                throw new ArgumentNullException("registry");
+            _registry = registry;
         }
 
         public bool Active { get; private set; }
@@ -112,8 +113,10 @@ namespace Redola.ActorModel
 
         private IEnumerable<ActorIdentity> LookupRemoteActors(string actorType, Func<IEnumerable<ActorIdentity>, IEnumerable<ActorIdentity>> matchActorFunc)
         {
-            _log.DebugFormat("Lookup actors, ActorType[{0}], Count[{1}].", actorType, _configuration.ActorDirectory.Count());
-            var matchedActors = matchActorFunc(_configuration.ActorDirectory);
+            var entries = _registry.GetEntries();
+            _log.DebugFormat("Lookup actors, ActorType[{0}], Count[{1}].", actorType, entries.Count());
+
+            var matchedActors = matchActorFunc(entries);
             if (matchedActors != null && matchedActors.Any())
             {
                 _log.DebugFormat("Resolve actors, ActorType[{0}], Count[{1}].", actorType, matchedActors.Count());

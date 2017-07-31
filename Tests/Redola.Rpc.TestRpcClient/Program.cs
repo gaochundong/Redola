@@ -27,9 +27,9 @@ namespace Redola.Rpc.TestRpcClient
             var localXmlFileLocalActorConfiguration = LocalXmlFileActorConfiguration.Load(localXmlFileLocalActorPath);
             var localActor = new RpcActor(localXmlFileLocalActorConfiguration);
 
-            var localXmlFileActorDirectoryPath = Environment.CurrentDirectory + @"\\XmlConfiguration\\ActorDirectory.xml";
-            var localXmlFileActorDirectoryConfiguration = LocalXmlFileActorDirectoryConfiguration.Load(localXmlFileActorDirectoryPath);
-            var localXmlFileActorDirectory = new LocalXmlFileActorDirectory(localXmlFileActorDirectoryConfiguration);
+            var localXmlFileActorRegistryPath = Environment.CurrentDirectory + @"\\XmlConfiguration\\ActorRegistry.xml";
+            var localXmlFileActorRegistry = LocalXmlFileActorRegistry.Load(localXmlFileActorRegistryPath);
+            var localXmlFileActorDirectory = new LocalXmlFileActorDirectory(localXmlFileActorRegistry);
 
             var localXmlFileServiceRegistryPath = Environment.CurrentDirectory + @"\\XmlConfiguration\\ServiceRegistry.xml";
             var serviceRegistry = LocalXmlFileServiceRegistry.Load(localXmlFileServiceRegistryPath);
@@ -64,7 +64,7 @@ namespace Redola.Rpc.TestRpcClient
                     {
                         localActor.Shutdown();
 
-                        localXmlFileActorDirectory = new LocalXmlFileActorDirectory(localXmlFileActorDirectoryConfiguration);
+                        localXmlFileActorDirectory = new LocalXmlFileActorDirectory(localXmlFileActorRegistry);
                         localActor.Bootup(localXmlFileActorDirectory);
                     }
                     else if (Regex.Match(text, @"^hello(\d*)$").Success)

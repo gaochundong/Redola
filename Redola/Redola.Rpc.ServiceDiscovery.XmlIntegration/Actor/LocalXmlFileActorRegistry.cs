@@ -1,24 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Redola.ActorModel;
 
 namespace Redola.Rpc.ServiceDiscovery.XmlIntegration
 {
-    public class LocalXmlFileServiceRegistry
+    public class LocalXmlFileActorRegistry
     {
         private string _localXmlFilePath = string.Empty;
-        private XmlServiceRegistry _registry;
+        private XmlActorRegistry _registry;
 
-        public LocalXmlFileServiceRegistry(string localXmlFilePath)
+        public LocalXmlFileActorRegistry(string localXmlFilePath)
         {
             if (string.IsNullOrEmpty(localXmlFilePath))
                 throw new ArgumentNullException("localXmlFilePath");
             if (!File.Exists(localXmlFilePath))
-                throw new FileNotFoundException("Cannot find the xml service registry file.", localXmlFilePath);
+                throw new FileNotFoundException("Cannot find the xml file.", localXmlFilePath);
             _localXmlFilePath = localXmlFilePath;
 
             var fileContent = File.ReadAllText(_localXmlFilePath);
-            _registry = XmlConvert.DeserializeObject<XmlServiceRegistry>(fileContent);
+            _registry = XmlConvert.DeserializeObject<XmlActorRegistry>(fileContent);
         }
 
         public string LocalXmlFilePath
@@ -26,15 +27,15 @@ namespace Redola.Rpc.ServiceDiscovery.XmlIntegration
             get { return _localXmlFilePath; }
         }
 
-        public IEnumerable<XmlServiceRegistryEntry> GetEntries()
+        public IEnumerable<ActorIdentity> GetEntries()
         {
             return _registry.Entries;
         }
 
-        public static LocalXmlFileServiceRegistry Load(string localXmlFilePath)
+        public static LocalXmlFileActorRegistry Load(string localXmlFilePath)
         {
-            var configuration = new LocalXmlFileServiceRegistry(localXmlFilePath);
-            return configuration;
+            var registry = new LocalXmlFileActorRegistry(localXmlFilePath);
+            return registry;
         }
     }
 }

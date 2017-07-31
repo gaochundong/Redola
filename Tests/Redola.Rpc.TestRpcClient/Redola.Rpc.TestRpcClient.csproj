@@ -84,7 +84,7 @@
     <Content Include="XmlConfiguration\ServiceRegistry.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="XmlConfiguration\ActorDirectory.xml">
+    <Content Include="XmlConfiguration\ActorRegistry.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
