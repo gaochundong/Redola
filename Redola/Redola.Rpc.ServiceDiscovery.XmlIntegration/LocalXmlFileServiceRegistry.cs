@@ -26,9 +26,9 @@ namespace Redola.Rpc.ServiceDiscovery.XmlIntegration
             get { return _localXmlFilePath; }
         }
 
-        public IEnumerable<XmlServiceRegistryEntry> Entries
+        public IEnumerable<XmlServiceRegistryEntry> GetEntries()
         {
-            get { return _registry.Entries; }
+            return _registry.Entries;
         }
 
         public static LocalXmlFileServiceRegistry Load(string localXmlFilePath)
