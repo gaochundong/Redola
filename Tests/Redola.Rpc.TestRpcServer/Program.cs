@@ -25,16 +25,16 @@ namespace Redola.Rpc.TestRpcServer
 
             var localXmlFileActorRegistryPath = Environment.CurrentDirectory + @"\\XmlConfiguration\\ActorRegistry.xml";
             var localXmlFileActorRegistry = LocalXmlFileActorRegistry.Load(localXmlFileActorRegistryPath);
-            var localXmlFileActorDirectory = new LocalXmlFileActorDirectory(localXmlFileActorRegistry);
+            var actorDirectory = new LocalXmlFileActorDirectory(localXmlFileActorRegistry);
 
-            var catalog = new ServiceCatalogProvider();
-            catalog.RegisterService<IHelloService>(new HelloService());
-            catalog.RegisterService<ICalcService>(new CalcService());
-            catalog.RegisterService<IOrderService>(new OrderService());
+            var serviceCatalog = new ServiceCatalogProvider();
+            serviceCatalog.RegisterService<IHelloService>(new HelloService());
+            serviceCatalog.RegisterService<ICalcService>(new CalcService());
+            serviceCatalog.RegisterService<IOrderService>(new OrderService());
 
-            var rpcServer = new RpcServer(localActor, catalog);
+            var rpcServer = new RpcServer(localActor, actorDirectory, serviceCatalog);
 
-            localActor.Bootup(localXmlFileActorDirectory);
+            rpcServer.Bootup();
 
             while (true)
             {
@@ -47,10 +47,8 @@ namespace Redola.Rpc.TestRpcServer
                     }
                     else if (text == "reconnect")
                     {
-                        localActor.Shutdown();
-
-                        localXmlFileActorDirectory = new LocalXmlFileActorDirectory(localXmlFileActorRegistry);
-                        localActor.Bootup(localXmlFileActorDirectory);
+                        rpcServer.Shutdown();
+                        rpcServer.Bootup();
                     }
                     else
                     {
@@ -63,7 +61,7 @@ namespace Redola.Rpc.TestRpcServer
                 }
             }
 
-            localActor.Shutdown();
+            rpcServer.Shutdown();
         }
     }
 }

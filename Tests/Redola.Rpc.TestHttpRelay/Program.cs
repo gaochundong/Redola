@@ -28,7 +28,7 @@ namespace Redola.Rpc.TestHttpRelay
 
             var localXmlFileActorRegistryPath = Environment.CurrentDirectory + @"\\XmlConfiguration\\ActorRegistry.xml";
             var localXmlFileActorRegistry = LocalXmlFileActorRegistry.Load(localXmlFileActorRegistryPath);
-            var localXmlFileActorDirectory = new LocalXmlFileActorDirectory(localXmlFileActorRegistry);
+            var actorDirectory = new LocalXmlFileActorDirectory(localXmlFileActorRegistry);
 
             var localXmlFileServiceRegistryPath = Environment.CurrentDirectory + @"\\XmlConfiguration\\ServiceRegistry.xml";
             var serviceRegistry = LocalXmlFileServiceRegistry.Load(localXmlFileServiceRegistryPath);
@@ -37,17 +37,12 @@ namespace Redola.Rpc.TestHttpRelay
             var serviceResolver = new ServiceResolver(serviceRetriever);
             var proxyGenerator = new ServiceProxyGenerator(serviceResolver);
 
-            var fixture = new RpcMethodFixture(
-                new MethodLocatorExtractor(),
-                new MethodArgumentEncoder(RpcActor.DefaultObjectEncoder),
-                new MethodArgumentDecoder(RpcActor.DefaultObjectDecoder));
-
-            var rpcClient = new RpcClient(localActor, proxyGenerator, fixture);
+            var rpcClient = new RpcClient(localActor, actorDirectory, proxyGenerator);
 
             var helloClient = rpcClient.Resolve<IHelloService>();
             var calcClient = rpcClient.Resolve<ICalcService>();
 
-            localActor.Bootup(localXmlFileActorDirectory);
+            rpcClient.Bootup();
 
             var container = new TestContainer();
             container.AddModule(new TestModule(helloClient, calcClient));
@@ -64,6 +59,7 @@ namespace Redola.Rpc.TestHttpRelay
             Console.ReadKey();
 
             host.Stop();
+            rpcClient.Shutdown();
             Console.WriteLine("Stopped. Goodbye!");
         }
     }

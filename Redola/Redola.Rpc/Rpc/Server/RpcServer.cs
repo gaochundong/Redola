@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using Redola.ActorModel;
 
 namespace Redola.Rpc
 {
     public class RpcServer : RpcHandler
     {
+        private IActorDirectory _directory;
         private IServiceCatalogProvider _catalog;
         private RpcMethodFixture _fixture;
         private MethodRouteResolver _resolver;
 
-        public RpcServer(RpcActor localActor, IServiceCatalogProvider catalog)
-            : this(localActor, catalog,
+        public RpcServer(RpcActor localActor, IActorDirectory directory, IServiceCatalogProvider catalog)
+            : this(localActor, directory, catalog,
                   new RpcMethodFixture(
                     new MethodLocatorExtractor(),
                     new MethodArgumentEncoder(RpcActor.DefaultObjectEncoder),
@@ -18,28 +20,34 @@ namespace Redola.Rpc
         {
         }
 
-        public RpcServer(RpcActor localActor, IServiceCatalogProvider catalog, RpcMethodFixture fixture)
+        public RpcServer(RpcActor localActor, IActorDirectory directory, IServiceCatalogProvider catalog, RpcMethodFixture fixture)
             : base(localActor)
         {
+            if (directory == null)
+                throw new ArgumentNullException("directory");
             if (catalog == null)
                 throw new ArgumentNullException("catalog");
             if (fixture == null)
                 throw new ArgumentNullException("fixture");
 
+            _directory = directory;
             _catalog = catalog;
             _fixture = fixture;
 
             Initialize();
         }
 
-        public RpcServer(RpcActor localActor, IRateLimiter rateLimiter, IServiceCatalogProvider catalog, RpcMethodFixture fixture)
+        public RpcServer(RpcActor localActor, IRateLimiter rateLimiter, IActorDirectory directory, IServiceCatalogProvider catalog, RpcMethodFixture fixture)
             : base(localActor, rateLimiter)
         {
+            if (directory == null)
+                throw new ArgumentNullException("directory");
             if (catalog == null)
                 throw new ArgumentNullException("catalog");
             if (fixture == null)
                 throw new ArgumentNullException("fixture");
 
+            _directory = directory;
             _catalog = catalog;
             _fixture = fixture;
 
@@ -113,6 +121,16 @@ namespace Redola.Rpc
                 MethodReturnValue = returnValue,
             };
             return response;
+        }
+
+        public void Bootup()
+        {
+            this.Actor.Bootup(_directory);
+        }
+
+        public void Shutdown()
+        {
+            this.Actor.Shutdown();
         }
     }
 }

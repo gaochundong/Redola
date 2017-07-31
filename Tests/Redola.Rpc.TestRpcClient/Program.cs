@@ -29,7 +29,7 @@ namespace Redola.Rpc.TestRpcClient
 
             var localXmlFileActorRegistryPath = Environment.CurrentDirectory + @"\\XmlConfiguration\\ActorRegistry.xml";
             var localXmlFileActorRegistry = LocalXmlFileActorRegistry.Load(localXmlFileActorRegistryPath);
-            var localXmlFileActorDirectory = new LocalXmlFileActorDirectory(localXmlFileActorRegistry);
+            var actorDirectory = new LocalXmlFileActorDirectory(localXmlFileActorRegistry);
 
             var localXmlFileServiceRegistryPath = Environment.CurrentDirectory + @"\\XmlConfiguration\\ServiceRegistry.xml";
             var serviceRegistry = LocalXmlFileServiceRegistry.Load(localXmlFileServiceRegistryPath);
@@ -38,13 +38,13 @@ namespace Redola.Rpc.TestRpcClient
             var serviceResolver = new ServiceResolver(serviceRetriever);
             var proxyGenerator = new ServiceProxyGenerator(serviceResolver);
 
-            var rpcClient = new RpcClient(localActor, proxyGenerator);
+            var rpcClient = new RpcClient(localActor, actorDirectory, proxyGenerator);
 
             var helloClient = rpcClient.Resolve<IHelloService>();
             var calcClient = rpcClient.Resolve<ICalcService>();
             var orderClient = rpcClient.Resolve<IOrderService>();
 
-            localActor.Bootup(localXmlFileActorDirectory);
+            rpcClient.Bootup();
 
             while (true)
             {
@@ -57,10 +57,8 @@ namespace Redola.Rpc.TestRpcClient
                     }
                     else if (text == "reconnect")
                     {
-                        localActor.Shutdown();
-
-                        localXmlFileActorDirectory = new LocalXmlFileActorDirectory(localXmlFileActorRegistry);
-                        localActor.Bootup(localXmlFileActorDirectory);
+                        rpcClient.Shutdown();
+                        rpcClient.Bootup();
                     }
                     else if (Regex.Match(text, @"^hello(\d*)$").Success)
                     {
@@ -126,7 +124,7 @@ namespace Redola.Rpc.TestRpcClient
                 }
             }
 
-            localActor.Shutdown();
+            rpcClient.Shutdown();
         }
 
         private static void Hello(IHelloService helloClient)

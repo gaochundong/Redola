@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using Redola.ActorModel;
 
 namespace Redola.Rpc
 {
     public class RpcClient : RpcHandler
     {
+        private IActorDirectory _directory;
         private IServiceProxyGenerator _proxyGenerator;
         private RpcMethodFixture _fixture;
 
-        public RpcClient(RpcActor localActor, IServiceProxyGenerator proxyGenerator)
-            : this(localActor, proxyGenerator,
+        public RpcClient(RpcActor localActor, IActorDirectory directory, IServiceProxyGenerator proxyGenerator)
+            : this(localActor, directory, proxyGenerator,
                   new RpcMethodFixture(
                     new MethodLocatorExtractor(),
                     new MethodArgumentEncoder(RpcActor.DefaultObjectEncoder),
@@ -17,28 +19,34 @@ namespace Redola.Rpc
         {
         }
 
-        public RpcClient(RpcActor localActor, IServiceProxyGenerator proxyGenerator, RpcMethodFixture fixture)
+        public RpcClient(RpcActor localActor, IActorDirectory directory, IServiceProxyGenerator proxyGenerator, RpcMethodFixture fixture)
             : base(localActor)
         {
+            if (directory == null)
+                throw new ArgumentNullException("directory");
             if (proxyGenerator == null)
                 throw new ArgumentNullException("proxyGenerator");
             if (fixture == null)
                 throw new ArgumentNullException("fixture");
 
+            _directory = directory;
             _proxyGenerator = proxyGenerator;
             _fixture = fixture;
 
             Initialize();
         }
 
-        public RpcClient(RpcActor localActor, IRateLimiter rateLimiter, IServiceProxyGenerator proxyGenerator, RpcMethodFixture fixture)
+        public RpcClient(RpcActor localActor, IRateLimiter rateLimiter, IActorDirectory directory, IServiceProxyGenerator proxyGenerator, RpcMethodFixture fixture)
             : base(localActor, rateLimiter)
         {
+            if (directory == null)
+                throw new ArgumentNullException("directory");
             if (proxyGenerator == null)
                 throw new ArgumentNullException("proxyGenerator");
             if (fixture == null)
                 throw new ArgumentNullException("fixture");
 
+            _directory = directory;
             _proxyGenerator = proxyGenerator;
             _fixture = fixture;
 
@@ -67,6 +75,16 @@ namespace Redola.Rpc
         public T Resolve<T>(IServiceLoadBalancingStrategy strategy)
         {
             return _proxyGenerator.CreateServiceProxy<T>(this, _fixture, strategy);
+        }
+
+        public void Bootup()
+        {
+            this.Actor.Bootup(_directory);
+        }
+
+        public void Shutdown()
+        {
+            this.Actor.Shutdown();
         }
     }
 }
