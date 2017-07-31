@@ -12,6 +12,7 @@ namespace Redola.Rpc.ServiceDiscovery.ConsulIntegration
     {
         private ILog _log = Logger.Get<ConsulActorRegistry>();
         private ConsulClient _consul;
+        private const string _protocol = @"redola://";
 
         public ConsulActorRegistry(ConsulClient consul)
         {
@@ -32,7 +33,7 @@ namespace Redola.Rpc.ServiceDiscovery.ConsulIntegration
 
             var registration = new AgentServiceRegistration()
             {
-                ID = string.Format("{0}/{1}/", actor.Type, actor.Name),
+                ID = string.Format("{0}{1}/{2}/", _protocol, actor.Type, actor.Name),
                 Name = actor.Type,
                 Tags = tags == null ? null : tags.ToArray(),
                 Address = actor.Address,
@@ -60,7 +61,7 @@ namespace Redola.Rpc.ServiceDiscovery.ConsulIntegration
             if (string.IsNullOrWhiteSpace(actorName))
                 throw new ArgumentNullException("actorName");
 
-            var serviceID = string.Format("{0}/{1}", actorType, actorName);
+            var serviceID = string.Format("{0}{1}/{2}/", _protocol, actorType, actorName);
 
             var result = _consul.Agent.ServiceDeregister(serviceID).GetAwaiter().GetResult();
 
@@ -93,14 +94,17 @@ namespace Redola.Rpc.ServiceDiscovery.ConsulIntegration
                 actorType, result.Response.Count(), result.StatusCode, result.RequestTime.TotalMilliseconds);
 
             return result.Response.Select(r =>
-                new ConsulActorRegistryEntry()
                 {
-                    ActorKey = ActorIdentity.GetKey(r.ServiceName, r.ServiceID.Split('/')[1]),
-                    ActorIdentity = new ActorIdentity(r.ServiceName, r.ServiceID.Split('/')[1])
+                    var splitter = r.ServiceID.Substring(_protocol.Length).Split('/');
+                    return new ConsulActorRegistryEntry()
                     {
-                        Address = r.ServiceAddress,
-                        Port = r.ServicePort.ToString(),
-                    }
+                        ActorKey = ActorIdentity.GetKey(r.ServiceName, splitter[1]),
+                        ActorIdentity = new ActorIdentity(r.ServiceName, splitter[1])
+                        {
+                            Address = r.ServiceAddress,
+                            Port = r.ServicePort.ToString(),
+                        }
+                    };
                 });
         }
     }
