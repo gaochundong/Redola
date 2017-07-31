@@ -8,9 +8,11 @@ namespace Redola.Rpc.ServiceDiscovery.XmlIntegration
     {
         private LocalXmlFileServiceRegistry _registry;
 
-        public LocalXmlFileServiceDiscovery(string localXmlFilePath)
+        public LocalXmlFileServiceDiscovery(LocalXmlFileServiceRegistry registry)
         {
-            _registry = LocalXmlFileServiceRegistry.Load(localXmlFilePath);
+            if (registry == null)
+                throw new ArgumentNullException("registry");
+            _registry = registry;
         }
 
         public IEnumerable<ServiceActor> Discover(Type serviceType)

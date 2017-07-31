@@ -42,9 +42,9 @@
     <Compile Include="LocalXmlFileServiceRegistry.cs" />
     <Compile Include="LocalXmlFileServiceDiscovery.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="XmlServiceRegistry.cs" />
-    <Compile Include="XmlServiceRegistryEntry.cs" />
-    <Compile Include="XmlConvert.cs" />
+    <Compile Include="Service\XmlServiceRegistry.cs" />
+    <Compile Include="Service\XmlServiceRegistryEntry.cs" />
+    <Compile Include="Serialization\XmlConvert.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Redola.Rpc\Redola.Rpc.csproj">

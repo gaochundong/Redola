@@ -32,7 +32,8 @@ namespace Redola.Rpc.TestRpcClient
             var localXmlFileActorDirectory = new LocalXmlFileActorDirectory(localXmlFileActorDirectoryConfiguration);
 
             var localXmlFileServiceRegistryPath = Environment.CurrentDirectory + @"\\XmlConfiguration\\ServiceRegistry.xml";
-            var serviceDiscovery = new LocalXmlFileServiceDiscovery(localXmlFileServiceRegistryPath);
+            var serviceRegistry = LocalXmlFileServiceRegistry.Load(localXmlFileServiceRegistryPath);
+            var serviceDiscovery = new LocalXmlFileServiceDiscovery(serviceRegistry);
             var serviceRetriever = new ServiceRetriever(serviceDiscovery);
             var serviceResolver = new ServiceResolver(serviceRetriever);
             var proxyGenerator = new ServiceProxyGenerator(serviceResolver);
