@@ -9,6 +9,15 @@ namespace Redola.Rpc
         private RpcMethodFixture _fixture;
         private MethodRouteResolver _resolver;
 
+        public RpcServer(RpcActor localActor, IServiceCatalogProvider catalog)
+            : this(localActor, catalog,
+                  new RpcMethodFixture(
+                    new MethodLocatorExtractor(),
+                    new MethodArgumentEncoder(RpcActor.DefaultObjectEncoder),
+                    new MethodArgumentDecoder(RpcActor.DefaultObjectDecoder)))
+        {
+        }
+
         public RpcServer(RpcActor localActor, IServiceCatalogProvider catalog, RpcMethodFixture fixture)
             : base(localActor)
         {

@@ -32,12 +32,7 @@ namespace Redola.Rpc.TestRpcServer
             catalog.RegisterService<ICalcService>(new CalcService());
             catalog.RegisterService<IOrderService>(new OrderService());
 
-            var fixture = new RpcMethodFixture(
-                new MethodLocatorExtractor(),
-                new MethodArgumentEncoder(RpcActor.DefaultObjectEncoder),
-                new MethodArgumentDecoder(RpcActor.DefaultObjectDecoder));
-
-            var rpcServer = new RpcServer(localActor, catalog, fixture);
+            var rpcServer = new RpcServer(localActor, catalog);
 
             localActor.Bootup(localXmlFileActorDirectory);
 

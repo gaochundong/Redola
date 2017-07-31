@@ -38,12 +38,7 @@ namespace Redola.Rpc.TestRpcClient
             var serviceResolver = new ServiceResolver(serviceRetriever);
             var proxyGenerator = new ServiceProxyGenerator(serviceResolver);
 
-            var fixture = new RpcMethodFixture(
-                new MethodLocatorExtractor(),
-                new MethodArgumentEncoder(RpcActor.DefaultObjectEncoder),
-                new MethodArgumentDecoder(RpcActor.DefaultObjectDecoder));
-
-            var rpcClient = new RpcClient(localActor, proxyGenerator, fixture);
+            var rpcClient = new RpcClient(localActor, proxyGenerator);
 
             var helloClient = rpcClient.Resolve<IHelloService>();
             var calcClient = rpcClient.Resolve<ICalcService>();

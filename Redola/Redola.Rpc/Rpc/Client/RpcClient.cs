@@ -8,6 +8,15 @@ namespace Redola.Rpc
         private IServiceProxyGenerator _proxyGenerator;
         private RpcMethodFixture _fixture;
 
+        public RpcClient(RpcActor localActor, IServiceProxyGenerator proxyGenerator)
+            : this(localActor, proxyGenerator,
+                  new RpcMethodFixture(
+                    new MethodLocatorExtractor(),
+                    new MethodArgumentEncoder(RpcActor.DefaultObjectEncoder),
+                    new MethodArgumentDecoder(RpcActor.DefaultObjectDecoder)))
+        {
+        }
+
         public RpcClient(RpcActor localActor, IServiceProxyGenerator proxyGenerator, RpcMethodFixture fixture)
             : base(localActor)
         {
