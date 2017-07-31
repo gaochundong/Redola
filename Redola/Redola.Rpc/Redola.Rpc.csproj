@@ -48,16 +48,16 @@
     <Compile Include="..\SolutionVersion.cs">
       <Link>SolutionVersion.cs</Link>
     </Compile>
-    <Compile Include="Messaging\Encoding\ActorMessageDecoder.cs" />
-    <Compile Include="Messaging\Encoding\ActorMessageEncoder.cs" />
+    <Compile Include="Messaging\Encoding\ActorMessage\ActorMessageDecoder.cs" />
+    <Compile Include="Messaging\Encoding\ActorMessage\ActorMessageEncoder.cs" />
     <Compile Include="Messaging\Encoding\Compression\GZipCompression.cs" />
-    <Compile Include="Messaging\Encoding\IActorMessageDecoder.cs" />
-    <Compile Include="Messaging\Encoding\IActorMessageEncoder.cs" />
-    <Compile Include="Messaging\Encoding\IMessageDecoder.cs" />
-    <Compile Include="Messaging\Encoding\IMessageEncoder.cs" />
+    <Compile Include="Messaging\Encoding\ActorMessage\IActorMessageDecoder.cs" />
+    <Compile Include="Messaging\Encoding\ActorMessage\IActorMessageEncoder.cs" />
+    <Compile Include="Messaging\Encoding\IObjectDecoder.cs" />
+    <Compile Include="Messaging\Encoding\IObjectEncoder.cs" />
     <Compile Include="Messaging\Encoding\Protobuf\ProtocolBuffersConvert.cs" />
-    <Compile Include="Messaging\Encoding\Protobuf\ProtocolBuffersMessageDecoder.cs" />
-    <Compile Include="Messaging\Encoding\Protobuf\ProtocolBuffersMessageEncoder.cs" />
+    <Compile Include="Messaging\Encoding\Protobuf\ProtocolBuffersObjectDecoder.cs" />
+    <Compile Include="Messaging\Encoding\Protobuf\ProtocolBuffersObjectEncoder.cs" />
     <Compile Include="Messaging\Envelope\ActorEndpoint.cs" />
     <Compile Include="Messaging\Envelope\ActorMessageEnvelopeExtensions.cs" />
     <Compile Include="Messaging\Envelope\ActorMessageEnvelopeGeneric.cs" />

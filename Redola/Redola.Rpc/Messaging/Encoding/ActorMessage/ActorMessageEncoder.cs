@@ -2,21 +2,21 @@
 {
     public class ActorMessageEncoder : IActorMessageEncoder
     {
-        private IMessageEncoder _encoder;
+        private IObjectEncoder _encoder;
 
-        public ActorMessageEncoder(IMessageEncoder encoder)
+        public ActorMessageEncoder(IObjectEncoder encoder)
         {
             _encoder = encoder;
         }
 
         public byte[] EncodeMessage(object message)
         {
-            return _encoder.EncodeMessage(message);
+            return _encoder.Encode(message);
         }
 
         public byte[] EncodeMessage<T>(T message)
         {
-            return _encoder.EncodeMessage(message);
+            return _encoder.Encode(message);
         }
 
         public byte[] EncodeMessageEnvelope<T>(T message)
@@ -26,7 +26,7 @@
                 MessageType = typeof(T).Name,
                 MessageData = EncodeMessage(message),
             };
-            return _encoder.EncodeMessage(envelope);
+            return _encoder.Encode(envelope);
         }
     }
 }

@@ -2,21 +2,21 @@
 {
     public class MethodArgumentEncoder : IMethodArgumentEncoder
     {
-        private IMessageEncoder _encoder;
+        private IObjectEncoder _encoder;
 
-        public MethodArgumentEncoder(IMessageEncoder encoder)
+        public MethodArgumentEncoder(IObjectEncoder encoder)
         {
             _encoder = encoder;
         }
 
         public byte[] Encode(object argument)
         {
-            return _encoder.EncodeMessage(argument);
+            return _encoder.Encode(argument);
         }
 
         public byte[] Encode<T>(T argument)
         {
-            return _encoder.EncodeMessage(argument);
+            return _encoder.Encode(argument);
         }
     }
 }

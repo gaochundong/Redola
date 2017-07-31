@@ -6,10 +6,10 @@ namespace Redola.Rpc
 {
     public class RpcActor
     {
-        public static readonly IMessageEncoder DefaultMessageEncoder = new ProtocolBuffersMessageEncoder();
-        public static readonly IMessageDecoder DefaultMessageDecoder = new ProtocolBuffersMessageDecoder();
-        public static readonly IActorMessageEncoder DefaultActorMessageEncoder = new ActorMessageEncoder(DefaultMessageEncoder);
-        public static readonly IActorMessageDecoder DefaultActorMessageDecoder = new ActorMessageDecoder(DefaultMessageDecoder);
+        public static readonly IObjectEncoder DefaultObjectEncoder = new ProtocolBuffersObjectEncoder();
+        public static readonly IObjectDecoder DefaultObjectDecoder = new ProtocolBuffersObjectDecoder();
+        public static readonly IActorMessageEncoder DefaultActorMessageEncoder = new ActorMessageEncoder(DefaultObjectEncoder);
+        public static readonly IActorMessageDecoder DefaultActorMessageDecoder = new ActorMessageDecoder(DefaultObjectDecoder);
 
         private BlockingRouteActor _localActor = null;
 

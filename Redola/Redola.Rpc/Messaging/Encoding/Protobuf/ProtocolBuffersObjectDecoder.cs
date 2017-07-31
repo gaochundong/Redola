@@ -2,29 +2,29 @@
 
 namespace Redola.Rpc
 {
-    public class ProtocolBuffersMessageDecoder : IMessageDecoder
+    public class ProtocolBuffersObjectDecoder : IObjectDecoder
     {
-        public ProtocolBuffersMessageDecoder()
+        public ProtocolBuffersObjectDecoder()
         {
             this.CompressionEnabled = true;
         }
 
         public bool CompressionEnabled { get; set; }
 
-        public T DecodeMessage<T>(byte[] data)
+        public T Decode<T>(byte[] data)
         {
-            return DecodeMessage<T>(data, data.Length);
+            return Decode<T>(data, data.Length);
         }
 
-        public T DecodeMessage<T>(byte[] data, int count)
+        public T Decode<T>(byte[] data, int count)
         {
-            return DecodeMessage<T>(data, 0, count);
+            return Decode<T>(data, 0, count);
         }
 
-        public T DecodeMessage<T>(byte[] data, int offset, int count)
+        public T Decode<T>(byte[] data, int offset, int count)
         {
             if (data == null)
-                throw new ArgumentNullException("The data which is to be deserialized cannot be null.");
+                throw new ArgumentNullException("The data to be deserialized cannot be null.");
 
             if (CompressionEnabled)
             {
@@ -36,12 +36,12 @@ namespace Redola.Rpc
             }
         }
 
-        public object DecodeMessage(Type type, byte[] data, int offset, int count)
+        public object Decode(Type type, byte[] data, int offset, int count)
         {
             if (type == null)
-                throw new ArgumentNullException("The type which is to be deserialized cannot be null.");
+                throw new ArgumentNullException("The type to be deserialized cannot be null.");
             if (data == null)
-                throw new ArgumentNullException("The data which is to be deserialized cannot be null.");
+                throw new ArgumentNullException("The data to be deserialized cannot be null.");
 
             if (CompressionEnabled)
             {

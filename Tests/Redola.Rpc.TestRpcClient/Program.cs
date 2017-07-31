@@ -39,8 +39,8 @@ namespace Redola.Rpc.TestRpcClient
 
             var fixture = new RpcMethodFixture(
                 new MethodLocatorExtractor(),
-                new MethodArgumentEncoder(RpcActor.DefaultMessageEncoder),
-                new MethodArgumentDecoder(RpcActor.DefaultMessageDecoder));
+                new MethodArgumentEncoder(RpcActor.DefaultObjectEncoder),
+                new MethodArgumentDecoder(RpcActor.DefaultObjectDecoder));
 
             var rpcClient = new RpcClient(localActor, proxyGenerator, fixture);
 
