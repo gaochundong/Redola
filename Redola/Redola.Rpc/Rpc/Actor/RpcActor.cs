@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Redola.ActorModel;
 
 namespace Redola.Rpc
@@ -49,6 +50,16 @@ namespace Redola.Rpc
         public void RegisterRpcHandler(RpcHandler handler)
         {
             this.Actor.RegisterMessageHandler(handler);
+        }
+
+        public void DeregisterRpcHandler(RpcHandler handler)
+        {
+            this.Actor.DeregisterMessageHandler(handler);
+        }
+
+        public IEnumerable<RpcHandler> GetRpcHandlers()
+        {
+            return this.Actor.GetMessageHandlers().Where(h => h is RpcHandler).Select(h => h as RpcHandler);
         }
 
         #region Blocking Envelope

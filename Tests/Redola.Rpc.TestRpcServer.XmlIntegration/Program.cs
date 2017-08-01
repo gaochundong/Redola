@@ -38,6 +38,13 @@ namespace Redola.Rpc.TestRpcServer.XmlIntegration
 
             var rpcServer = new RpcServer(localActor, actorDirectory, serviceCatalog, serviceDirectory);
 
+            //var serviceDiscovery = new LocalXmlFileServiceDiscovery(serviceRegistry);
+            //var serviceRetriever = new ServiceRetriever(serviceDiscovery);
+            //var serviceResolver = new ServiceResolver(serviceRetriever);
+            //var proxyGenerator = new ServiceProxyGenerator(serviceResolver);
+
+            //var orderEventClient = rpcServer.Resolve<IOrderEventService>();
+
             rpcServer.Bootup();
 
             while (true)

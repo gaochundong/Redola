@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Logrila.Logging;
 using Redola.ActorModel;
 
@@ -26,7 +27,18 @@ namespace Redola.Rpc
 
         public void RegisterMessageHandler(IRouteActorMessageHandler messageHandler)
         {
-            _messageHandlers.Add(messageHandler);
+            if (messageHandler == null)
+                throw new ArgumentNullException("messageHandler");
+
+            if (!_messageHandlers.Contains(messageHandler))
+            {
+                _messageHandlers.Add(messageHandler);
+            }
+        }
+
+        public void DeregisterMessageHandler(IRouteActorMessageHandler messageHandler)
+        {
+            _messageHandlers.Remove(messageHandler);
         }
 
         public IEnumerable<IRouteActorMessageHandler> GetMessageHandlers()

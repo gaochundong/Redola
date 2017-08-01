@@ -88,6 +88,8 @@ namespace Redola.Rpc
             {
                 if (this.Actor.Active)
                 {
+                    this.Actor.DeregisterRpcHandler(this);
+
                     this.Actor.Shutdown();
                 }
             }

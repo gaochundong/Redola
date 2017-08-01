@@ -153,6 +153,8 @@ namespace Redola.Rpc
                         _serviceDirectory.DeregisterService(this.Actor.Identity, service.DeclaringType);
                     }
 
+                    this.Actor.DeregisterRpcHandler(this);
+
                     this.Actor.Shutdown();
                 }
             }

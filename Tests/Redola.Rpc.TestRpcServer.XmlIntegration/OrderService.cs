@@ -9,7 +9,7 @@ namespace Redola.Rpc.TestRpcServer.XmlIntegration
 
         public PlaceOrderResponse PlaceOrder(PlaceOrderRequest request)
         {
-            _log.DebugFormat("PlaceOrder, OrderID={0}", request.Contract.OrderID);
+            _log.DebugFormat("PlaceOrder, OrderID[{0}].", request.Contract.OrderID);
             return new PlaceOrderResponse()
             {
                 Contract = request.Contract,
