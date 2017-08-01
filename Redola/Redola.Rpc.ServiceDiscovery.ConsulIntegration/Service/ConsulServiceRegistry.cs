@@ -49,11 +49,11 @@ namespace Redola.Rpc.ServiceDiscovery.ConsulIntegration
             {
                 throw new InvalidOperationException(string.Format(
                     "Cannot register the actor [{0}] and service [{1}] and tags [{2}] with result [{3}] and cost [{4}] milliseconds.",
-                    actor, serviceType, string.Join(",", tags), result.StatusCode, result.RequestTime.TotalMilliseconds));
+                    actor, serviceType, tags == null ? string.Empty : string.Join(",", tags), result.StatusCode, result.RequestTime.TotalMilliseconds));
             }
 
             _log.DebugFormat("RegisterService, register the actor [{0}] and service [{1}] and tags [{2}] with result [{3}] and cost [{4}] milliseconds.",
-                actor, serviceType, string.Join(",", tags), result.StatusCode, result.RequestTime.TotalMilliseconds);
+                actor, serviceType, tags == null ? string.Empty : string.Join(",", tags), result.StatusCode, result.RequestTime.TotalMilliseconds);
         }
 
         public void DeregisterService(string actorType, string actorName, string serviceType)

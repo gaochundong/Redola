@@ -47,11 +47,11 @@ namespace Redola.Rpc.ServiceDiscovery.ConsulIntegration
             {
                 throw new InvalidOperationException(string.Format(
                     "Cannot register the actor [{0}] and tags [{1}] with result [{2}] and cost [{3}] milliseconds.",
-                    actor, string.Join(",", tags), result.StatusCode, result.RequestTime.TotalMilliseconds));
+                    actor, tags == null ? string.Empty : string.Join(",", tags), result.StatusCode, result.RequestTime.TotalMilliseconds));
             }
 
             _log.DebugFormat("RegisterActor, register the actor [{0}] and tags [{1}] with result [{2}] and cost [{3}] milliseconds.",
-                actor, string.Join(",", tags), result.StatusCode, result.RequestTime.TotalMilliseconds);
+                actor, tags == null ? string.Empty : string.Join(",", tags), result.StatusCode, result.RequestTime.TotalMilliseconds);
         }
 
         public void DeregisterActor(string actorType, string actorName)
