@@ -18,7 +18,7 @@ namespace Redola.ActorModel
         {
             base.OnActorChannelConnected(sender, e);
 
-            if (!e.RemoteActor.Equals(this.LocalActor))
+            if (!e.RemoteActor.Equals(this.Identity))
                 NotifyActorChanged(e.RemoteActor);
         }
 
@@ -26,7 +26,7 @@ namespace Redola.ActorModel
         {
             base.OnActorChannelDisconnected(sender, e);
 
-            if (!e.RemoteActor.Equals(this.LocalActor))
+            if (!e.RemoteActor.Equals(this.Identity))
                 NotifyActorChanged(e.RemoteActor);
         }
 

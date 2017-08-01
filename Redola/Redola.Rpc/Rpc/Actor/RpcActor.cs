@@ -31,23 +31,24 @@ namespace Redola.Rpc
         }
 
         internal BlockingRouteActor Actor { get { return _localActor; } }
-        public bool Active { get { return _localActor.Active; } }
-        public IActorMessageEncoder Encoder { get { return _localActor.Encoder; } }
-        public IActorMessageDecoder Decoder { get { return _localActor.Decoder; } }
+        public ActorIdentity Identity { get { return this.Actor.Identity; } }
+        public bool Active { get { return this.Actor.Active; } }
+        public IActorMessageEncoder Encoder { get { return this.Actor.Encoder; } }
+        public IActorMessageDecoder Decoder { get { return this.Actor.Decoder; } }
 
         public void Bootup(IActorDirectory directory)
         {
-            _localActor.Bootup(directory);
+            this.Actor.Bootup(directory);
         }
 
         public void Shutdown()
         {
-            _localActor.Shutdown();
+            this.Actor.Shutdown();
         }
 
         public void RegisterRpcHandler(RpcHandler handler)
         {
-            _localActor.RegisterMessageHandler(handler);
+            this.Actor.RegisterMessageHandler(handler);
         }
 
         #region Blocking Envelope
@@ -59,7 +60,7 @@ namespace Redola.Rpc
 
         public ActorMessageEnvelope<P> Send<R, P>(ActorIdentity remoteActor, ActorMessageEnvelope<R> request, TimeSpan timeout)
         {
-            return _localActor.SendMessage<R, P>(remoteActor, request, timeout);
+            return this.Actor.SendMessage<R, P>(remoteActor, request, timeout);
         }
 
         public ActorMessageEnvelope<P> Send<R, P>(string remoteActorType, string remoteActorName, ActorMessageEnvelope<R> request)
@@ -69,7 +70,7 @@ namespace Redola.Rpc
 
         public ActorMessageEnvelope<P> Send<R, P>(string remoteActorType, string remoteActorName, ActorMessageEnvelope<R> request, TimeSpan timeout)
         {
-            return _localActor.SendMessage<R, P>(remoteActorType, remoteActorName, request, timeout);
+            return this.Actor.SendMessage<R, P>(remoteActorType, remoteActorName, request, timeout);
         }
 
         public ActorMessageEnvelope<P> Send<R, P>(string remoteActorType, ActorMessageEnvelope<R> request)
@@ -79,7 +80,7 @@ namespace Redola.Rpc
 
         public ActorMessageEnvelope<P> Send<R, P>(string remoteActorType, ActorMessageEnvelope<R> request, TimeSpan timeout)
         {
-            return _localActor.SendMessage<R, P>(remoteActorType, request, timeout);
+            return this.Actor.SendMessage<R, P>(remoteActorType, request, timeout);
         }
 
         #endregion
@@ -134,32 +135,32 @@ namespace Redola.Rpc
 
         public void Send<T>(ActorIdentity remoteActor, ActorMessageEnvelope<T> message)
         {
-            _localActor.Send(remoteActor, message);
+            this.Actor.Send(remoteActor, message);
         }
 
         public void BeginSend<T>(ActorIdentity remoteActor, ActorMessageEnvelope<T> message)
         {
-            _localActor.BeginSend(remoteActor, message);
+            this.Actor.BeginSend(remoteActor, message);
         }
 
         public void Send<T>(string remoteActorType, string remoteActorName, ActorMessageEnvelope<T> message)
         {
-            _localActor.Send(remoteActorType, remoteActorName, message);
+            this.Actor.Send(remoteActorType, remoteActorName, message);
         }
 
         public void BeginSend<T>(string remoteActorType, string remoteActorName, ActorMessageEnvelope<T> message)
         {
-            _localActor.BeginSend(remoteActorType, remoteActorName, message);
+            this.Actor.BeginSend(remoteActorType, remoteActorName, message);
         }
 
         public void Send<T>(string remoteActorType, ActorMessageEnvelope<T> message)
         {
-            _localActor.Send(remoteActorType, message);
+            this.Actor.Send(remoteActorType, message);
         }
 
         public void BeginSend<T>(string remoteActorType, ActorMessageEnvelope<T> message)
         {
-            _localActor.BeginSend(remoteActorType, message);
+            this.Actor.BeginSend(remoteActorType, message);
         }
 
         #endregion
@@ -226,12 +227,12 @@ namespace Redola.Rpc
 
         public void Reply<T>(string channelIdentifier, ActorMessageEnvelope<T> message)
         {
-            _localActor.Reply(channelIdentifier, message);
+            this.Actor.Reply(channelIdentifier, message);
         }
 
         public void BeginReply<T>(string channelIdentifier, ActorMessageEnvelope<T> message)
         {
-            _localActor.BeginReply(channelIdentifier, message);
+            this.Actor.BeginReply(channelIdentifier, message);
         }
 
         #endregion
@@ -262,22 +263,22 @@ namespace Redola.Rpc
 
         public void Broadcast<T>(string remoteActorType, ActorMessageEnvelope<T> message)
         {
-            _localActor.Broadcast(remoteActorType, message);
+            this.Actor.Broadcast(remoteActorType, message);
         }
 
         public void BeginBroadcast<T>(string remoteActorType, ActorMessageEnvelope<T> message)
         {
-            _localActor.BeginBroadcast(remoteActorType, message);
+            this.Actor.BeginBroadcast(remoteActorType, message);
         }
 
         public void Broadcast<T>(IEnumerable<string> remoteActorTypes, ActorMessageEnvelope<T> message)
         {
-            _localActor.Broadcast(remoteActorTypes, message);
+            this.Actor.Broadcast(remoteActorTypes, message);
         }
 
         public void BeginBroadcast<T>(IEnumerable<string> remoteActorTypes, ActorMessageEnvelope<T> message)
         {
-            _localActor.BeginBroadcast(remoteActorTypes, message);
+            this.Actor.BeginBroadcast(remoteActorTypes, message);
         }
 
         #endregion

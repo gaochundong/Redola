@@ -1,6 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Registry>
     <Entries>
-        <ActorIdentity Type="client" Name="client-44444" Address="localhost" Port="44444"/>
+        <Entry>
+            <ActorIdentity Type="client" Name="client-44444" Address="localhost" Port="44444"/>
+        </Entry>
     </Entries>
 </Registry>
+

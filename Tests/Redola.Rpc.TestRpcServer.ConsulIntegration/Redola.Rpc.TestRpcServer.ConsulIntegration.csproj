@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{A4CE7BCE-7F4D-4E4B-AFC1-4A70F9A886A8}</ProjectGuid>
+    <ProjectGuid>{B15B8512-F25E-4E0C-A598-2E440754DD41}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Redola.Rpc.TestRpcServer</RootNamespace>
-    <AssemblyName>Redola.Rpc.TestRpcServer</AssemblyName>
+    <RootNamespace>Redola.Rpc.TestRpcServer.ConsulIntegration</RootNamespace>
+    <AssemblyName>Redola.Rpc.TestRpcServer.ConsulIntegration</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\bin\Debug\TestRpcServer\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -32,6 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Consul, Version=0.7.2.3, Culture=neutral, PublicKeyToken=20a6ad9a81df1d95, processorArchitecture=MSIL">
+      <HintPath>..\..\Redola\packages\Consul.0.7.2.3\lib\net45\Consul.dll</HintPath>
+    </Reference>
     <Reference Include="Logrila.Logging, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\Redola\packages\Logrila.Logging.1.0.3.0\lib\net46\Logrila.Logging.dll</HintPath>
     </Reference>
@@ -43,7 +46,6 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -67,9 +69,9 @@
       <Project>{17b964e4-8d0f-4077-8f5a-7654e6403d09}</Project>
       <Name>Redola.Rpc.DynamicProxy.CastleIntegration</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Redola\Redola.Rpc.ServiceDiscovery.XmlIntegration\Redola.Rpc.ServiceDiscovery.XmlIntegration.csproj">
-      <Project>{d708e4c4-c49d-4554-a960-bc8688f8bc49}</Project>
-      <Name>Redola.Rpc.ServiceDiscovery.XmlIntegration</Name>
+    <ProjectReference Include="..\..\Redola\Redola.Rpc.ServiceDiscovery.ConsulIntegration\Redola.Rpc.ServiceDiscovery.ConsulIntegration.csproj">
+      <Project>{dedff96e-4b91-4648-b25f-43e6489f19c7}</Project>
+      <Name>Redola.Rpc.ServiceDiscovery.ConsulIntegration</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Redola\Redola.Rpc\Redola.Rpc.csproj">
       <Project>{465f580d-f09f-4362-a6ee-40b2627b11a4}</Project>
@@ -82,12 +84,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="XmlConfiguration\LocalActor.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="XmlConfiguration\ActorRegistry.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="XmlConfiguration\ServiceRegistry.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

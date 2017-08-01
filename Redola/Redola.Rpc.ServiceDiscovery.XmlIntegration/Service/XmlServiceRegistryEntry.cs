@@ -1,4 +1,5 @@
 ﻿using System.Xml.Serialization;
+using Redola.ActorModel;
 
 namespace Redola.Rpc.ServiceDiscovery.XmlIntegration
 {
@@ -8,7 +9,7 @@ namespace Redola.Rpc.ServiceDiscovery.XmlIntegration
         [XmlElement(ElementName = "ServiceType")]
         public string ServiceType { get; set; }
         [XmlElement(ElementName = "ServiceActor")]
-        public ServiceActor ServiceActor { get; set; }
+        public ActorIdentity ServiceActor { get; set; }
 
         public override string ToString()
         {

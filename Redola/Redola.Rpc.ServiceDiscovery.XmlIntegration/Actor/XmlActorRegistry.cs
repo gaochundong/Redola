@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Serialization;
-using Redola.ActorModel;
 
 namespace Redola.Rpc.ServiceDiscovery.XmlIntegration
 {
@@ -8,6 +7,6 @@ namespace Redola.Rpc.ServiceDiscovery.XmlIntegration
     public class XmlActorRegistry
     {
         [XmlArray(ElementName = "Entries")]
-        public List<ActorIdentity> Entries { get; set; }
+        public List<XmlActorRegistryEntry> Entries { get; set; }
     }
 }

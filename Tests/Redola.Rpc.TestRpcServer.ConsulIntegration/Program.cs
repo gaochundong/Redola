@@ -1,11 +1,12 @@
 ﻿using System;
+using Consul;
 using Logrila.Logging;
 using Logrila.Logging.NLogIntegration;
 using Redola.ActorModel;
-using Redola.Rpc.ServiceDiscovery.XmlIntegration;
+using Redola.Rpc.ServiceDiscovery.ConsulIntegration;
 using Redola.Rpc.TestContracts;
 
-namespace Redola.Rpc.TestRpcServer
+namespace Redola.Rpc.TestRpcServer.ConsulIntegration
 {
     class Program
     {
@@ -23,13 +24,15 @@ namespace Redola.Rpc.TestRpcServer
             var localXmlFileLocalActorConfiguration = LocalXmlFileActorConfiguration.Load(localXmlFileLocalActorPath);
             var localActor = new RpcActor(localXmlFileLocalActorConfiguration);
 
-            var localXmlFileActorRegistryPath = Environment.CurrentDirectory + @"\\XmlConfiguration\\ActorRegistry.xml";
-            var localXmlFileActorRegistry = LocalXmlFileActorRegistry.Load(localXmlFileActorRegistryPath);
-            var actorDirectory = new LocalXmlFileActorDirectory(localXmlFileActorRegistry);
+            var consul = new ConsulClient((c) =>
+            {
+                c.Address = new Uri("http://localhost:8881");
+            });
+            var actorRegistry = new ConsulActorRegistry(consul);
+            var actorDirectory = new ConsulActorDirectory(actorRegistry);
 
-            var localXmlFileServiceRegistryPath = Environment.CurrentDirectory + @"\\XmlConfiguration\\ServiceRegistry.xml";
-            var serviceRegistry = LocalXmlFileServiceRegistry.Load(localXmlFileServiceRegistryPath);
-            var serviceDirectory = new LocalXmlFileServiceDirectory(serviceRegistry);
+            var serviceRegistry = new ConsulServiceRegistry(consul);
+            var serviceDirectory = new ConsulServiceDirectory(serviceRegistry);
 
             var serviceCatalog = new ServiceCatalogProvider();
             serviceCatalog.RegisterService<IHelloService>(new HelloService());

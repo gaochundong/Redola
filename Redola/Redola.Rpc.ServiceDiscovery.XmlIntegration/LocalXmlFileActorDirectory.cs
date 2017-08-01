@@ -12,6 +12,7 @@ namespace Redola.Rpc.ServiceDiscovery.XmlIntegration
         private ILog _log = Logger.Get<LocalXmlFileActorDirectory>();
         private LocalXmlFileActorRegistry _registry;
         private ActorIdentity _localActor;
+        private readonly object _registerLock = new object();
 
         public LocalXmlFileActorDirectory(LocalXmlFileActorRegistry registry)
         {
@@ -27,13 +28,26 @@ namespace Redola.Rpc.ServiceDiscovery.XmlIntegration
             if (localActor == null)
                 throw new ArgumentNullException("localActor");
 
-            _localActor = localActor;
-            this.Active = true;
+            lock (_registerLock)
+            {
+                if (_localActor != null)
+                    throw new InvalidOperationException("The local actor has already been registered.");
+
+                _localActor = localActor;
+                this.Active = true;
+            }
         }
 
         public void Close()
         {
-            this.Active = false;
+            lock (_registerLock)
+            {
+                if (_localActor != null)
+                {
+                    _localActor = null;
+                }
+                this.Active = false;
+            }
         }
 
         public IPEndPoint LookupRemoteActorEndPoint(string actorType, string actorName)

@@ -44,7 +44,9 @@
     </Compile>
     <Compile Include="Actor\LocalXmlFileActorRegistry.cs" />
     <Compile Include="Actor\XmlActorRegistry.cs" />
+    <Compile Include="Actor\XmlActorRegistryEntry.cs" />
     <Compile Include="LocalXmlFileActorDirectory.cs" />
+    <Compile Include="LocalXmlFileServiceDirectory.cs" />
     <Compile Include="Service\LocalXmlFileServiceRegistry.cs" />
     <Compile Include="LocalXmlFileServiceDiscovery.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -98,7 +98,6 @@ namespace Redola.Rpc.ServiceDiscovery.ConsulIntegration
                     var splitter = r.ServiceID.Substring(_protocol.Length).Split('/');
                     return new ConsulActorRegistryEntry()
                     {
-                        ActorKey = ActorIdentity.GetKey(r.ServiceName, splitter[1]),
                         ActorIdentity = new ActorIdentity(r.ServiceName, splitter[1])
                         {
                             Address = r.ServiceAddress,

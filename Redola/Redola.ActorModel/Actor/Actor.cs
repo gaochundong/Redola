@@ -18,10 +18,10 @@ namespace Redola.ActorModel
             _configuration = configuration;
         }
 
-        public ActorIdentity LocalActor { get { return _configuration.LocalActor; } }
+        public ActorIdentity Identity { get { return _configuration.LocalActor; } }
         public ActorChannelConfiguration ChannelConfiguration { get { return _configuration.ChannelConfiguration; } }
-        public string Type { get { return this.LocalActor.Type; } }
-        public string Name { get { return this.LocalActor.Name; } }
+        public string Type { get { return this.Identity.Type; } }
+        public string Name { get { return this.Identity.Name; } }
 
         public bool Active
         {
@@ -30,7 +30,7 @@ namespace Redola.ActorModel
                 if (_manager == null)
                     return false;
 
-                var channel = _manager.GetActorChannel(this.LocalActor);
+                var channel = _manager.GetActorChannel(this.Identity);
                 if (channel == null)
                     return false;
                 else
@@ -44,9 +44,9 @@ namespace Redola.ActorModel
                 throw new ArgumentNullException("directory");
             if (this.Active)
                 throw new InvalidOperationException(
-                    string.Format("Local actor [{0}] has already been booted up.", this.LocalActor));
+                    string.Format("Local actor [{0}] has already been booted up.", this.Identity));
 
-            _log.DebugFormat("Claim local actor [{0}].", this.LocalActor);
+            _log.DebugFormat("Claim local actor [{0}].", this.Identity);
 
             if (_directory != null)
                 throw new InvalidOperationException("Actor directory has already been assigned.");
@@ -59,21 +59,21 @@ namespace Redola.ActorModel
 
             try
             {
-                _manager.ActivateLocalActor(this.LocalActor);
+                _manager.ActivateLocalActor(this.Identity);
             }
             catch (Exception ex)
             {
                 _log.Error(ex.Message, ex);
                 Shutdown();
                 throw new InvalidOperationException(
-                    string.Format("Cannot initiate the local actor [{0}] during bootup.", this.LocalActor));
+                    string.Format("Cannot initiate the local actor [{0}] during bootup.", this.Identity));
             }
 
             try
             {
                 if (!_directory.Active)
                 {
-                    _directory.Register(this.LocalActor);
+                    _directory.Register(this.Identity);
                 }
             }
             catch (Exception ex)
@@ -81,7 +81,7 @@ namespace Redola.ActorModel
                 _log.Error(ex.Message, ex);
                 Shutdown();
                 throw new InvalidOperationException(
-                    string.Format("Cannot connect to actor directory during bootup, [{0}].", this.LocalActor));
+                    string.Format("Cannot connect to actor directory during bootup, [{0}].", this.Identity));
             }
         }
 
@@ -137,7 +137,7 @@ namespace Redola.ActorModel
 
         public override string ToString()
         {
-            return string.Format("{0}", this.LocalActor);
+            return string.Format("{0}", this.Identity);
         }
 
         #region Send

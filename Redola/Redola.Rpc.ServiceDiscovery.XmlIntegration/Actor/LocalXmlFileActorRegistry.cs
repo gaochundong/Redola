@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Redola.ActorModel;
 
 namespace Redola.Rpc.ServiceDiscovery.XmlIntegration
@@ -29,7 +30,7 @@ namespace Redola.Rpc.ServiceDiscovery.XmlIntegration
 
         public IEnumerable<ActorIdentity> GetEntries()
         {
-            return _registry.Entries;
+            return _registry.Entries.Select(e => e.ActorIdentity);
         }
 
         public static LocalXmlFileActorRegistry Load(string localXmlFilePath)

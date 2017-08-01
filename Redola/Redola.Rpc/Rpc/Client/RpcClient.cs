@@ -6,12 +6,13 @@ namespace Redola.Rpc
 {
     public class RpcClient : RpcHandler
     {
-        private IActorDirectory _directory;
+        private IActorDirectory _actorDirectory;
         private IServiceProxyGenerator _proxyGenerator;
-        private RpcMethodFixture _fixture;
+        private RpcMethodFixture _methodFixture;
+        private readonly object _bootupLock = new object();
 
-        public RpcClient(RpcActor localActor, IActorDirectory directory, IServiceProxyGenerator proxyGenerator)
-            : this(localActor, directory, proxyGenerator,
+        public RpcClient(RpcActor localActor, IActorDirectory actorDirectory, IServiceProxyGenerator proxyGenerator)
+            : this(localActor, actorDirectory, proxyGenerator,
                   new RpcMethodFixture(
                     new MethodLocatorExtractor(),
                     new MethodArgumentEncoder(RpcActor.DefaultObjectEncoder),
@@ -19,43 +20,34 @@ namespace Redola.Rpc
         {
         }
 
-        public RpcClient(RpcActor localActor, IActorDirectory directory, IServiceProxyGenerator proxyGenerator, RpcMethodFixture fixture)
+        public RpcClient(RpcActor localActor, IActorDirectory actorDirectory, IServiceProxyGenerator proxyGenerator, RpcMethodFixture methodFixture)
             : base(localActor)
         {
-            if (directory == null)
-                throw new ArgumentNullException("directory");
+            if (actorDirectory == null)
+                throw new ArgumentNullException("actorDirectory");
             if (proxyGenerator == null)
                 throw new ArgumentNullException("proxyGenerator");
-            if (fixture == null)
-                throw new ArgumentNullException("fixture");
+            if (methodFixture == null)
+                throw new ArgumentNullException("methodFixture");
 
-            _directory = directory;
+            _actorDirectory = actorDirectory;
             _proxyGenerator = proxyGenerator;
-            _fixture = fixture;
-
-            Initialize();
+            _methodFixture = methodFixture;
         }
 
-        public RpcClient(RpcActor localActor, IRateLimiter rateLimiter, IActorDirectory directory, IServiceProxyGenerator proxyGenerator, RpcMethodFixture fixture)
+        public RpcClient(RpcActor localActor, IRateLimiter rateLimiter, IActorDirectory actorDirectory, IServiceProxyGenerator proxyGenerator, RpcMethodFixture methodFixture)
             : base(localActor, rateLimiter)
         {
-            if (directory == null)
-                throw new ArgumentNullException("directory");
+            if (actorDirectory == null)
+                throw new ArgumentNullException("actorDirectory");
             if (proxyGenerator == null)
                 throw new ArgumentNullException("proxyGenerator");
-            if (fixture == null)
-                throw new ArgumentNullException("fixture");
+            if (methodFixture == null)
+                throw new ArgumentNullException("methodFixture");
 
-            _directory = directory;
+            _actorDirectory = actorDirectory;
             _proxyGenerator = proxyGenerator;
-            _fixture = fixture;
-
-            Initialize();
-        }
-
-        private void Initialize()
-        {
-            this.Actor.RegisterRpcHandler(this);
+            _methodFixture = methodFixture;
         }
 
         protected override IEnumerable<RpcMessageContract> RegisterRpcMessageContracts()
@@ -69,22 +61,36 @@ namespace Redola.Rpc
 
         public T Resolve<T>()
         {
-            return _proxyGenerator.CreateServiceProxy<T>(this, _fixture);
+            return _proxyGenerator.CreateServiceProxy<T>(this, _methodFixture);
         }
 
         public T Resolve<T>(IServiceLoadBalancingStrategy strategy)
         {
-            return _proxyGenerator.CreateServiceProxy<T>(this, _fixture, strategy);
+            return _proxyGenerator.CreateServiceProxy<T>(this, _methodFixture, strategy);
         }
 
         public void Bootup()
         {
-            this.Actor.Bootup(_directory);
+            lock (_bootupLock)
+            {
+                if (this.Actor.Active)
+                    throw new InvalidOperationException("The actor has already been bootup.");
+
+                this.Actor.RegisterRpcHandler(this);
+
+                this.Actor.Bootup(_actorDirectory);
+            }
         }
 
         public void Shutdown()
         {
-            this.Actor.Shutdown();
+            lock (_bootupLock)
+            {
+                if (this.Actor.Active)
+                {
+                    this.Actor.Shutdown();
+                }
+            }
         }
     }
 }

@@ -17,7 +17,9 @@ namespace Redola.Rpc.ServiceDiscovery.XmlIntegration
 
         public IEnumerable<ServiceActor> Discover(Type serviceType)
         {
-            return _registry.GetEntries().Where(e => e.ServiceType == serviceType.FullName).Select(e => e.ServiceActor);
+            return _registry.GetEntries()
+                .Where(s => s.ServiceType == serviceType.FullName)
+                .Select(s => new ServiceActor(s.ServiceActor.Type, s.ServiceActor.Name));
         }
     }
 }

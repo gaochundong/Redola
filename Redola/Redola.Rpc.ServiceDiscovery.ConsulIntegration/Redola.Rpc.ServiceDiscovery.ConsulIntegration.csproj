@@ -47,6 +47,7 @@
     </Compile>
     <Compile Include="Actor\ConsulActorRegistry.cs" />
     <Compile Include="ConsulActorDirectory.cs" />
+    <Compile Include="ConsulServiceDirectory.cs" />
     <Compile Include="ConsulServiceDiscovery.cs" />
     <Compile Include="Service\ConsulServiceRegistry.cs" />
     <Compile Include="Actor\ConsulActorRegistryEntry.cs" />

@@ -6,13 +6,15 @@ namespace Redola.Rpc
 {
     public class RpcServer : RpcHandler
     {
-        private IActorDirectory _directory;
-        private IServiceCatalogProvider _catalog;
-        private RpcMethodFixture _fixture;
-        private MethodRouteResolver _resolver;
+        private IActorDirectory _actorDirectory;
+        private IServiceCatalogProvider _serviceCatalog;
+        private IServiceDirectory _serviceDirectory;
+        private RpcMethodFixture _methodFixture;
+        private MethodRouteResolver _methodResolver;
+        private readonly object _bootupLock = new object();
 
-        public RpcServer(RpcActor localActor, IActorDirectory directory, IServiceCatalogProvider catalog)
-            : this(localActor, directory, catalog,
+        public RpcServer(RpcActor localActor, IActorDirectory actorDirectory, IServiceCatalogProvider serviceCatalog, IServiceDirectory serviceDirectory)
+            : this(localActor, actorDirectory, serviceCatalog, serviceDirectory,
                   new RpcMethodFixture(
                     new MethodLocatorExtractor(),
                     new MethodArgumentEncoder(RpcActor.DefaultObjectEncoder),
@@ -20,48 +22,40 @@ namespace Redola.Rpc
         {
         }
 
-        public RpcServer(RpcActor localActor, IActorDirectory directory, IServiceCatalogProvider catalog, RpcMethodFixture fixture)
+        public RpcServer(RpcActor localActor, IActorDirectory actorDirectory, IServiceCatalogProvider serviceCatalog, IServiceDirectory serviceDirectory, RpcMethodFixture methodFixture)
             : base(localActor)
         {
-            if (directory == null)
-                throw new ArgumentNullException("directory");
-            if (catalog == null)
-                throw new ArgumentNullException("catalog");
-            if (fixture == null)
-                throw new ArgumentNullException("fixture");
+            if (actorDirectory == null)
+                throw new ArgumentNullException("actorDirectory");
+            if (serviceCatalog == null)
+                throw new ArgumentNullException("serviceCatalog");
+            if (serviceDirectory == null)
+                throw new ArgumentNullException("serviceDirectory");
+            if (methodFixture == null)
+                throw new ArgumentNullException("methodFixture");
 
-            _directory = directory;
-            _catalog = catalog;
-            _fixture = fixture;
-
-            Initialize();
+            _actorDirectory = actorDirectory;
+            _serviceCatalog = serviceCatalog;
+            _serviceDirectory = serviceDirectory;
+            _methodFixture = methodFixture;
         }
 
-        public RpcServer(RpcActor localActor, IRateLimiter rateLimiter, IActorDirectory directory, IServiceCatalogProvider catalog, RpcMethodFixture fixture)
+        public RpcServer(RpcActor localActor, IRateLimiter rateLimiter, IActorDirectory actorDirectory, IServiceCatalogProvider serviceCatalog, IServiceDirectory serviceDirectory, RpcMethodFixture methodFixture)
             : base(localActor, rateLimiter)
         {
-            if (directory == null)
-                throw new ArgumentNullException("directory");
-            if (catalog == null)
-                throw new ArgumentNullException("catalog");
-            if (fixture == null)
-                throw new ArgumentNullException("fixture");
+            if (actorDirectory == null)
+                throw new ArgumentNullException("actorDirectory");
+            if (serviceCatalog == null)
+                throw new ArgumentNullException("serviceCatalog");
+            if (serviceDirectory == null)
+                throw new ArgumentNullException("serviceDirectory");
+            if (methodFixture == null)
+                throw new ArgumentNullException("methodFixture");
 
-            _directory = directory;
-            _catalog = catalog;
-            _fixture = fixture;
-
-            Initialize();
-        }
-
-        private void Initialize()
-        {
-            var services = _catalog.GetServices();
-            var routeBuilder = new MethodRouteBuilder(_fixture.Extractor);
-            var routeCache = routeBuilder.BuildCache(services);
-            _resolver = new MethodRouteResolver(routeCache);
-
-            this.Actor.RegisterRpcHandler(this);
+            _actorDirectory = actorDirectory;
+            _serviceCatalog = serviceCatalog;
+            _serviceDirectory = serviceDirectory;
+            _methodFixture = methodFixture;
         }
 
         protected override IEnumerable<RpcMessageContract> RegisterRpcMessageContracts()
@@ -76,15 +70,15 @@ namespace Redola.Rpc
 
         private void OnInvokeMethodMessage(ActorSender sender, ActorMessageEnvelope<InvokeMethodMessage> request)
         {
-            request.Message.Deserialize(_fixture.ArgumentDecoder);
+            request.Message.Deserialize(_methodFixture.ArgumentDecoder);
             InvokeMethod(request.Message);
         }
 
         private void OnInvokeMethodRequest(ActorSender sender, ActorMessageEnvelope<InvokeMethodRequest> request)
         {
-            request.Message.Deserialize(_fixture.ArgumentDecoder);
+            request.Message.Deserialize(_methodFixture.ArgumentDecoder);
             var message = InvokeMethod(request.Message);
-            message.Serialize(_fixture.ArgumentEncoder);
+            message.Serialize(_methodFixture.ArgumentEncoder);
 
             var response = new ActorMessageEnvelope<InvokeMethodResponse>()
             {
@@ -98,7 +92,7 @@ namespace Redola.Rpc
 
         private void InvokeMethod(InvokeMethodMessage message)
         {
-            var methodRoute = _resolver.Resolve(message.MethodLocator);
+            var methodRoute = _methodResolver.Resolve(message.MethodLocator);
             if (methodRoute == null)
                 throw new InvalidOperationException(string.Format(
                     "Cannot resolve method route [{0}].", message.MethodLocator));
@@ -108,7 +102,7 @@ namespace Redola.Rpc
 
         private InvokeMethodResponse InvokeMethod(InvokeMethodRequest request)
         {
-            var methodRoute = _resolver.Resolve(request.MethodLocator);
+            var methodRoute = _methodResolver.Resolve(request.MethodLocator);
             if (methodRoute == null)
                 throw new InvalidOperationException(string.Format(
                     "Cannot resolve method route [{0}].", request.MethodLocator));
@@ -125,12 +119,43 @@ namespace Redola.Rpc
 
         public void Bootup()
         {
-            this.Actor.Bootup(_directory);
+            lock (_bootupLock)
+            {
+                if (this.Actor.Active)
+                    throw new InvalidOperationException("The actor has already been bootup.");
+
+                var services = _serviceCatalog.GetServices();
+                var routeBuilder = new MethodRouteBuilder(_methodFixture.Extractor);
+                var routeCache = routeBuilder.BuildCache(services);
+                _methodResolver = new MethodRouteResolver(routeCache);
+
+                this.Actor.RegisterRpcHandler(this);
+
+                this.Actor.Bootup(_actorDirectory);
+
+                foreach (var service in services)
+                {
+                    _serviceDirectory.RegisterService(this.Actor.Identity, service.DeclaringType);
+                }
+            }
         }
 
         public void Shutdown()
         {
-            this.Actor.Shutdown();
+            lock (_bootupLock)
+            {
+                if (this.Actor.Active)
+                {
+                    var services = _serviceCatalog.GetServices();
+
+                    foreach (var service in services)
+                    {
+                        _serviceDirectory.RegisterService(this.Actor.Identity, service.DeclaringType);
+                    }
+
+                    this.Actor.Shutdown();
+                }
+            }
         }
     }
 }
