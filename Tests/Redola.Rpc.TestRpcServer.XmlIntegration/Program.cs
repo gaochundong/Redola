@@ -5,7 +5,7 @@ using Redola.ActorModel;
 using Redola.Rpc.ServiceDiscovery.XmlIntegration;
 using Redola.Rpc.TestContracts;
 
-namespace Redola.Rpc.TestRpcServer
+namespace Redola.Rpc.TestRpcServer.XmlIntegration
 {
     class Program
     {

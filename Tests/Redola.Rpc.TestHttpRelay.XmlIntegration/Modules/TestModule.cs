@@ -2,7 +2,7 @@
 using Happer.Http;
 using Redola.Rpc.TestContracts;
 
-namespace Redola.Rpc.TestHttpRelay
+namespace Redola.Rpc.TestHttpRelay.XmlIntegration
 {
     internal class TestModule : Module
     {

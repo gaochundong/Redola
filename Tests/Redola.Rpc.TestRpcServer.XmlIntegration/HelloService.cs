@@ -2,7 +2,7 @@
 using Logrila.Logging;
 using Redola.Rpc.TestContracts;
 
-namespace Redola.Rpc.TestRpcServer
+namespace Redola.Rpc.TestRpcServer.XmlIntegration
 {
     internal class HelloService : IHelloService
     {

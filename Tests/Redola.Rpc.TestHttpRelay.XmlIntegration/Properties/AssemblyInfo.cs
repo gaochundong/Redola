@@ -1,16 +1,16 @@
 ﻿using System.Reflection;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("Redola.Rpc.TestRpcClient")]
+[assembly: AssemblyTitle("Redola.Rpc.TestHttpRelay.XmlIntegration")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Dennis Gao")]
-[assembly: AssemblyProduct("Redola.Rpc.TestRpcClient")]
+[assembly: AssemblyProduct("Redola.Rpc.TestHttpRelay.XmlIntegration")]
 [assembly: AssemblyCopyright("Copyright © 2016-2017, Dennis Gao")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
 [assembly: ComVisible(false)]
-[assembly: Guid("80a02268-72b7-4312-af7a-c1ddd9654364")]
+[assembly: Guid("01eaa9d3-a299-4ec2-bade-843ba7500174")]
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
