@@ -63,9 +63,9 @@
       <Project>{05e69e70-97ff-4fff-b106-e423b6f51a00}</Project>
       <Name>Redola.ActorModel</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Redola\Redola.Rpc.DynamicProxy.CastleIntegration\Redola.Rpc.DynamicProxy.CastleIntegration.csproj">
-      <Project>{17b964e4-8d0f-4077-8f5a-7654e6403d09}</Project>
-      <Name>Redola.Rpc.DynamicProxy.CastleIntegration</Name>
+    <ProjectReference Include="..\..\Redola\Redola.Rpc.ServiceDiscovery.ConsulIntegration\Redola.Rpc.ServiceDiscovery.ConsulIntegration.csproj">
+      <Project>{dedff96e-4b91-4648-b25f-43e6489f19c7}</Project>
+      <Name>Redola.Rpc.ServiceDiscovery.ConsulIntegration</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Redola\Redola.Rpc.ServiceDiscovery.XmlIntegration\Redola.Rpc.ServiceDiscovery.XmlIntegration.csproj">
       <Project>{d708e4c4-c49d-4554-a960-bc8688f8bc49}</Project>

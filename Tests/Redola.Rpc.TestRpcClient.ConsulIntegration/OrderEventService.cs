@@ -1,7 +1,7 @@
 ﻿using Logrila.Logging;
 using Redola.Rpc.TestContracts;
 
-namespace Redola.Rpc.TestRpcClient.XmlIntegration
+namespace Redola.Rpc.TestRpcClient.ConsulIntegration
 {
     internal class OrderEventService : IOrderEventService
     {

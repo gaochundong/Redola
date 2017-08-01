@@ -92,6 +92,7 @@
     <Compile Include="Rpc\Method\Argument\Encoding\MethodArgumentEncoder.cs" />
     <Compile Include="Rpc\Method\Argument\Encoding\IMethodArgumentDecoder.cs" />
     <Compile Include="Rpc\Method\Argument\Encoding\IMethodArgumentEncoder.cs" />
+    <Compile Include="Rpc\RpcNode.cs" />
     <Compile Include="Rpc\Server\Catalog\ServiceCatalogProvider.cs" />
     <Compile Include="Rpc\Method\RpcMethodFixture.cs" />
     <Compile Include="Rpc\Method\Extractor\MethodLocatorExtractor.cs" />

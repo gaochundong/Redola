@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using Consul;
 using Logrila.Logging;
 using Logrila.Logging.NLogIntegration;
 using Redola.ActorModel;
+using Redola.Rpc.DynamicProxy.CastleIntegration;
 using Redola.Rpc.ServiceDiscovery.ConsulIntegration;
 using Redola.Rpc.TestContracts;
 
@@ -31,17 +33,23 @@ namespace Redola.Rpc.TestRpcServer.ConsulIntegration
             var actorRegistry = new ConsulActorRegistry(consul);
             var actorDirectory = new ConsulActorDirectory(actorRegistry);
 
-            var serviceRegistry = new ConsulServiceRegistry(consul);
-            var serviceDirectory = new ConsulServiceDirectory(serviceRegistry);
-
             var serviceCatalog = new ServiceCatalogProvider();
             serviceCatalog.RegisterService<IHelloService>(new HelloService());
             serviceCatalog.RegisterService<ICalcService>(new CalcService());
             serviceCatalog.RegisterService<IOrderService>(new OrderService());
 
-            var rpcServer = new RpcServer(localActor, actorDirectory, serviceCatalog, serviceDirectory);
+            var serviceRegistry = new ConsulServiceRegistry(consul);
+            var serviceDirectory = new ConsulServiceDirectory(serviceRegistry);
+            var serviceDiscovery = new ConsulServiceDiscovery(serviceRegistry);
+            var serviceRetriever = new ServiceRetriever(serviceDiscovery);
+            var serviceResolver = new ServiceResolver(serviceRetriever);
+            var proxyGenerator = new ServiceProxyGenerator(serviceResolver);
 
-            rpcServer.Bootup();
+            var rpcNode = new RpcNode(localActor, actorDirectory, serviceCatalog, serviceDirectory, proxyGenerator);
+
+            var orderEventClient = rpcNode.Resolve<IOrderEventService>();
+
+            rpcNode.Bootup();
 
             while (true)
             {
@@ -54,8 +62,21 @@ namespace Redola.Rpc.TestRpcServer.ConsulIntegration
                     }
                     else if (text == "reconnect")
                     {
-                        rpcServer.Shutdown();
-                        rpcServer.Bootup();
+                        rpcNode.Shutdown();
+                        rpcNode.Bootup();
+                    }
+                    else if (Regex.Match(text, @"^notify(\d*)$").Success)
+                    {
+                        var match = Regex.Match(text, @"notify(\d*)$");
+                        int totalCalls = 0;
+                        if (!int.TryParse(match.Groups[1].Value, out totalCalls))
+                        {
+                            totalCalls = 1;
+                        }
+                        for (int i = 0; i < totalCalls; i++)
+                        {
+                            NotifyOrderDelivered(orderEventClient);
+                        }
                     }
                     else
                     {
@@ -68,7 +89,19 @@ namespace Redola.Rpc.TestRpcServer.ConsulIntegration
                 }
             }
 
-            rpcServer.Shutdown();
+            rpcNode.Shutdown();
+        }
+
+        private static void NotifyOrderDelivered(IOrderEventService orderEventClient)
+        {
+            var notification = new OrderDeliveredNotification()
+            {
+                OrderID = Guid.NewGuid().ToString(),
+                OrderStatus = 1,
+            };
+
+            _log.DebugFormat("NotifyOrderDelivered, order [{0}] delivered.", notification.OrderID);
+            orderEventClient.OrderDelivered(notification);
         }
     }
 }

@@ -35,19 +35,23 @@ namespace Redola.Rpc.TestRpcClient.ConsulIntegration
             var actorRegistry = new ConsulActorRegistry(consul);
             var actorDirectory = new ConsulActorDirectory(actorRegistry);
 
+            var serviceCatalog = new ServiceCatalogProvider();
+            serviceCatalog.RegisterService<IOrderEventService>(new OrderEventService());
+
             var serviceRegistry = new ConsulServiceRegistry(consul);
+            var serviceDirectory = new ConsulServiceDirectory(serviceRegistry);
             var serviceDiscovery = new ConsulServiceDiscovery(serviceRegistry);
             var serviceRetriever = new ServiceRetriever(serviceDiscovery);
             var serviceResolver = new ServiceResolver(serviceRetriever);
             var proxyGenerator = new ServiceProxyGenerator(serviceResolver);
 
-            var rpcClient = new RpcClient(localActor, actorDirectory, proxyGenerator);
+            var rpcNode = new RpcNode(localActor, actorDirectory, serviceCatalog, serviceDirectory, proxyGenerator);
 
-            var helloClient = rpcClient.Resolve<IHelloService>();
-            var calcClient = rpcClient.Resolve<ICalcService>();
-            var orderClient = rpcClient.Resolve<IOrderService>();
+            var helloClient = rpcNode.Resolve<IHelloService>();
+            var calcClient = rpcNode.Resolve<ICalcService>();
+            var orderClient = rpcNode.Resolve<IOrderService>();
 
-            rpcClient.Bootup();
+            rpcNode.Bootup();
 
             while (true)
             {
@@ -60,8 +64,8 @@ namespace Redola.Rpc.TestRpcClient.ConsulIntegration
                     }
                     else if (text == "reconnect")
                     {
-                        rpcClient.Shutdown();
-                        rpcClient.Bootup();
+                        rpcNode.Shutdown();
+                        rpcNode.Bootup();
                     }
                     else if (Regex.Match(text, @"^hello(\d*)$").Success)
                     {
@@ -127,7 +131,7 @@ namespace Redola.Rpc.TestRpcClient.ConsulIntegration
                 }
             }
 
-            rpcClient.Shutdown();
+            rpcNode.Shutdown();
         }
 
         private static void Hello(IHelloService helloClient)
