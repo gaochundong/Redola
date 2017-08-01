@@ -10,7 +10,7 @@
 // Generated from: Tests/Redola.Rpc.TestContracts/Order.proto
 namespace Redola.Rpc.TestContracts
 {
-    [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"Order")]
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"Order")]
   public partial class Order : global::ProtoBuf.IExtensible
   {
     public Order() {}
@@ -84,30 +84,6 @@ namespace Redola.Rpc.TestContracts
     {
       get { return _ErrorCode; }
       set { _ErrorCode = value; }
-    }
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"OrderStatusChangedNotification")]
-  public partial class OrderStatusChangedNotification : global::ProtoBuf.IExtensible
-  {
-    public OrderStatusChangedNotification() {}
-    
-    private string _OrderID;
-    [global::ProtoBuf.ProtoMember(10, IsRequired = true, Name=@"OrderID", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public string OrderID
-    {
-      get { return _OrderID; }
-      set { _OrderID = value; }
-    }
-    private int _OrderStatus;
-    [global::ProtoBuf.ProtoMember(15, IsRequired = true, Name=@"OrderStatus", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public int OrderStatus
-    {
-      get { return _OrderStatus; }
-      set { _OrderStatus = value; }
     }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)

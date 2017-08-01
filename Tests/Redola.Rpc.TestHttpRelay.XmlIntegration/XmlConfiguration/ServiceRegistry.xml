@@ -9,9 +9,5 @@
             <ServiceType>Redola.Rpc.TestContracts.ICalcService</ServiceType>
             <ServiceActor Type="server" Name="server-33333"/>
         </Entry>
-        <Entry>
-            <ServiceType>Redola.Rpc.TestContracts.IOrderService</ServiceType>
-            <ServiceActor Type="server" Name="server-33333"/>
-        </Entry>
     </Entries>
 </Registry>

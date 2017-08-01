@@ -25,10 +25,12 @@ namespace Redola.Rpc.TestActorServer
             var helloService = new HelloService(localActor, new CountableRateLimiter());
             var calcService = new CalcService(localActor, new CountableRateLimiter());
             var orderService = new OrderService(localActor, new CountableRateLimiter());
+            var orderEventClient = new OrderEventClient(localActor);
 
             localActor.RegisterRpcHandler(helloService);
             localActor.RegisterRpcHandler(calcService);
             localActor.RegisterRpcHandler(orderService);
+            localActor.RegisterRpcHandler(orderEventClient);
 
             var directoryConfiguration = AppConfigCenterActorDirectoryConfiguration.Load();
             var directory = new CenterActorDirectory(directoryConfiguration);
@@ -60,7 +62,7 @@ namespace Redola.Rpc.TestActorServer
                         }
                         for (int i = 0; i < totalCalls; i++)
                         {
-                            NotifyOrderChanged(orderService);
+                            NotifyOrderDelivered(orderEventClient);
                         }
                     }
                     else
@@ -77,19 +79,16 @@ namespace Redola.Rpc.TestActorServer
             localActor.Shutdown();
         }
 
-        private static void NotifyOrderChanged(OrderService orderService)
+        private static void NotifyOrderDelivered(IOrderEventService orderEventClient)
         {
-            var notification = new ActorMessageEnvelope<OrderStatusChangedNotification>()
+            var notification = new OrderDeliveredNotification()
             {
-                Message = new OrderStatusChangedNotification()
-                {
-                    OrderID = Guid.NewGuid().ToString(),
-                    OrderStatus = 1,
-                },
+                OrderID = Guid.NewGuid().ToString(),
+                OrderStatus = 1,
             };
 
-            _log.DebugFormat("NotifyOrderChanged, notify order changed with MessageID[{0}].", notification.MessageID);
-            orderService.NotifyOrderChanged(notification);
+            _log.DebugFormat("NotifyOrderDelivered, order [{0}] delivered.", notification.OrderID);
+            orderEventClient.OrderDelivered(notification);
         }
     }
 }

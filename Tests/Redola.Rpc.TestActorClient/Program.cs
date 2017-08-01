@@ -27,10 +27,12 @@ namespace Redola.Rpc.TestActorClient
             var helloClient = new HelloClient(localActor);
             var calcClient = new CalcClient(localActor);
             var orderClient = new OrderClient(localActor);
+            var orderEventService = new OrderEventService(localActor);
 
             localActor.RegisterRpcHandler(helloClient);
             localActor.RegisterRpcHandler(calcClient);
             localActor.RegisterRpcHandler(orderClient);
+            localActor.RegisterRpcHandler(orderEventService);
 
             var directoryConfiguration = AppConfigCenterActorDirectoryConfiguration.Load();
             var directory = new CenterActorDirectory(directoryConfiguration);

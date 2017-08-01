@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="CalcService.cs" />
     <Compile Include="HelloService.cs" />
+    <Compile Include="OrderEventClient.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="OrderService.cs" />

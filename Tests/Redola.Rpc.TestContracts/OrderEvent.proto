@@ -1,0 +1,20 @@
+package Redola.Rpc.TestContracts;
+
+option java_package = "com.redola.rpc.testcontracts";
+option java_outer_classname = "OrderEvents";
+
+message OrderDeliveredNotification
+{
+	required string OrderID = 10;
+	required int32 OrderStatus = 15;
+}
+
+message OrderDeliveredConfirmation
+{
+	required string OrderID = 10;
+}
+
+service OrderEventService
+{
+	rpc OrderDelivered (OrderDeliveredNotification) returns (OrderDeliveredConfirmation);
+}

@@ -19,20 +19,12 @@ namespace Redola.Rpc.TestActorClient
 
             messages.Add(new RequestResponseMessageContract(typeof(PlaceOrderRequest), typeof(PlaceOrderResponse)));
 
-            messages.Add(new ReceiveMessageContract(typeof(OrderStatusChangedNotification)));
-
             return messages;
         }
 
         public PlaceOrderResponse PlaceOrder(PlaceOrderRequest request)
         {
             return this.Send<PlaceOrderRequest, PlaceOrderResponse>("server", request);
-        }
-
-        private void OnOrderStatusChangedNotification(ActorSender sender, ActorMessageEnvelope<OrderStatusChangedNotification> message)
-        {
-            _log.DebugFormat("OnOrderStatusChangedNotification, order changed, MessageID[{0}], CorrelationID[{1}].",
-                message.MessageID, message.CorrelationID);
         }
     }
 }

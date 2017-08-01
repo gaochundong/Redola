@@ -49,10 +49,5 @@ namespace Redola.Rpc.TestActorServer
                 ErrorCode = PlaceOrderErrorCode.OrderPlaced,
             };
         }
-
-        public void NotifyOrderChanged(ActorMessageEnvelope<OrderStatusChangedNotification> notification)
-        {
-            this.BeginSend("client", notification);
-        }
     }
 }

@@ -41,10 +41,12 @@
     <Compile Include="Calc.cs" />
     <Compile Include="Hello.cs" />
     <Compile Include="Order.cs" />
+    <Compile Include="OrderEvent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Calc.proto" />
+    <None Include="OrderEvent.proto" />
     <None Include="Hello.proto" />
     <None Include="Order.proto" />
     <None Include="packages.config" />
