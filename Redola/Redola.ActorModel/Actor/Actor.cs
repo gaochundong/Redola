@@ -73,6 +73,7 @@ namespace Redola.ActorModel
             {
                 if (!_directory.Active)
                 {
+                    _directory.Open();
                     _directory.Register(this.Identity);
                 }
             }
@@ -97,6 +98,7 @@ namespace Redola.ActorModel
             }
             if (_directory != null)
             {
+                _directory.Deregister(this.Identity);
                 _directory.Close();
                 _directory = null;
             }

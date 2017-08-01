@@ -13,6 +13,7 @@ namespace Redola.ActorModel
         private ILog _log = Logger.Get<CenterActorDirectory>();
         private CenterActorDirectoryConfiguration _configuration;
         private IActorChannel _centerChannel;
+        private readonly object _openLock = new object();
 
         public CenterActorDirectory(CenterActorDirectoryConfiguration configuration)
         {
@@ -23,6 +24,23 @@ namespace Redola.ActorModel
 
         public ActorIdentity CenterActor { get { return _configuration.CenterActor; } }
         public ActorChannelConfiguration ChannelConfiguration { get { return _configuration.ChannelConfiguration; } }
+
+        public void Open()
+        {
+        }
+
+        public void Close()
+        {
+            lock (_openLock)
+            {
+                if (_centerChannel != null)
+                {
+                    _centerChannel.Close();
+                    _centerChannel.ChannelDataReceived -= OnCenterChannelDataReceived;
+                    _centerChannel = null;
+                }
+            }
+        }
 
         public bool Active
         {
@@ -39,48 +57,46 @@ namespace Redola.ActorModel
         {
             if (localActor == null)
                 throw new ArgumentNullException("localActor");
-            if (this.Active)
-                throw new InvalidOperationException(
-                    string.Format("Center actor [{0}] has already been registered.", this.CenterActor));
 
-            _log.DebugFormat("Connecting to center actor [{0}].", this.CenterActor);
-            var centerChannel = BuildCenterActorChannel(localActor);
-
-            centerChannel.Open();
-            int retryTimes = 1;
-            TimeSpan retryPeriod = TimeSpan.FromMilliseconds(100);
-            while (true)
+            lock (_openLock)
             {
-                if (centerChannel.Active)
-                    break;
-
-                Thread.Sleep(retryPeriod);
-
-                if (centerChannel.Active)
-                    break;
-
-                retryTimes++;
-                if (retryTimes > 300)
-                {
-                    centerChannel.Close();
+                if (this.Active)
                     throw new InvalidOperationException(
-                        string.Format("Cannot connect to center actor [{0}] after wait [{1}] milliseconds.",
-                            this.CenterActor, retryTimes * (int)retryPeriod.TotalMilliseconds));
+                        string.Format("Center actor [{0}] has already been registered.", this.CenterActor));
+
+                _log.DebugFormat("Connecting to center actor [{0}].", this.CenterActor);
+                var centerChannel = BuildCenterActorChannel(localActor);
+
+                centerChannel.Open();
+                int retryTimes = 1;
+                TimeSpan retryPeriod = TimeSpan.FromMilliseconds(100);
+                while (true)
+                {
+                    if (centerChannel.Active)
+                        break;
+
+                    Thread.Sleep(retryPeriod);
+
+                    if (centerChannel.Active)
+                        break;
+
+                    retryTimes++;
+                    if (retryTimes > 300)
+                    {
+                        centerChannel.Close();
+                        throw new InvalidOperationException(
+                            string.Format("Cannot connect to center actor [{0}] after wait [{1}] milliseconds.",
+                                this.CenterActor, retryTimes * (int)retryPeriod.TotalMilliseconds));
+                    }
                 }
+                _log.DebugFormat("Connected to center actor [{0}].", this.CenterActor);
+                _centerChannel = centerChannel;
+                _centerChannel.ChannelDataReceived += OnCenterChannelDataReceived;
             }
-            _log.DebugFormat("Connected to center actor [{0}].", this.CenterActor);
-            _centerChannel = centerChannel;
-            _centerChannel.ChannelDataReceived += OnCenterChannelDataReceived;
         }
 
-        public void Close()
+        public void Deregister(ActorIdentity localActor)
         {
-            if (_centerChannel != null)
-            {
-                _centerChannel.Close();
-                _centerChannel.ChannelDataReceived -= OnCenterChannelDataReceived;
-                _centerChannel = null;
-            }
         }
 
         private IActorChannel BuildCenterActorChannel(ActorIdentity localActor)

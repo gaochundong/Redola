@@ -54,6 +54,11 @@ namespace Redola.Rpc.ServiceDiscovery.ConsulIntegration
                 actor, tags == null ? string.Empty : string.Join(",", tags), result.StatusCode, result.RequestTime.TotalMilliseconds);
         }
 
+        public void DeregisterActor(ActorIdentity actor)
+        {
+            DeregisterActor(actor.Type, actor.Name);
+        }
+
         public void DeregisterActor(string actorType, string actorName)
         {
             if (string.IsNullOrWhiteSpace(actorType))

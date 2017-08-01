@@ -12,13 +12,29 @@ namespace Redola.Rpc.ServiceDiscovery.ConsulIntegration
         private ILog _log = Logger.Get<ConsulActorDirectory>();
         private ConsulActorRegistry _registry;
         private ActorIdentity _localActor;
-        private readonly object _registerLock = new object();
+        private readonly object _openLock = new object();
 
         public ConsulActorDirectory(ConsulActorRegistry registry)
         {
             if (registry == null)
                 throw new ArgumentNullException("registry");
             _registry = registry;
+        }
+
+        public void Open()
+        {
+            lock (_openLock)
+            {
+                this.Active = true;
+            }
+        }
+
+        public void Close()
+        {
+            lock (_openLock)
+            {
+                this.Active = false;
+            }
         }
 
         public bool Active { get; private set; }
@@ -28,27 +44,28 @@ namespace Redola.Rpc.ServiceDiscovery.ConsulIntegration
             if (localActor == null)
                 throw new ArgumentNullException("localActor");
 
-            lock (_registerLock)
+            lock (_openLock)
             {
                 if (_localActor != null)
                     throw new InvalidOperationException("The local actor has already been registered.");
 
                 _localActor = localActor;
                 _registry.RegisterActor(_localActor);
-                this.Active = true;
             }
         }
 
-        public void Close()
+        public void Deregister(ActorIdentity localActor)
         {
-            lock (_registerLock)
+            if (localActor == null)
+                throw new ArgumentNullException("localActor");
+
+            lock (_openLock)
             {
                 if (_localActor != null)
                 {
-                    _registry.DeregisterActor(_localActor.Type, _localActor.Name);
+                    _registry.DeregisterActor(_localActor);
                     _localActor = null;
                 }
-                this.Active = false;
             }
         }
 
