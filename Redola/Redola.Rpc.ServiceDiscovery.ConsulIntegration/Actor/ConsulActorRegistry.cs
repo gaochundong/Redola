@@ -95,6 +95,13 @@ namespace Redola.Rpc.ServiceDiscovery.ConsulIntegration
                     actorType, result.StatusCode, result.RequestTime.TotalMilliseconds));
             }
 
+            if (!result.Response.Any())
+            {
+                throw new InvalidOperationException(string.Format(
+                    "Actor type [{0}] not found with result [{1}] and cost [{2}] milliseconds.",
+                    actorType, result.StatusCode, result.RequestTime.TotalMilliseconds));
+            }
+
             _log.DebugFormat("GetActors, get actor type [{0}] with count [{1}] and result [{2}] and cost [{3}] milliseconds.",
                 actorType, result.Response.Count(), result.StatusCode, result.RequestTime.TotalMilliseconds);
 

@@ -94,6 +94,13 @@ namespace Redola.Rpc.ServiceDiscovery.ConsulIntegration
                     serviceType, result.StatusCode, result.RequestTime.TotalMilliseconds));
             }
 
+            if (!result.Response.Any())
+            {
+                throw new InvalidOperationException(string.Format(
+                    "Service type [{0}] not found with result [{1}] and cost [{2}] milliseconds.",
+                    serviceType, result.StatusCode, result.RequestTime.TotalMilliseconds));
+            }
+
             _log.DebugFormat("GetServices, get service type [{0}] with count [{1}] and result [{2}] and cost [{3}] milliseconds.",
                 serviceType, result.Response.Count(), result.StatusCode, result.RequestTime.TotalMilliseconds);
 
