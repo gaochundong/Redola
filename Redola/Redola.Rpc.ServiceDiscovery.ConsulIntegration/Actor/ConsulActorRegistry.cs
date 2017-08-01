@@ -12,7 +12,7 @@ namespace Redola.Rpc.ServiceDiscovery.ConsulIntegration
     {
         private ILog _log = Logger.Get<ConsulActorRegistry>();
         private ConsulClient _consul;
-        private const string _protocol = @"redola://";
+        private const string _protocol = @"redola";
 
         public ConsulActorRegistry(ConsulClient consul)
         {
@@ -33,7 +33,7 @@ namespace Redola.Rpc.ServiceDiscovery.ConsulIntegration
 
             var registration = new AgentServiceRegistration()
             {
-                ID = string.Format("{0}{1}/{2}/", _protocol, actor.Type, actor.Name),
+                ID = string.Format("{0}/{1}/{2}/", _protocol, actor.Type, actor.Name),
                 Name = actor.Type,
                 Tags = tags == null ? null : tags.ToArray(),
                 Address = actor.Address,
@@ -66,7 +66,7 @@ namespace Redola.Rpc.ServiceDiscovery.ConsulIntegration
             if (string.IsNullOrWhiteSpace(actorName))
                 throw new ArgumentNullException("actorName");
 
-            var serviceID = string.Format("{0}{1}/{2}/", _protocol, actorType, actorName);
+            var serviceID = string.Format("{0}/{1}/{2}/", _protocol, actorType, actorName);
 
             var result = _consul.Agent.ServiceDeregister(serviceID).GetAwaiter().GetResult();
 
@@ -100,10 +100,10 @@ namespace Redola.Rpc.ServiceDiscovery.ConsulIntegration
 
             return result.Response.Select(r =>
                 {
-                    var splitter = r.ServiceID.Substring(_protocol.Length).Split('/');
+                    var splitter = r.ServiceID.Split('/');
                     return new ConsulActorRegistryEntry()
                     {
-                        ActorIdentity = new ActorIdentity(r.ServiceName, splitter[1])
+                        ActorIdentity = new ActorIdentity(splitter[1], splitter[2])
                         {
                             Address = r.ServiceAddress,
                             Port = r.ServicePort.ToString(),

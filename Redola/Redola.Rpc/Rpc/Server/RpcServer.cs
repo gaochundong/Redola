@@ -150,7 +150,7 @@ namespace Redola.Rpc
 
                     foreach (var service in services)
                     {
-                        _serviceDirectory.RegisterService(this.Actor.Identity, service.DeclaringType);
+                        _serviceDirectory.DeregisterService(this.Actor.Identity, service.DeclaringType);
                     }
 
                     this.Actor.Shutdown();

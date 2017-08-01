@@ -12,7 +12,7 @@ namespace Redola.Rpc.ServiceDiscovery.ConsulIntegration
     {
         private ILog _log = Logger.Get<ConsulServiceRegistry>();
         private ConsulClient _consul;
-        private const string _protocol = @"redola://";
+        private const string _protocol = @"redola";
 
         public ConsulServiceRegistry(ConsulClient consul)
         {
@@ -35,7 +35,7 @@ namespace Redola.Rpc.ServiceDiscovery.ConsulIntegration
 
             var registration = new AgentServiceRegistration()
             {
-                ID = string.Format("{0}{1}/{2}/{3}", _protocol, actor.Type, actor.Name, serviceType),
+                ID = string.Format("{0}/{1}/{2}/{3}", _protocol, actor.Type, actor.Name, serviceType),
                 Name = serviceType,
                 Tags = tags == null ? null : tags.ToArray(),
                 Address = actor.Address,
@@ -65,7 +65,7 @@ namespace Redola.Rpc.ServiceDiscovery.ConsulIntegration
             if (string.IsNullOrWhiteSpace(serviceType))
                 throw new ArgumentNullException("serviceType");
 
-            var serviceID = string.Format("{0}{1}/{2}/{3}", _protocol, actorType, actorName, serviceType);
+            var serviceID = string.Format("{0}/{1}/{2}/{3}", _protocol, actorType, actorName, serviceType);
 
             var result = _consul.Agent.ServiceDeregister(serviceID).GetAwaiter().GetResult();
 
@@ -99,11 +99,11 @@ namespace Redola.Rpc.ServiceDiscovery.ConsulIntegration
 
             return result.Response.Select(r =>
                 {
-                    var splitter = r.ServiceID.Substring(_protocol.Length).Split('/');
+                    var splitter = r.ServiceID.Split('/');
                     return new ConsulServiceRegistryEntry()
                     {
                         ServiceType = serviceType,
-                        ServiceActor = new ActorIdentity(splitter[0], splitter[1])
+                        ServiceActor = new ActorIdentity(splitter[1], splitter[2])
                         {
                             Address = r.ServiceAddress,
                             Port = r.ServicePort.ToString(),
